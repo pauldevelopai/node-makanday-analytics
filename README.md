@@ -6,29 +6,12 @@ what your audience actually rewards. It runs on your own computer. Your data
 stays on your computer (and in your GitHub copy of this app, which you
 control).
 
-This guide gets it running. **No prior coding experience is needed.** If you
-can install Microsoft Word, you can do this. Set aside about 45 minutes the
-first time. After that, opening the app is one double-click.
+This guide gets it running. **No prior coding experience is needed.** 
+After you have gone through this setup, opening the app is one double-click.
 
-If you get stuck on any step, that's normal. Email Paul at Develop AI and
+If you get stuck on any step, that's normal. Email Paul at Develop AI (paul@developai.co.za) and
 tell him exactly which step you're on and what your screen looks like —
 he'll get you unstuck. He's already done this dozens of times.
-
----
-
-## What you need before you start
-
-You need four things. Don't worry if you don't have them yet — the steps
-below set them up.
-
-- **A computer.** A Mac or a Windows laptop, made in the last 5 years or so.
-- **Internet.** Just to download things at the start. Once everything is
-  installed, the app runs offline (except for the AI brief, which needs the
-  internet to ask Claude a question).
-- **About £5 (or $5, or €5).** This is for an account with Anthropic, who
-  make Claude. You'll add money to it once, and a typical week of using
-  this app will cost a few cents. We'll set this up in Part 3.
-- **About 45 minutes** the first time. Make a cup of tea. You've got this.
 
 ---
 
