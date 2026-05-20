@@ -2,10 +2,10 @@
  "slug": "makanday-analytics",
  "host_id": "79e0e8fd-648a-4fd4-bbc5-1a14ead4135f",
  "node_version": "0.5.0",
- "runtime_version": "0.5.0",
+ "runtime_version": "0.6.0",
  "newsroom": "MakanDay",
  "platform": "darwin arm64 node v22.19.0",
  "first_boot": "2026-05-20T12:40:47.147Z",
- "last_boot": "2026-05-20T12:40:47.147Z",
- "boot_count": 1
+ "last_boot": "2026-05-20T17:58:11.629Z",
+ "boot_count": 8
 }
