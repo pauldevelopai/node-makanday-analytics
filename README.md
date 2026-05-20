@@ -42,21 +42,25 @@ Keep your key private — don’t email it, don’t share it, don’t put it in 
 
 **Part 4 — Get the app onto your computer**
 This is the GitHub bit. GitHub is a website where the code for this app lives. You’ll make your own personal copy of it on GitHub (called a fork), and then download that copy onto your computer. Your copy is yours forever — even if Develop AI disappears tomorrow, your copy keeps working.
+
 Step 4a — Make a GitHub account (if you don’t have one)
 Go to: github.com
 Click Sign up and follow the steps. Use your work email.
+
 Step 4b — Fork the app to your own account
 Once signed in to GitHub, go to: https://github.com/pauldevelopai/node-makanday-analytics (Paul will give you this exact link.)
 In the top-right of that page, click the button labelled Fork.
 On the next screen, click the green Create fork button. (You can leave all the settings as they are.)
 After a moment, GitHub shows you a copy of the project — but this time under your username. Look at the top-left to confirm: it should say your-username / node-makanday-analytics.
 You now own a copy. Keep this browser tab open — we’ll need it.
+
 Step 4c — Download your copy to your computer
 On your fork’s page, find the green Code button (above the file list). Click it.
 In the menu that drops down, click Download ZIP.
 The ZIP file lands in your Downloads folder.
 Unzip it (double-click on Mac; right-click → Extract All on Windows). You’ll get a folder called something like node-makanday-analytics-main.
 Move that folder somewhere sensible. Drag it into your Documents folder. Rename it if you want — MakanDay Analytics is fine.
+
 Step 4d — Open the folder in VS Code
 Open VS Code (the app you installed in Part 2).
 In the top menu, click File → Open Folder…
