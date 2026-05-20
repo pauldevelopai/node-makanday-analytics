@@ -40,6 +40,32 @@ button.up{margin-left:8px}
 .empty input[type=file]{display:none}
 .empty.busy label{background:var(--line);color:var(--paper-dim);cursor:wait}
 
+/* setup screen */
+.setup{margin:50px 0;padding:0;border:1px solid var(--line);background:var(--ink2)}
+.setup-hd{padding:20px 28px;border-bottom:1px solid var(--line)}
+.setup-hd h2{font-size:26px;font-weight:600;margin-bottom:6px}
+.setup-hd p{color:var(--paper-dim);font-size:15px;max-width:640px}
+.setup-body{padding:28px;display:grid;grid-template-columns:1fr 1fr;gap:0;background:var(--line);border-bottom:1px solid var(--line)}
+.setup-opt{background:var(--ink2);padding:24px;cursor:pointer;transition:.15s;border:2px solid transparent}
+.setup-opt:hover{background:var(--ink)}
+.setup-opt.on{border-color:var(--signal);background:var(--ink)}
+.setup-opt h3{font-size:18px;font-weight:600;margin-bottom:4px}
+.setup-opt .price{font-family:var(--mono);font-size:11px;color:var(--paper-dim);letter-spacing:.04em;margin-bottom:10px}
+.setup-opt p{font-size:13px;color:var(--paper-dim);line-height:1.5}
+.setup-opt a{color:var(--signal);text-decoration:none}
+.setup-opt a:hover{text-decoration:underline}
+.setup-key{padding:24px 28px}
+.setup-key label{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--paper-dim);display:block;margin-bottom:8px}
+.setup-key input{width:100%;background:var(--ink);color:var(--paper);border:1px solid var(--line);padding:12px 14px;font-family:var(--mono);font-size:14px;letter-spacing:.02em}
+.setup-key input:focus{outline:none;border-color:var(--signal)}
+.setup-actions{padding:0 28px 24px;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+.setup-help{font-size:13px;color:var(--paper-dim);flex:1;min-width:240px}
+.setup-help a{color:var(--signal)}
+.setup-err{padding:12px 16px;margin:14px 28px;border:1px solid var(--alert);color:var(--alert);font-size:14px;display:none}
+.setup-err.on{display:block}
+.key-link{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--paper-dim);text-decoration:none;border-bottom:1px dotted var(--paper-dim)}
+.key-link:hover{color:var(--signal);border-bottom-color:var(--signal)}
+
 .topline{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin:30px 0 6px}
 .stat{background:var(--ink2);padding:18px 20px}
 .stat .l{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--paper-dim)}
@@ -111,7 +137,8 @@ tr:hover td{background:var(--ink2)}
       MATRIX &nbsp;<select id="picker" style="display:none"></select>
       <button class="up" id="upload-more" style="display:none">Upload another</button><br>
       <span id="meta-line"><b id="m-n">—</b> stories</span><br>
-      METRIC &nbsp;<b>FB engagement rate · owned posts</b>
+      METRIC &nbsp;<b>FB engagement rate · owned posts</b><br>
+      <a href="#" class="key-link" id="open-setup" style="display:none">change api key</a>
     </div>
   </div>
 
@@ -119,6 +146,41 @@ tr:hover td{background:var(--ink2)}
     Reads <b>your own</b> published-story performance, not external conversation.
     The signal that matters isn&rsquo;t raw reach (inflated by boosting and the algorithm)
     &mdash; it&rsquo;s <b>engagement rate</b>: the share of people reached who actually acted.
+  </div>
+
+  <div id="setup" class="setup" style="display:none">
+    <div class="setup-hd">
+      <h2>Welcome &mdash; let&rsquo;s set up your AI key</h2>
+      <p>Your Node uses AI to write the editorial brief. Pick whichever
+        provider you already have an account with (or pick whichever feels
+        easier &mdash; both work just as well for this app). You only need
+        <b>one</b> key. Cost is a few cents per brief.</p>
+    </div>
+    <div class="setup-body">
+      <div class="setup-opt on" data-provider="anthropic">
+        <h3>Anthropic &mdash; Claude</h3>
+        <div class="price">default model: claude-haiku-4-5 &middot; ~$1/$5 per million tokens</div>
+        <p>Get a key at <a href="https://console.anthropic.com" target="_blank" rel="noopener">console.anthropic.com</a> &rarr; API Keys.
+          Add $5 to Billing. Your key starts with <code>sk-ant-</code>.</p>
+      </div>
+      <div class="setup-opt" data-provider="openai">
+        <h3>OpenAI &mdash; GPT</h3>
+        <div class="price">default model: gpt-5.4-mini &middot; ~$0.75/$4.50 per million tokens</div>
+        <p>Get a key at <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">platform.openai.com/api-keys</a>.
+          Add $5 to Billing. Your key starts with <code>sk-</code>.</p>
+      </div>
+    </div>
+    <div class="setup-key">
+      <label for="setup-key-input">Paste your API key</label>
+      <input id="setup-key-input" type="password" autocomplete="off" placeholder="sk-ant-... or sk-...">
+    </div>
+    <div class="setup-err" id="setup-err"></div>
+    <div class="setup-actions">
+      <div class="setup-help">Your key stays on this computer in a file called <code>.env</code>.
+        It&rsquo;s never uploaded to GitHub. You can change it later via the &ldquo;change api key&rdquo;
+        link top-right.</div>
+      <button class="btn" id="setup-save">Save and continue</button>
+    </div>
   </div>
 
   <div id="empty" class="empty" style="display:none">

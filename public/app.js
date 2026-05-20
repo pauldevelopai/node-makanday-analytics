@@ -5,6 +5,11 @@ const fmt = n => n >= 1000 ? (n / 1000).toFixed(n >= 10000 ? 0 : 1) + "k" : Stri
 let REPORT = null, CURRENT = null;
 
 async function boot() {
+  // Three states: setup → empty → dashboard.
+  const setup = await fetch("/api/setup").then(r => r.json()).catch(() => ({ configured: false }));
+  if (!setup.configured) { showSetup(); return; }
+  $("#open-setup").style.display = "inline-block";
+
   const sources = await fetch("/api/sources").then(r => r.json()).catch(() => []);
   if (!sources.length) { showEmpty(); return; }
   const picker = $("#picker");
@@ -16,14 +21,59 @@ async function boot() {
   load(sources[0].source_label);
 }
 
+function showSetup() {
+  $("#setup").style.display = "block";
+  $("#empty").style.display = "none";
+  $("#dash").style.display = "none";
+}
 function showEmpty() {
+  $("#setup").style.display = "none";
   $("#empty").style.display = "block";
   $("#dash").style.display = "none";
 }
 function showDash() {
+  $("#setup").style.display = "none";
   $("#empty").style.display = "none";
   $("#dash").style.display = "block";
 }
+
+// ── Setup form ──────────────────────────────────────────────────────────────
+let chosenProvider = "anthropic";
+document.querySelectorAll(".setup-opt").forEach(el => {
+  el.addEventListener("click", () => {
+    document.querySelectorAll(".setup-opt").forEach(x => x.classList.remove("on"));
+    el.classList.add("on");
+    chosenProvider = el.dataset.provider;
+  });
+});
+
+$("#open-setup")?.addEventListener("click", e => {
+  e.preventDefault();
+  $("#setup-err").classList.remove("on");
+  $("#setup-key-input").value = "";
+  showSetup();
+});
+
+$("#setup-save")?.addEventListener("click", async () => {
+  const errBox = $("#setup-err");
+  errBox.classList.remove("on");
+  const apiKey = $("#setup-key-input").value.trim();
+  if (!apiKey) { errBox.textContent = "Paste your API key first."; errBox.classList.add("on"); return; }
+  const btn = $("#setup-save"); btn.disabled = true; btn.textContent = "Saving…";
+  try {
+    const res = await fetch("/api/setup", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ provider: chosenProvider, apiKey })
+    });
+    const data = await res.json();
+    if (!res.ok || data.error) throw new Error(data.error || "Save failed");
+    await boot();
+  } catch (e) {
+    errBox.textContent = e.message; errBox.classList.add("on");
+  } finally {
+    btn.disabled = false; btn.textContent = "Save and continue";
+  }
+});
 
 async function load(source) {
   CURRENT = source;
