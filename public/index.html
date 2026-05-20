@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MakanDay Audience Signal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0d0c0a;--ink2:#16140f;--panel:#1c1a14;--line:#3a352a;
+  --paper:#ede4d3;--paper-dim:#a89e88;--signal:#e8a13a;--signal-deep:#c4761b;
+  --alert:#d9543f;--good:#7fae6a;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;--serif:'Newsreader',Georgia,serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--ink);color:var(--paper);font-family:var(--serif);-webkit-font-smoothing:antialiased;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding:34px 26px 90px}
+.mast{border-bottom:2px solid var(--paper);padding-bottom:18px;display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--signal);margin-bottom:10px;display:flex;align-items:center;gap:9px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--signal);animation:pulse 2.4s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(232,161,58,.6)}70%{box-shadow:0 0 0 9px rgba(232,161,58,0)}100%{box-shadow:0 0 0 0 rgba(232,161,58,0)}}
+h1{font-size:42px;font-weight:600;letter-spacing:-.02em;line-height:1.05}
+h1 span{font-style:italic;font-weight:400;color:var(--paper-dim)}
+.mast-meta{font-family:var(--mono);font-size:11px;color:var(--paper-dim);text-align:right;line-height:2}
+.mast-meta b{color:var(--paper)}
+select,button.up{font-family:var(--mono);font-size:12px;background:var(--ink2);color:var(--signal);border:1px solid var(--line);padding:7px 10px;cursor:pointer}
+button.up{margin-left:8px}
+.sub{margin-top:16px;font-size:15.5px;color:var(--paper-dim);max-width:780px;border-left:2px solid var(--signal-deep);padding-left:16px}
+.sub b{color:var(--paper);font-weight:600}
+
+/* empty state */
+.empty{margin:60px 0;padding:60px 40px;border:2px dashed var(--line);text-align:center;transition:.2s}
+.empty.over{border-color:var(--signal);background:var(--ink2)}
+.empty h2{font-size:28px;font-weight:600;margin-bottom:10px}
+.empty p{color:var(--paper-dim);max-width:560px;margin:0 auto 24px}
+.empty label{display:inline-block;font-family:var(--mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;background:var(--signal);color:var(--ink);padding:13px 28px;cursor:pointer;font-weight:600;transition:.15s}
+.empty label:hover{background:var(--paper)}
+.empty .or{font-family:var(--mono);font-size:11px;color:var(--paper-dim);margin:14px 0 0;letter-spacing:.18em;text-transform:uppercase}
+.empty input[type=file]{display:none}
+.empty.busy label{background:var(--line);color:var(--paper-dim);cursor:wait}
+
+.topline{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin:30px 0 6px}
+.stat{background:var(--ink2);padding:18px 20px}
+.stat .l{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--paper-dim)}
+.stat .v{font-size:34px;font-weight:600;margin-top:6px;font-variant-numeric:tabular-nums}
+.stat .v small{font-size:14px;color:var(--paper-dim);font-weight:400}
+.tabs{display:flex;margin:34px 0 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.tab{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;background:none;border:none;color:var(--paper-dim);padding:13px 18px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:.15s}
+.tab:hover{color:var(--paper)}
+.tab.on{color:var(--signal);border-bottom-color:var(--signal)}
+.view{display:none;padding-top:30px;animation:fade .35s ease}
+.view.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.sec-h{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--paper-dim);margin-bottom:4px}
+.sec-t{font-size:24px;font-weight:600;margin-bottom:6px}
+.sec-d{font-size:14.5px;color:var(--paper-dim);max-width:700px;margin-bottom:24px}
+.sec-d code{font-family:var(--mono);font-size:12.5px;color:var(--signal);background:var(--ink2);padding:1px 5px;border-radius:3px}
+.barrow{display:grid;grid-template-columns:210px 1fr 80px;gap:14px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.barrow:last-child{border-bottom:none}
+.barlbl{font-size:15px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.barlbl b{font-weight:600}.barlbl .n{font-family:var(--mono);font-size:11px;color:var(--paper-dim)}
+.track{height:22px;background:var(--ink2);border:1px solid var(--line)}
+.fill{height:100%;background:linear-gradient(90deg,var(--signal-deep),var(--signal));transition:width 1s cubic-bezier(.2,.8,.2,1)}
+.fill.muted{background:linear-gradient(90deg,#4a4334,#6e6248)}
+.barval{font-family:var(--mono);font-size:13px;font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+table{width:100%;border-collapse:collapse;font-size:14.5px}
+th{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--paper-dim);text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);font-weight:500}
+th.r,td.r{text-align:right;font-variant-numeric:tabular-nums}
+td{padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:hover td{background:var(--ink2)}
+.tt{font-weight:500;line-height:1.35}
+.pill{font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border:1px solid var(--line);border-radius:2px;color:var(--paper-dim);white-space:nowrap}
+.pill.exceptional{border-color:var(--good);color:var(--good)}
+.pill.low{border-color:var(--alert);color:var(--alert)}
+.rate{font-family:var(--mono);font-weight:600}
+.rate.hi{color:var(--good)}.rate.lo{color:var(--alert)}
+.mono{font-family:var(--mono)}.dim{color:var(--paper-dim)}
+.delta{font-family:var(--mono);font-weight:600}
+.delta.up{color:var(--good)}.delta.down{color:var(--alert)}
+.toggle{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;background:none;color:var(--paper-dim);border:1px solid var(--line);padding:8px 14px;cursor:pointer;margin:0 8px 18px 0}
+.toggle.on{color:var(--signal);border-color:var(--signal)}
+.ai-box{background:var(--panel);border:1px solid var(--line);overflow:hidden}
+.ai-bar{display:flex;justify-content:space-between;align-items:center;padding:16px 22px;border-bottom:1px solid var(--line);background:var(--ink2);flex-wrap:wrap;gap:12px}
+.ai-bar .t{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--signal)}
+.btn{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:var(--signal);color:var(--ink);border:none;padding:11px 22px;cursor:pointer;font-weight:600;transition:.15s}
+.btn:hover{background:var(--paper)}.btn:disabled{background:var(--line);color:var(--paper-dim);cursor:wait}
+.ai-body{padding:26px 28px;min-height:170px;font-size:16px;line-height:1.65}
+.ai-body .placeholder{color:var(--paper-dim);font-style:italic}
+.ai-body h3{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--signal);margin:22px 0 8px;font-weight:600}
+.ai-body h3:first-child{margin-top:0}
+.ai-body p{margin:0 0 12px}.ai-body strong{color:var(--signal);font-weight:600}
+.ai-body ul{margin:0 0 14px;padding-left:20px}.ai-body li{margin-bottom:7px}
+.spin{display:inline-block;width:13px;height:13px;border:2px solid var(--paper-dim);border-top-color:var(--signal);border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px;margin-right:8px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.q-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-bottom:24px}
+.q-grid .stat .v.err{color:var(--alert)}.q-grid .stat .v.ok{color:var(--good)}
+.foot{margin-top:46px;border-top:1px solid var(--line);padding-top:18px;font-family:var(--mono);font-size:11px;color:var(--paper-dim);line-height:1.8}
+.err{color:var(--alert);padding:12px 16px;border:1px solid var(--alert);margin-top:16px;font-size:14px}
+@media(max-width:780px){.topline,.q-grid{grid-template-columns:1fr 1fr}.barrow{grid-template-columns:1fr;gap:6px}.track{order:3}h1{font-size:32px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="mast">
+    <div>
+      <div class="kicker"><span class="dot"></span> MakanDay · Audience Signal Node · running locally</div>
+      <h1>MakanDay <span>Audience Signal</span></h1>
+    </div>
+    <div class="mast-meta">
+      MATRIX &nbsp;<select id="picker" style="display:none"></select>
+      <button class="up" id="upload-more" style="display:none">Upload another</button><br>
+      <span id="meta-line"><b id="m-n">—</b> stories</span><br>
+      METRIC &nbsp;<b>FB engagement rate · owned posts</b>
+    </div>
+  </div>
+
+  <div class="sub" id="sub">
+    Reads <b>your own</b> published-story performance, not external conversation.
+    The signal that matters isn&rsquo;t raw reach (inflated by boosting and the algorithm)
+    &mdash; it&rsquo;s <b>engagement rate</b>: the share of people reached who actually acted.
+  </div>
+
+  <div id="empty" class="empty" style="display:none">
+    <h2>Upload your matrix to get started</h2>
+    <p>Drag your <b>Stories Produced 2025 Social Media Matrix</b> Word file
+      here, or click below. The file stays on this computer &mdash; nothing is uploaded online.</p>
+    <label for="file-input">Choose Word file</label>
+    <input id="file-input" type="file" accept=".docx,.doc">
+    <div class="or">or drop the file anywhere in this box</div>
+    <div id="upload-error" class="err" style="display:none"></div>
+  </div>
+
+  <div id="dash" style="display:none">
+    <div class="topline" id="topline"></div>
+    <div class="tabs">
+      <button class="tab on" data-v="beats">Beats</button>
+      <button class="tab" data-v="signal">Signal Leaders</button>
+      <button class="tab" data-v="trend">Rising / Fading</button>
+      <button class="tab" data-v="format">Format</button>
+      <button class="tab" data-v="headline">Headline Signal</button>
+      <button class="tab" data-v="timeline">Timeline</button>
+      <button class="tab" data-v="quality">Data Quality</button>
+      <button class="tab" data-v="brief">AI Brief</button>
+    </div>
+
+    <div id="v-beats" class="view on">
+      <div class="sec-h">Topic clustering · keyword-tagged, editable in <code>lib/beats.js</code></div>
+      <div class="sec-t">Which beats actually move the audience</div>
+      <div class="sec-d">Ranked by <b>median engagement rate</b>, not volume.</div>
+      <div id="beats"></div>
+    </div>
+    <div id="v-signal" class="view">
+      <div class="sec-h">Engagement rate = engagement &divide; reach</div>
+      <div class="sec-t">What truly resonated &mdash; vs what just got boosted</div>
+      <button class="toggle on" id="sg-rate">By engagement rate</button>
+      <button class="toggle" id="sg-reach">Reach giants that under-converted</button>
+      <table><thead><tr><th>Story</th><th>Beat</th><th>Band</th><th class="r">Reach</th><th class="r">Eng.</th><th class="r">Rate</th></tr></thead><tbody id="signal-tb"></tbody></table>
+    </div>
+    <div id="v-trend" class="view">
+      <div class="sec-h">First half vs second half of the year</div>
+      <div class="sec-t">Beats heating up &mdash; or cooling off</div>
+      <table><thead><tr><th>Beat</th><th class="r">Early rate</th><th class="r">Late rate</th><th class="r">Δ</th><th>Direction</th></tr></thead><tbody id="trend-tb"></tbody></table>
+    </div>
+    <div id="v-format" class="view">
+      <div class="sec-h">Investigation · Opinion · News · Editorial</div>
+      <div class="sec-t">Does format change how hard the audience leans in?</div>
+      <div id="format"></div>
+    </div>
+    <div id="v-headline" class="view">
+      <div class="sec-h">Headline shape vs resonance</div>
+      <div class="sec-t">Does the way a hed is written change conversion?</div>
+      <table><thead><tr><th>Feature</th><th class="r">With (n)</th><th class="r">Rate w/</th><th class="r">Rate w/o</th><th class="r">Δ</th></tr></thead><tbody id="hl-tb"></tbody></table>
+    </div>
+    <div id="v-timeline" class="view">
+      <div class="sec-h">Monthly medians</div>
+      <div class="sec-t">Is the audience warming or cooling?</div>
+      <div id="timeline"></div>
+    </div>
+    <div id="v-quality" class="view">
+      <div class="sec-h">Ingestion integrity</div>
+      <div class="sec-t">What the source matrix got wrong</div>
+      <div class="q-grid" id="q-grid"></div>
+      <table><thead><tr><th>Row</th><th>Level</th><th>Field</th><th>Issue</th></tr></thead><tbody id="q-tb"></tbody></table>
+    </div>
+    <div id="v-brief" class="view">
+      <div class="sec-h">AI brief · uses your Anthropic API key</div>
+      <div class="sec-t">The editorial intelligence brief</div>
+      <div class="ai-box">
+        <div class="ai-bar"><div class="t">⌁ Claude · editorial intelligence</div>
+          <button class="btn" id="gen">Generate brief</button></div>
+        <div class="ai-body"><div class="placeholder" id="ai-out">No brief yet. Press &ldquo;Generate brief&rdquo;.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    MakanDay Audience Signal &mdash; a Node on GROUNDED, running on your computer<br>
+    Edit your taxonomy in <code>lib/beats.js</code>. Drop new matrices into <code>data/raw/</code> or upload via the page above.
+  </div>
+</div>
+<script src="/app.js"></script>
+</body>
+</html>

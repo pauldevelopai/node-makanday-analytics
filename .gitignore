@@ -1,0 +1,19 @@
+# Secrets — NEVER commit
+.env
+.env.local
+
+# Dependencies — re-installed by npm install
+node_modules/
+
+# OS cruft
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+
+# Intentionally NOT ignored (Paul / Develop AI uses these for training):
+#   data/raw/           — your uploaded Word matrices
+#   data/processed/     — the parsed stories + quality reports
+#
+# If your Node ever handles confidential material, talk to Paul before
+# committing data — the Node setup may need adjusting first.
