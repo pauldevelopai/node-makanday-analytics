@@ -82,24 +82,38 @@ credit in the commit message.
 commits; they pull. The Node's dev server hot-reloads (`npm run dev`) so
 iteration is fast. This is the move for live training sessions.
 
-## Pulling newsroom data for training GROUNDED
+## Pulling newsroom activity for cohort visibility
 
-Per your call, `data/processed/*.json` and `data/raw/*` are committed to
-each newsroom's fork. To pull data from every onboarded newsroom:
+Per the "data is shared" decision, each Node logs every operation (ingest,
+brief, error) — with full prompt and response text for briefs — to
+`data/processed/node_<slug>_activity.json`, committed to the newsroom's
+fork. The newsroom can see their own history in the **Activity** tab of
+their dashboard; you pull the cohort-wide view.
+
+The harvest script lives in its own repo: `grounded-cohort-harvest`. Set
+it up once on your Mac:
 
 ```bash
-# Once per newsroom — checkouts of every fork in a local "harvest" dir
-mkdir -p ~/harvest && cd ~/harvest
-gh repo list <newsroom-org> --json name -q '.[].name' | \
-  grep '^node-' | \
-  xargs -I{} gh repo clone <newsroom-org>/{}
+cd /Users/paulmcnally/Downloads/grounded-cohort-harvest
+chmod +x harvest.mjs
+# Edit forks.json to add newsrooms as they onboard
+./harvest.mjs
 ```
 
-Then a single script can walk every `~/harvest/node-*/data/processed/` and
-union the rows for training. The `newsroom_id` field is `"local"` in every
-fork — when harvesting, rewrite it to the actual newsroom identifier as
-you ingest. Worth doing this in a small `scripts/harvest.mjs` in the
-GROUNDED repo once you have 3+ Nodes producing data.
+Output lands in `./harvest/<timestamp>/`:
+- `summary.txt` — read in two minutes (totals, provider mix, most recent
+  activity per newsroom)
+- `cohort-activity.json` — every event, every newsroom, sorted by time
+
+Run weekly during pilot, daily during active onboarding. The script uses
+`gh` to fetch only the activity file from each fork (no full clone), so
+it's fast even with a dozen newsrooms.
+
+When to graduate this: at 5+ Nodes across a dozen newsrooms, move
+harvested events into a Postgres table. When GROUNDED is on Lightsail,
+flip to the push model — Nodes POST events to a telemetry endpoint and
+the harvest script becomes a backup channel. Node code doesn't change;
+only `host.log` swaps implementation.
 
 ## Graduation: when a Node folds into GROUNDED proper
 
@@ -125,6 +139,26 @@ The application code (`analytics.js` + `handlers.js`) is identical in
 both worlds — that's the whole point of having designed the host
 interface. The standalone Node and the integrated Node are the same code,
 two implementations underneath.
+
+## Provider flexibility (Anthropic + OpenAI) is standalone-only
+
+Runtime v0.2.0 supports both Anthropic and OpenAI as AI providers, auto-
+detecting from whichever API key is in the newsroom's `.env`. Default
+models are deliberately cheap (`claude-haiku-4-5` for Anthropic,
+`gpt-5.4-mini` for OpenAI). Both overridable via `MODEL=` env var; OpenAI
+calls additionally accept `OPENAI_BASE_URL=` so a newsroom can route
+through OpenRouter, Groq, or local Ollama if they prefer.
+
+**This is standalone-only**. GROUNDED's locked rule #1 (Haiku-only,
+hardcoded in `lib/claude.js`) still stands — when this Node graduates
+into the GROUNDED monorepo, the OpenAI path *is dropped* and the Node
+uses GROUNDED's Haiku-only wrapper. The dual-provider host-lite is a
+laptop-friendly convenience for the pilot, not a forever capability.
+
+If you ever want to relax locked rule #1 for OpenAI support in GROUNDED
+proper, that's a separate, bigger conversation. I'd push back on it —
+the locked rule has cost-control reasoning behind it that I'd want to
+preserve.
 
 ## What's intentionally NOT here yet (and when to add it)
 

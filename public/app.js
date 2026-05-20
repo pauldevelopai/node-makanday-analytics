@@ -34,6 +34,7 @@ async function load(source) {
   renderTopline(); renderBeats(); renderSignal("rate");
   renderTrend(); renderFormat(); renderHeadline(); renderTimeline();
   renderQuality();
+  renderActivity();
   $("#ai-out").className = "placeholder";
   $("#ai-out").textContent = "No brief yet. Press “Generate brief”.";
   $("#gen").textContent = "Generate brief";
@@ -135,6 +136,38 @@ async function renderQuality() {
     `<tr><td class="mono">${i.n}</td><td><span class="pill ${i.level === "error" ? "low" : ""}">${i.level}</span></td>
      <td class="mono dim">${i.field}</td><td>${escapeHtml(i.msg)}</td></tr>`).join("")
     || `<tr><td colspan="4" class="dim">No issues — clean ingest.</td></tr>`;
+}
+
+async function renderActivity() {
+  const data = await fetch("/api/activity").then(r => r.json()).catch(() => ({ activity: [] }));
+  const rows = (data.activity || []).slice().reverse();   // newest first
+  if (!rows.length) {
+    $("#activity-tb").innerHTML = `<tr><td colspan="6" class="dim">No activity yet — upload a matrix or generate a brief.</td></tr>`;
+    return;
+  }
+  $("#activity-tb").innerHTML = rows.map(r => {
+    const when = (r.ts || "").replace("T", " ").slice(0, 19);
+    const op = r.op || r.kind || "—";
+    const src = r.source || r.source_label || "—";
+    const pm = r.provider ? `${r.provider} / ${r.model || "?"}` : "—";
+    const dur = r.duration_ms ? `${r.duration_ms} ms` : "—";
+    let detail = "";
+    if (r.op === "ingest" && r.success) {
+      detail = `${r.story_count} stories · ${r.warnings || 0} warnings · ${r.errors || 0} errors`;
+    } else if (r.op === "brief" && r.success) {
+      detail = `<details><summary>view brief (${(r.response || "").length} chars)</summary>` +
+        `<pre style="white-space:pre-wrap;font-family:var(--mono);font-size:12px;margin:6px 0;color:var(--paper-dim)">${escapeHtml(r.response || "")}</pre></details>`;
+    } else if (r.success === false) {
+      detail = `<span style="color:var(--alert)">error: ${escapeHtml(r.error || "unknown")}</span>`;
+    }
+    return `<tr>
+      <td class="mono dim" style="white-space:nowrap">${when}</td>
+      <td><span class="pill">${op}</span></td>
+      <td class="mono">${src}</td>
+      <td class="mono dim">${pm}</td>
+      <td class="r mono">${dur}</td>
+      <td>${detail}</td></tr>`;
+  }).join("");
 }
 
 document.querySelector(".tabs")?.addEventListener("click", e => {

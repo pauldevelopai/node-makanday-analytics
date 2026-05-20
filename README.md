@@ -6,12 +6,31 @@ what your audience actually rewards. It runs on your own computer. Your data
 stays on your computer (and in your GitHub copy of this app, which you
 control).
 
-This guide gets it running. **No prior coding experience is needed.** 
-After you have gone through this setup, opening the app is one double-click.
+This guide gets it running. **No prior coding experience is needed.** If you
+can install Microsoft Word, you can do this. Set aside about 45 minutes the
+first time. After that, opening the app is one double-click.
 
-If you get stuck on any step, that's normal. Email Paul at Develop AI (paul@developai.co.za) and
+If you get stuck on any step, that's normal. Email Paul at Develop AI and
 tell him exactly which step you're on and what your screen looks like —
 he'll get you unstuck. He's already done this dozens of times.
+
+---
+
+## What you need before you start
+
+You need four things. Don't worry if you don't have them yet — the steps
+below set them up.
+
+- **A computer.** A Mac or a Windows laptop, made in the last 5 years or so.
+- **Internet.** Just to download things at the start. Once everything is
+  installed, the app runs offline (except for the AI brief, which needs the
+  internet to ask Claude a question).
+- **About £5 (or $5, or €5).** This is for an API account with **either
+  Anthropic (Claude) or OpenAI (GPT)** — whichever you prefer. The app
+  works with both. You'll add money to your chosen account once, and a
+  typical week of using this app costs a few cents. We'll set this up
+  in Part 3.
+- **About 45 minutes** the first time. Make a cup of tea. You've got this.
 
 ---
 
@@ -64,29 +83,50 @@ app's code and to type the few commands needed to start it.
 
 ---
 
-## Part 3 — Get your Anthropic AI key
+## Part 3 — Get your AI key
 
-The "AI brief" feature in this app asks Claude (made by Anthropic) to
-summarise what your data is telling you. To do that, the app needs your
-own personal "key" — a long line of letters and numbers Anthropic gives
-you. The key proves it's really you asking, and Anthropic charges you a
-few cents for each question (you control the maximum spend).
+The "AI brief" feature in this app asks an AI to summarise what your data
+is telling you. The app works with **either** Claude (from Anthropic) or
+GPT (from OpenAI) — you only need an account with **one** of them.
+
+**If you already have one of these accounts**, use it. Skip the other
+section. **If you have neither**, pick whichever feels easier — both
+work just as well for this app. Anthropic Claude is what GROUNDED uses
+under the hood; OpenAI's cheapest tier (GPT-5.4 Mini) is actually a
+fraction cheaper. The bill is a few cents per AI brief on either.
+
+### Option A — Anthropic (Claude)
 
 1. In your browser, go to: `console.anthropic.com`
 2. Click **Sign up** (or **Sign in** if you already have an account).
-3. Use your work email and pick a password.
-4. Once signed in, look on the left side of the screen for a section
-   called **"API Keys"**. Click it.
-5. Click **Create Key**. Give it any name (e.g. "MakanDay Analytics").
+   Use your work email and pick a password.
+3. Once signed in, look on the left side of the screen for a section
+   called **API Keys**. Click it.
+4. Click **Create Key**. Give it any name (e.g. "MakanDay Analytics").
    Click **Create**.
-6. You'll see a long string of characters starting with `sk-ant-`. **Copy
-   it now and paste it somewhere safe** — Anthropic won't show it to you
-   again. (If you lose it, you just make a new one. No harm done.)
-7. Now click your name in the top-right, go to **Billing**, and add £5 or
-   $5 to your account. That's enough to use this app for many weeks.
+5. You'll see a long string of characters starting with `sk-ant-`.
+   **Copy it now and paste it somewhere safe** — Anthropic won't show
+   it to you again. (If you lose it, you just make a new one. No harm.)
+6. Click your name in the top-right, go to **Billing**, and add £5 or
+   $5 to your account. That's enough for many weeks of use.
 
-**Keep your key private.** Don't email it, don't share it, don't put it in
-a public document. The next step shows you exactly where to paste it.
+You're done with Part 3. Skip Option B and go to Part 4.
+
+### Option B — OpenAI (GPT)
+
+1. In your browser, go to: `platform.openai.com`
+2. Click **Sign up** (or **Sign in**). Use your work email.
+3. Once signed in, click the gear icon (top right) for **Settings**,
+   then **API keys** in the left sidebar. (Or go straight to
+   `platform.openai.com/api-keys`.)
+4. Click **Create new secret key**. Give it any name. Click **Create**.
+5. You'll see a long string starting with `sk-...`. **Copy it now** —
+   OpenAI won't show it again. (If you lose it, make a new one.)
+6. In **Settings → Billing**, add £5 or $5 of credit. That covers many
+   weeks of use.
+
+**Keep your key private.** Don't email it, don't share it, don't put it
+in a public document. The next step shows you exactly where to paste it.
 
 ---
 
@@ -151,16 +191,25 @@ You now own a copy. Keep this browser tab open — we'll need it.
 4. Now you have a new file `.env` open. It looks like:
 
    ```
-   ANTHROPIC_API_KEY=sk-ant-...
+   ANTHROPIC_API_KEY=
+   OPENAI_API_KEY=
    ```
 
-5. Replace `sk-ant-...` with **your real key** from Part 3. The line
-   should look like: `ANTHROPIC_API_KEY=sk-ant-api03-xxxx...` (with your
-   actual long key).
+5. Paste your key from Part 3 after the **=** sign of whichever line
+   matches your provider. Leave the other line empty.
+
+   - If you did **Option A (Anthropic)**: paste after `ANTHROPIC_API_KEY=`
+     so the line reads `ANTHROPIC_API_KEY=sk-ant-api03-xxxx...`
+   - If you did **Option B (OpenAI)**: paste after `OPENAI_API_KEY=`
+     so the line reads `OPENAI_API_KEY=sk-xxxx...`
+
 6. Save the file (**Cmd+S** on Mac, **Ctrl+S** on Windows).
 
-**The `.env` file stays on your computer.** It is deliberately not part of
-what gets shared on GitHub. Your key stays private.
+The app figures out which provider to use automatically based on which
+key you filled in. No other setting needed.
+
+**The `.env` file stays on your computer.** It is deliberately not part
+of what gets shared on GitHub. Your key stays private.
 
 ---
 
@@ -304,16 +353,18 @@ The app is already running in another terminal window. Close that other
 terminal first. Or change the port: in your `.env` file add a line
 `PORT=3001` and try again.
 
-### "ANTHROPIC_API_KEY is not set"
-Your `.env` file is missing or doesn't have your key. Re-do Step 4e.
+### "ANTHROPIC_API_KEY is not set" or "OPENAI_API_KEY is not set"
+Your `.env` file is missing or doesn't have your key in the right place.
+Re-do Step 4e — make sure your key is on the correct line (Anthropic key
+goes after `ANTHROPIC_API_KEY=`, OpenAI key goes after `OPENAI_API_KEY=`).
 
 ### Browser shows "This site can't be reached"
 The app isn't running. Look at the terminal — does it still say "is
 running"? If not, run `npm start` again.
 
 ### The AI brief says "Brief unavailable"
-Most often, your Anthropic account has run out of credit. Top it up at
-`console.anthropic.com → Billing`. Or your key is wrong — check `.env`.
+Most often, your provider account has run out of credit. Top it up in
+your provider's Billing page. Or your key is wrong — check `.env`.
 
 ### Something else
 Email Paul with: (a) which step you're on, (b) what command you typed,
@@ -330,7 +381,8 @@ Be clear about this — it matters.
 | The app's code | Your GitHub fork (committed) | So you can update it, change it, and Paul can help. |
 | Your uploaded Word matrices (`data/raw/`) | Your GitHub fork (committed) | So Develop AI can use anonymised data to improve GROUNDED. |
 | Your processed stories + quality reports (`data/processed/`) | Your GitHub fork (committed) | Same reason. |
-| **Your Anthropic API key** (`.env`) | **Your computer only** | This is private. Never gets shared. The `.gitignore` file ensures it's excluded. |
+| Your **activity log** (`data/processed/node_makanday_analytics_activity.json`) | Your GitHub fork (committed) | A record of every ingest and every AI brief you've generated. You can see your own history any time in the **Activity** tab of the dashboard. Develop AI uses these to understand what's working across the cohort and to train future versions of GROUNDED. |
+| **Your Anthropic / OpenAI API key** (`.env`) | **Your computer only** | This is private. Never gets shared. The `.gitignore` file ensures it's excluded. |
 
 If you ever want to use this Node for confidential material (e.g.
 unpublished sources), talk to Paul first — the setup needs adjusting so

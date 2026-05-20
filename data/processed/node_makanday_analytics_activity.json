@@ -1,0 +1,15 @@
+[
+ {
+  "ts": "2026-05-20T07:23:45.573Z",
+  "newsroom_id": "local",
+  "kind": "run",
+  "op": "ingest",
+  "source": "makanday-2025",
+  "story_count": 120,
+  "errors": 0,
+  "warnings": 3,
+  "uncategorised": 48,
+  "duration_ms": 435,
+  "success": true
+ }
+]

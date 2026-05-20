@@ -48,16 +48,16 @@ test("flags rows with no parseable date but still keeps them", () => {
 test("ingestMatrix drives the host facade correctly (mock host)", async () => {
   const calls = [];
   const host = {
-    tablePrefix: "pg_makanday_analytics_",
+    tablePrefix: "node_makanday_analytics_",
     parse: { docxToHtml: async () => html },
     db: {
       tx: async fn => fn({ query: async (t, sql, p) => { calls.push([t, sql.split("\n")[0].trim(), p]); return { rows: [] }; } })
     },
-    log: { run: async m => calls.push(["log", m.kind]) }
+    log: { run: async m => calls.push(["log", m.op || m.kind]) }
   };
   const res = await ingestMatrix(host, Buffer.from("x"), "matrix-2025");
   assert.equal(res.storyCount, 5);
   assert.equal(res.quality.warnings >= 2, true);          // date + reach/typo
-  assert.ok(calls.some(c => c[0] === "log" && c[1] === "ingest"));
-  assert.ok(calls.every(c => c[0] === "log" || c[0].startsWith("pg_makanday_analytics_")));
+  // ingest.js no longer logs — that's now the handler's job. Only DB calls expected.
+  assert.ok(calls.every(c => c[0].startsWith("node_makanday_analytics_")));
 });

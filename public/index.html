@@ -141,6 +141,7 @@ tr:hover td{background:var(--ink2)}
       <button class="tab" data-v="headline">Headline Signal</button>
       <button class="tab" data-v="timeline">Timeline</button>
       <button class="tab" data-v="quality">Data Quality</button>
+      <button class="tab" data-v="activity">Activity</button>
       <button class="tab" data-v="brief">AI Brief</button>
     </div>
 
@@ -182,6 +183,16 @@ tr:hover td{background:var(--ink2)}
       <div class="sec-t">What the source matrix got wrong</div>
       <div class="q-grid" id="q-grid"></div>
       <table><thead><tr><th>Row</th><th>Level</th><th>Field</th><th>Issue</th></tr></thead><tbody id="q-tb"></tbody></table>
+    </div>
+    <div id="v-activity" class="view">
+      <div class="sec-h">Everything this Node has done · committed to your fork</div>
+      <div class="sec-t">Activity log</div>
+      <div class="sec-d">Every ingest, every brief, every error — timestamped, with the prompt
+        and full response Claude/GPT returned. This file lives at
+        <code>data/processed/node_makanday_analytics_activity.json</code> and is part of
+        what gets shared with Develop AI for improving GROUNDED.</div>
+      <table><thead><tr><th>When</th><th>Operation</th><th>Source</th><th>Provider / Model</th><th class="r">Duration</th><th>Details</th></tr></thead>
+      <tbody id="activity-tb"></tbody></table>
     </div>
     <div id="v-brief" class="view">
       <div class="sec-h">AI brief · uses your Anthropic API key</div>

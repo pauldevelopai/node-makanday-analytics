@@ -10,7 +10,7 @@
   "engagement": 13,
   "type": "Investigation",
   "id": 1,
-  "ingested_at": "2026-05-20T06:34:52.360Z"
+  "ingested_at": "2026-05-20T07:23:45.534Z"
  },
  {
   "newsroom_id": "local",
@@ -23,7 +23,7 @@
   "engagement": 37,
   "type": "Investigation",
   "id": 2,
-  "ingested_at": "2026-05-20T06:34:52.360Z"
+  "ingested_at": "2026-05-20T07:23:45.534Z"
  },
  {
   "newsroom_id": "local",
@@ -36,7 +36,7 @@
   "engagement": 16,
   "type": "News/Article",
   "id": 3,
-  "ingested_at": "2026-05-20T06:34:52.360Z"
+  "ingested_at": "2026-05-20T07:23:45.535Z"
  },
  {
   "newsroom_id": "local",
@@ -49,7 +49,7 @@
   "engagement": 7,
   "type": "News/Article",
   "id": 4,
-  "ingested_at": "2026-05-20T06:34:52.360Z"
+  "ingested_at": "2026-05-20T07:23:45.535Z"
  },
  {
   "newsroom_id": "local",
@@ -62,7 +62,7 @@
   "engagement": 52,
   "type": "Investigation",
   "id": 5,
-  "ingested_at": "2026-05-20T06:34:52.360Z"
+  "ingested_at": "2026-05-20T07:23:45.535Z"
  },
  {
   "newsroom_id": "local",
@@ -75,7 +75,7 @@
   "engagement": 14,
   "type": "News/Article",
   "id": 6,
-  "ingested_at": "2026-05-20T06:34:52.361Z"
+  "ingested_at": "2026-05-20T07:23:45.535Z"
  },
  {
   "newsroom_id": "local",
@@ -88,7 +88,7 @@
   "engagement": 49,
   "type": "Investigation",
   "id": 7,
-  "ingested_at": "2026-05-20T06:34:52.361Z"
+  "ingested_at": "2026-05-20T07:23:45.535Z"
  },
  {
   "newsroom_id": "local",
@@ -101,7 +101,7 @@
   "engagement": 8,
   "type": "Investigation",
   "id": 8,
-  "ingested_at": "2026-05-20T06:34:52.361Z"
+  "ingested_at": "2026-05-20T07:23:45.535Z"
  },
  {
   "newsroom_id": "local",
@@ -114,7 +114,7 @@
   "engagement": 21,
   "type": "News/Article",
   "id": 9,
-  "ingested_at": "2026-05-20T06:34:52.361Z"
+  "ingested_at": "2026-05-20T07:23:45.535Z"
  },
  {
   "newsroom_id": "local",
@@ -127,7 +127,7 @@
   "engagement": 26,
   "type": "News/Article",
   "id": 10,
-  "ingested_at": "2026-05-20T06:34:52.361Z"
+  "ingested_at": "2026-05-20T07:23:45.536Z"
  },
  {
   "newsroom_id": "local",
@@ -140,7 +140,7 @@
   "engagement": 486,
   "type": "Investigation",
   "id": 11,
-  "ingested_at": "2026-05-20T06:34:52.361Z"
+  "ingested_at": "2026-05-20T07:23:45.536Z"
  },
  {
   "newsroom_id": "local",
@@ -153,7 +153,7 @@
   "engagement": 16,
   "type": "Investigation",
   "id": 12,
-  "ingested_at": "2026-05-20T06:34:52.362Z"
+  "ingested_at": "2026-05-20T07:23:45.536Z"
  },
  {
   "newsroom_id": "local",
@@ -166,7 +166,7 @@
   "engagement": 32,
   "type": "Investigation",
   "id": 13,
-  "ingested_at": "2026-05-20T06:34:52.362Z"
+  "ingested_at": "2026-05-20T07:23:45.536Z"
  },
  {
   "newsroom_id": "local",
@@ -179,7 +179,7 @@
   "engagement": 23,
   "type": "Uncategorised",
   "id": 14,
-  "ingested_at": "2026-05-20T06:34:52.362Z"
+  "ingested_at": "2026-05-20T07:23:45.536Z"
  },
  {
   "newsroom_id": "local",
@@ -192,7 +192,7 @@
   "engagement": 12,
   "type": "Investigation",
   "id": 15,
-  "ingested_at": "2026-05-20T06:34:52.362Z"
+  "ingested_at": "2026-05-20T07:23:45.537Z"
  },
  {
   "newsroom_id": "local",
@@ -205,7 +205,7 @@
   "engagement": 22,
   "type": "Uncategorised",
   "id": 16,
-  "ingested_at": "2026-05-20T06:34:52.362Z"
+  "ingested_at": "2026-05-20T07:23:45.537Z"
  },
  {
   "newsroom_id": "local",
@@ -218,7 +218,7 @@
   "engagement": 8,
   "type": "Investigation",
   "id": 17,
-  "ingested_at": "2026-05-20T06:34:52.362Z"
+  "ingested_at": "2026-05-20T07:23:45.537Z"
  },
  {
   "newsroom_id": "local",
@@ -231,7 +231,7 @@
   "engagement": 11,
   "type": "Investigation",
   "id": 18,
-  "ingested_at": "2026-05-20T06:34:52.362Z"
+  "ingested_at": "2026-05-20T07:23:45.537Z"
  },
  {
   "newsroom_id": "local",
@@ -244,7 +244,7 @@
   "engagement": 13,
   "type": "Uncategorised",
   "id": 19,
-  "ingested_at": "2026-05-20T06:34:52.363Z"
+  "ingested_at": "2026-05-20T07:23:45.537Z"
  },
  {
   "newsroom_id": "local",
@@ -257,7 +257,7 @@
   "engagement": 16,
   "type": "Investigation",
   "id": 20,
-  "ingested_at": "2026-05-20T06:34:52.363Z"
+  "ingested_at": "2026-05-20T07:23:45.537Z"
  },
  {
   "newsroom_id": "local",
@@ -270,7 +270,7 @@
   "engagement": 80,
   "type": "Investigation",
   "id": 21,
-  "ingested_at": "2026-05-20T06:34:52.363Z"
+  "ingested_at": "2026-05-20T07:23:45.538Z"
  },
  {
   "newsroom_id": "local",
@@ -283,7 +283,7 @@
   "engagement": 90,
   "type": "Investigation",
   "id": 22,
-  "ingested_at": "2026-05-20T06:34:52.363Z"
+  "ingested_at": "2026-05-20T07:23:45.538Z"
  },
  {
   "newsroom_id": "local",
@@ -296,7 +296,7 @@
   "engagement": 27,
   "type": "Investigation",
   "id": 23,
-  "ingested_at": "2026-05-20T06:34:52.363Z"
+  "ingested_at": "2026-05-20T07:23:45.538Z"
  },
  {
   "newsroom_id": "local",
@@ -309,7 +309,7 @@
   "engagement": 95,
   "type": "Investigation",
   "id": 24,
-  "ingested_at": "2026-05-20T06:34:52.363Z"
+  "ingested_at": "2026-05-20T07:23:45.538Z"
  },
  {
   "newsroom_id": "local",
@@ -322,7 +322,7 @@
   "engagement": 24,
   "type": "Uncategorised",
   "id": 25,
-  "ingested_at": "2026-05-20T06:34:52.364Z"
+  "ingested_at": "2026-05-20T07:23:45.539Z"
  },
  {
   "newsroom_id": "local",
@@ -335,7 +335,7 @@
   "engagement": 93,
   "type": "Investigation",
   "id": 26,
-  "ingested_at": "2026-05-20T06:34:52.364Z"
+  "ingested_at": "2026-05-20T07:23:45.539Z"
  },
  {
   "newsroom_id": "local",
@@ -348,7 +348,7 @@
   "engagement": 8,
   "type": "Investigation",
   "id": 27,
-  "ingested_at": "2026-05-20T06:34:52.364Z"
+  "ingested_at": "2026-05-20T07:23:45.539Z"
  },
  {
   "newsroom_id": "local",
@@ -361,7 +361,7 @@
   "engagement": 14,
   "type": "Investigation",
   "id": 28,
-  "ingested_at": "2026-05-20T06:34:52.364Z"
+  "ingested_at": "2026-05-20T07:23:45.539Z"
  },
  {
   "newsroom_id": "local",
@@ -374,7 +374,7 @@
   "engagement": 39,
   "type": "Investigation",
   "id": 29,
-  "ingested_at": "2026-05-20T06:34:52.364Z"
+  "ingested_at": "2026-05-20T07:23:45.539Z"
  },
  {
   "newsroom_id": "local",
@@ -387,7 +387,7 @@
   "engagement": 28,
   "type": "Investigation",
   "id": 30,
-  "ingested_at": "2026-05-20T06:34:52.365Z"
+  "ingested_at": "2026-05-20T07:23:45.540Z"
  },
  {
   "newsroom_id": "local",
@@ -400,7 +400,7 @@
   "engagement": 29,
   "type": "Investigation",
   "id": 31,
-  "ingested_at": "2026-05-20T06:34:52.365Z"
+  "ingested_at": "2026-05-20T07:23:45.540Z"
  },
  {
   "newsroom_id": "local",
@@ -413,7 +413,7 @@
   "engagement": 24,
   "type": "Investigation",
   "id": 32,
-  "ingested_at": "2026-05-20T06:34:52.365Z"
+  "ingested_at": "2026-05-20T07:23:45.540Z"
  },
  {
   "newsroom_id": "local",
@@ -426,7 +426,7 @@
   "engagement": 48,
   "type": "Investigation",
   "id": 33,
-  "ingested_at": "2026-05-20T06:34:52.365Z"
+  "ingested_at": "2026-05-20T07:23:45.540Z"
  },
  {
   "newsroom_id": "local",
@@ -439,7 +439,7 @@
   "engagement": 37,
   "type": "Investigation",
   "id": 34,
-  "ingested_at": "2026-05-20T06:34:52.366Z"
+  "ingested_at": "2026-05-20T07:23:45.541Z"
  },
  {
   "newsroom_id": "local",
@@ -452,7 +452,7 @@
   "engagement": 37,
   "type": "Uncategorised",
   "id": 35,
-  "ingested_at": "2026-05-20T06:34:52.366Z"
+  "ingested_at": "2026-05-20T07:23:45.541Z"
  },
  {
   "newsroom_id": "local",
@@ -465,7 +465,7 @@
   "engagement": 32,
   "type": "Uncategorised",
   "id": 36,
-  "ingested_at": "2026-05-20T06:34:52.366Z"
+  "ingested_at": "2026-05-20T07:23:45.541Z"
  },
  {
   "newsroom_id": "local",
@@ -478,7 +478,7 @@
   "engagement": 35,
   "type": "Investigation",
   "id": 37,
-  "ingested_at": "2026-05-20T06:34:52.366Z"
+  "ingested_at": "2026-05-20T07:23:45.541Z"
  },
  {
   "newsroom_id": "local",
@@ -491,7 +491,7 @@
   "engagement": 30,
   "type": "Investigation",
   "id": 38,
-  "ingested_at": "2026-05-20T06:34:52.366Z"
+  "ingested_at": "2026-05-20T07:23:45.541Z"
  },
  {
   "newsroom_id": "local",
@@ -504,7 +504,7 @@
   "engagement": 577,
   "type": "Uncategorised",
   "id": 39,
-  "ingested_at": "2026-05-20T06:34:52.367Z"
+  "ingested_at": "2026-05-20T07:23:45.542Z"
  },
  {
   "newsroom_id": "local",
@@ -517,7 +517,7 @@
   "engagement": 184,
   "type": "Uncategorised",
   "id": 40,
-  "ingested_at": "2026-05-20T06:34:52.367Z"
+  "ingested_at": "2026-05-20T07:23:45.542Z"
  },
  {
   "newsroom_id": "local",
@@ -530,7 +530,7 @@
   "engagement": 60,
   "type": "Uncategorised",
   "id": 41,
-  "ingested_at": "2026-05-20T06:34:52.367Z"
+  "ingested_at": "2026-05-20T07:23:45.542Z"
  },
  {
   "newsroom_id": "local",
@@ -543,7 +543,7 @@
   "engagement": 16,
   "type": "Uncategorised",
   "id": 42,
-  "ingested_at": "2026-05-20T06:34:52.367Z"
+  "ingested_at": "2026-05-20T07:23:45.542Z"
  },
  {
   "newsroom_id": "local",
@@ -556,7 +556,7 @@
   "engagement": 30,
   "type": "Uncategorised",
   "id": 43,
-  "ingested_at": "2026-05-20T06:34:52.367Z"
+  "ingested_at": "2026-05-20T07:23:45.543Z"
  },
  {
   "newsroom_id": "local",
@@ -569,7 +569,7 @@
   "engagement": 65,
   "type": "Uncategorised",
   "id": 44,
-  "ingested_at": "2026-05-20T06:34:52.368Z"
+  "ingested_at": "2026-05-20T07:23:45.543Z"
  },
  {
   "newsroom_id": "local",
@@ -582,7 +582,7 @@
   "engagement": 166,
   "type": "Investigation",
   "id": 45,
-  "ingested_at": "2026-05-20T06:34:52.368Z"
+  "ingested_at": "2026-05-20T07:23:45.543Z"
  },
  {
   "newsroom_id": "local",
@@ -595,7 +595,7 @@
   "engagement": 31,
   "type": "Investigation",
   "id": 46,
-  "ingested_at": "2026-05-20T06:34:52.368Z"
+  "ingested_at": "2026-05-20T07:23:45.543Z"
  },
  {
   "newsroom_id": "local",
@@ -608,7 +608,7 @@
   "engagement": 24,
   "type": "Uncategorised",
   "id": 47,
-  "ingested_at": "2026-05-20T06:34:52.368Z"
+  "ingested_at": "2026-05-20T07:23:45.544Z"
  },
  {
   "newsroom_id": "local",
@@ -621,7 +621,7 @@
   "engagement": 667,
   "type": "Investigation",
   "id": 48,
-  "ingested_at": "2026-05-20T06:34:52.368Z"
+  "ingested_at": "2026-05-20T07:23:45.544Z"
  },
  {
   "newsroom_id": "local",
@@ -634,7 +634,7 @@
   "engagement": 511,
   "type": "Investigation",
   "id": 49,
-  "ingested_at": "2026-05-20T06:34:52.369Z"
+  "ingested_at": "2026-05-20T07:23:45.544Z"
  },
  {
   "newsroom_id": "local",
@@ -647,7 +647,7 @@
   "engagement": 5,
   "type": "Investigation",
   "id": 50,
-  "ingested_at": "2026-05-20T06:34:52.369Z"
+  "ingested_at": "2026-05-20T07:23:45.544Z"
  },
  {
   "newsroom_id": "local",
@@ -660,7 +660,7 @@
   "engagement": 16,
   "type": "Editorial",
   "id": 51,
-  "ingested_at": "2026-05-20T06:34:52.369Z"
+  "ingested_at": "2026-05-20T07:23:45.545Z"
  },
  {
   "newsroom_id": "local",
@@ -673,7 +673,7 @@
   "engagement": 23,
   "type": "Investigation",
   "id": 52,
-  "ingested_at": "2026-05-20T06:34:52.369Z"
+  "ingested_at": "2026-05-20T07:23:45.545Z"
  },
  {
   "newsroom_id": "local",
@@ -686,7 +686,7 @@
   "engagement": 18,
   "type": "Investigation",
   "id": 53,
-  "ingested_at": "2026-05-20T06:34:52.370Z"
+  "ingested_at": "2026-05-20T07:23:45.545Z"
  },
  {
   "newsroom_id": "local",
@@ -699,7 +699,7 @@
   "engagement": 24,
   "type": "Investigation",
   "id": 54,
-  "ingested_at": "2026-05-20T06:34:52.370Z"
+  "ingested_at": "2026-05-20T07:23:45.545Z"
  },
  {
   "newsroom_id": "local",
@@ -712,7 +712,7 @@
   "engagement": 9,
   "type": "Investigation",
   "id": 55,
-  "ingested_at": "2026-05-20T06:34:52.370Z"
+  "ingested_at": "2026-05-20T07:23:45.546Z"
  },
  {
   "newsroom_id": "local",
@@ -725,7 +725,7 @@
   "engagement": 53,
   "type": "Investigation",
   "id": 56,
-  "ingested_at": "2026-05-20T06:34:52.370Z"
+  "ingested_at": "2026-05-20T07:23:45.546Z"
  },
  {
   "newsroom_id": "local",
@@ -738,7 +738,7 @@
   "engagement": 49,
   "type": "Investigation",
   "id": 57,
-  "ingested_at": "2026-05-20T06:34:52.371Z"
+  "ingested_at": "2026-05-20T07:23:45.546Z"
  },
  {
   "newsroom_id": "local",
@@ -751,7 +751,7 @@
   "engagement": 27,
   "type": "Investigation",
   "id": 58,
-  "ingested_at": "2026-05-20T06:34:52.371Z"
+  "ingested_at": "2026-05-20T07:23:45.547Z"
  },
  {
   "newsroom_id": "local",
@@ -764,7 +764,7 @@
   "engagement": 72,
   "type": "Opinion",
   "id": 59,
-  "ingested_at": "2026-05-20T06:34:52.371Z"
+  "ingested_at": "2026-05-20T07:23:45.547Z"
  },
  {
   "newsroom_id": "local",
@@ -777,7 +777,7 @@
   "engagement": 20,
   "type": "Investigation",
   "id": 60,
-  "ingested_at": "2026-05-20T06:34:52.371Z"
+  "ingested_at": "2026-05-20T07:23:45.547Z"
  },
  {
   "newsroom_id": "local",
@@ -790,7 +790,7 @@
   "engagement": 12,
   "type": "Opinion",
   "id": 61,
-  "ingested_at": "2026-05-20T06:34:52.372Z"
+  "ingested_at": "2026-05-20T07:23:45.548Z"
  },
  {
   "newsroom_id": "local",
@@ -803,7 +803,7 @@
   "engagement": 8,
   "type": "Uncategorised",
   "id": 62,
-  "ingested_at": "2026-05-20T06:34:52.372Z"
+  "ingested_at": "2026-05-20T07:23:45.548Z"
  },
  {
   "newsroom_id": "local",
@@ -816,7 +816,7 @@
   "engagement": 17,
   "type": "Investigation",
   "id": 63,
-  "ingested_at": "2026-05-20T06:34:52.372Z"
+  "ingested_at": "2026-05-20T07:23:45.548Z"
  },
  {
   "newsroom_id": "local",
@@ -829,7 +829,7 @@
   "engagement": 21,
   "type": "Investigation",
   "id": 64,
-  "ingested_at": "2026-05-20T06:34:52.372Z"
+  "ingested_at": "2026-05-20T07:23:45.548Z"
  },
  {
   "newsroom_id": "local",
@@ -842,7 +842,7 @@
   "engagement": 10,
   "type": "Investigation",
   "id": 65,
-  "ingested_at": "2026-05-20T06:34:52.373Z"
+  "ingested_at": "2026-05-20T07:23:45.549Z"
  },
  {
   "newsroom_id": "local",
@@ -855,7 +855,7 @@
   "engagement": 16,
   "type": "News/Article",
   "id": 66,
-  "ingested_at": "2026-05-20T06:34:52.373Z"
+  "ingested_at": "2026-05-20T07:23:45.549Z"
  },
  {
   "newsroom_id": "local",
@@ -868,7 +868,7 @@
   "engagement": 22,
   "type": "News/Article",
   "id": 67,
-  "ingested_at": "2026-05-20T06:34:52.373Z"
+  "ingested_at": "2026-05-20T07:23:45.549Z"
  },
  {
   "newsroom_id": "local",
@@ -881,7 +881,7 @@
   "engagement": 7,
   "type": "News/Article",
   "id": 68,
-  "ingested_at": "2026-05-20T06:34:52.374Z"
+  "ingested_at": "2026-05-20T07:23:45.550Z"
  },
  {
   "newsroom_id": "local",
@@ -894,7 +894,7 @@
   "engagement": 5,
   "type": "Investigation",
   "id": 69,
-  "ingested_at": "2026-05-20T06:34:52.374Z"
+  "ingested_at": "2026-05-20T07:23:45.550Z"
  },
  {
   "newsroom_id": "local",
@@ -907,7 +907,7 @@
   "engagement": 12,
   "type": "Investigation",
   "id": 70,
-  "ingested_at": "2026-05-20T06:34:52.374Z"
+  "ingested_at": "2026-05-20T07:23:45.550Z"
  },
  {
   "newsroom_id": "local",
@@ -920,7 +920,7 @@
   "engagement": 14,
   "type": "Opinion",
   "id": 71,
-  "ingested_at": "2026-05-20T06:34:52.375Z"
+  "ingested_at": "2026-05-20T07:23:45.551Z"
  },
  {
   "newsroom_id": "local",
@@ -933,7 +933,7 @@
   "engagement": 7,
   "type": "News/Article",
   "id": 72,
-  "ingested_at": "2026-05-20T06:34:52.375Z"
+  "ingested_at": "2026-05-20T07:23:45.553Z"
  },
  {
   "newsroom_id": "local",
@@ -946,7 +946,7 @@
   "engagement": 128,
   "type": "Opinion",
   "id": 73,
-  "ingested_at": "2026-05-20T06:34:52.375Z"
+  "ingested_at": "2026-05-20T07:23:45.553Z"
  },
  {
   "newsroom_id": "local",
@@ -959,7 +959,7 @@
   "engagement": 34,
   "type": "Investigation",
   "id": 74,
-  "ingested_at": "2026-05-20T06:34:52.376Z"
+  "ingested_at": "2026-05-20T07:23:45.553Z"
  },
  {
   "newsroom_id": "local",
@@ -972,7 +972,7 @@
   "engagement": 6,
   "type": "Uncategorised",
   "id": 75,
-  "ingested_at": "2026-05-20T06:34:52.376Z"
+  "ingested_at": "2026-05-20T07:23:45.554Z"
  },
  {
   "newsroom_id": "local",
@@ -985,7 +985,7 @@
   "engagement": 23,
   "type": "Investigation",
   "id": 76,
-  "ingested_at": "2026-05-20T06:34:52.377Z"
+  "ingested_at": "2026-05-20T07:23:45.554Z"
  },
  {
   "newsroom_id": "local",
@@ -998,7 +998,7 @@
   "engagement": 8,
   "type": "Opinion",
   "id": 77,
-  "ingested_at": "2026-05-20T06:34:52.377Z"
+  "ingested_at": "2026-05-20T07:23:45.554Z"
  },
  {
   "newsroom_id": "local",
@@ -1011,7 +1011,7 @@
   "engagement": 12,
   "type": "Uncategorised",
   "id": 78,
-  "ingested_at": "2026-05-20T06:34:52.377Z"
+  "ingested_at": "2026-05-20T07:23:45.555Z"
  },
  {
   "newsroom_id": "local",
@@ -1024,7 +1024,7 @@
   "engagement": 118,
   "type": "Investigation",
   "id": 79,
-  "ingested_at": "2026-05-20T06:34:52.378Z"
+  "ingested_at": "2026-05-20T07:23:45.555Z"
  },
  {
   "newsroom_id": "local",
@@ -1037,7 +1037,7 @@
   "engagement": 14,
   "type": "Uncategorised",
   "id": 80,
-  "ingested_at": "2026-05-20T06:34:52.378Z"
+  "ingested_at": "2026-05-20T07:23:45.555Z"
  },
  {
   "newsroom_id": "local",
@@ -1050,7 +1050,7 @@
   "engagement": 12,
   "type": "Investigation",
   "id": 81,
-  "ingested_at": "2026-05-20T06:34:52.378Z"
+  "ingested_at": "2026-05-20T07:23:45.556Z"
  },
  {
   "newsroom_id": "local",
@@ -1063,7 +1063,7 @@
   "engagement": 16,
   "type": "Opinion",
   "id": 82,
-  "ingested_at": "2026-05-20T06:34:52.379Z"
+  "ingested_at": "2026-05-20T07:23:45.556Z"
  },
  {
   "newsroom_id": "local",
@@ -1076,7 +1076,7 @@
   "engagement": 32,
   "type": "Investigation",
   "id": 83,
-  "ingested_at": "2026-05-20T06:34:52.379Z"
+  "ingested_at": "2026-05-20T07:23:45.557Z"
  },
  {
   "newsroom_id": "local",
@@ -1089,7 +1089,7 @@
   "engagement": 39,
   "type": "Investigation",
   "id": 84,
-  "ingested_at": "2026-05-20T06:34:52.379Z"
+  "ingested_at": "2026-05-20T07:23:45.557Z"
  },
  {
   "newsroom_id": "local",
@@ -1102,7 +1102,7 @@
   "engagement": 31,
   "type": "Investigation",
   "id": 85,
-  "ingested_at": "2026-05-20T06:34:52.380Z"
+  "ingested_at": "2026-05-20T07:23:45.557Z"
  },
  {
   "newsroom_id": "local",
@@ -1115,7 +1115,7 @@
   "engagement": 3,
   "type": "Opinion",
   "id": 86,
-  "ingested_at": "2026-05-20T06:34:52.380Z"
+  "ingested_at": "2026-05-20T07:23:45.558Z"
  },
  {
   "newsroom_id": "local",
@@ -1128,7 +1128,7 @@
   "engagement": 16,
   "type": "Uncategorised",
   "id": 87,
-  "ingested_at": "2026-05-20T06:34:52.381Z"
+  "ingested_at": "2026-05-20T07:23:45.558Z"
  },
  {
   "newsroom_id": "local",
@@ -1141,7 +1141,7 @@
   "engagement": 5,
   "type": "Uncategorised",
   "id": 88,
-  "ingested_at": "2026-05-20T06:34:52.381Z"
+  "ingested_at": "2026-05-20T07:23:45.558Z"
  },
  {
   "newsroom_id": "local",
@@ -1154,7 +1154,7 @@
   "engagement": 20,
   "type": "Uncategorised",
   "id": 89,
-  "ingested_at": "2026-05-20T06:34:52.381Z"
+  "ingested_at": "2026-05-20T07:23:45.559Z"
  },
  {
   "newsroom_id": "local",
@@ -1167,7 +1167,7 @@
   "engagement": 12,
   "type": "Uncategorised",
   "id": 90,
-  "ingested_at": "2026-05-20T06:34:52.382Z"
+  "ingested_at": "2026-05-20T07:23:45.559Z"
  },
  {
   "newsroom_id": "local",
@@ -1180,7 +1180,7 @@
   "engagement": 12,
   "type": "Uncategorised",
   "id": 91,
-  "ingested_at": "2026-05-20T06:34:52.382Z"
+  "ingested_at": "2026-05-20T07:23:45.560Z"
  },
  {
   "newsroom_id": "local",
@@ -1193,7 +1193,7 @@
   "engagement": 79,
   "type": "Uncategorised",
   "id": 92,
-  "ingested_at": "2026-05-20T06:34:52.383Z"
+  "ingested_at": "2026-05-20T07:23:45.560Z"
  },
  {
   "newsroom_id": "local",
@@ -1206,7 +1206,7 @@
   "engagement": 15,
   "type": "Uncategorised",
   "id": 93,
-  "ingested_at": "2026-05-20T06:34:52.383Z"
+  "ingested_at": "2026-05-20T07:23:45.560Z"
  },
  {
   "newsroom_id": "local",
@@ -1219,7 +1219,7 @@
   "engagement": 27,
   "type": "Uncategorised",
   "id": 94,
-  "ingested_at": "2026-05-20T06:34:52.384Z"
+  "ingested_at": "2026-05-20T07:23:45.561Z"
  },
  {
   "newsroom_id": "local",
@@ -1232,7 +1232,7 @@
   "engagement": 54,
   "type": "Uncategorised",
   "id": 95,
-  "ingested_at": "2026-05-20T06:34:52.384Z"
+  "ingested_at": "2026-05-20T07:23:45.561Z"
  },
  {
   "newsroom_id": "local",
@@ -1245,7 +1245,7 @@
   "engagement": 10,
   "type": "Uncategorised",
   "id": 96,
-  "ingested_at": "2026-05-20T06:34:52.384Z"
+  "ingested_at": "2026-05-20T07:23:45.562Z"
  },
  {
   "newsroom_id": "local",
@@ -1258,7 +1258,7 @@
   "engagement": 21,
   "type": "Uncategorised",
   "id": 97,
-  "ingested_at": "2026-05-20T06:34:52.385Z"
+  "ingested_at": "2026-05-20T07:23:45.562Z"
  },
  {
   "newsroom_id": "local",
@@ -1271,7 +1271,7 @@
   "engagement": 12,
   "type": "Uncategorised",
   "id": 98,
-  "ingested_at": "2026-05-20T06:34:52.385Z"
+  "ingested_at": "2026-05-20T07:23:45.562Z"
  },
  {
   "newsroom_id": "local",
@@ -1284,7 +1284,7 @@
   "engagement": 7,
   "type": "Uncategorised",
   "id": 99,
-  "ingested_at": "2026-05-20T06:34:52.386Z"
+  "ingested_at": "2026-05-20T07:23:45.563Z"
  },
  {
   "newsroom_id": "local",
@@ -1297,7 +1297,7 @@
   "engagement": 7,
   "type": "Uncategorised",
   "id": 100,
-  "ingested_at": "2026-05-20T06:34:52.391Z"
+  "ingested_at": "2026-05-20T07:23:45.563Z"
  },
  {
   "newsroom_id": "local",
@@ -1310,7 +1310,7 @@
   "engagement": 218,
   "type": "Uncategorised",
   "id": 101,
-  "ingested_at": "2026-05-20T06:34:52.391Z"
+  "ingested_at": "2026-05-20T07:23:45.564Z"
  },
  {
   "newsroom_id": "local",
@@ -1323,7 +1323,7 @@
   "engagement": 40,
   "type": "Uncategorised",
   "id": 102,
-  "ingested_at": "2026-05-20T06:34:52.392Z"
+  "ingested_at": "2026-05-20T07:23:45.564Z"
  },
  {
   "newsroom_id": "local",
@@ -1336,7 +1336,7 @@
   "engagement": 36,
   "type": "Uncategorised",
   "id": 103,
-  "ingested_at": "2026-05-20T06:34:52.392Z"
+  "ingested_at": "2026-05-20T07:23:45.565Z"
  },
  {
   "newsroom_id": "local",
@@ -1349,7 +1349,7 @@
   "engagement": 42,
   "type": "Uncategorised",
   "id": 104,
-  "ingested_at": "2026-05-20T06:34:52.393Z"
+  "ingested_at": "2026-05-20T07:23:45.565Z"
  },
  {
   "newsroom_id": "local",
@@ -1362,7 +1362,7 @@
   "engagement": 26,
   "type": "Uncategorised",
   "id": 105,
-  "ingested_at": "2026-05-20T06:34:52.393Z"
+  "ingested_at": "2026-05-20T07:23:45.565Z"
  },
  {
   "newsroom_id": "local",
@@ -1375,7 +1375,7 @@
   "engagement": 13,
   "type": "Uncategorised",
   "id": 106,
-  "ingested_at": "2026-05-20T06:34:52.394Z"
+  "ingested_at": "2026-05-20T07:23:45.566Z"
  },
  {
   "newsroom_id": "local",
@@ -1388,7 +1388,7 @@
   "engagement": 50,
   "type": "Uncategorised",
   "id": 107,
-  "ingested_at": "2026-05-20T06:34:52.394Z"
+  "ingested_at": "2026-05-20T07:23:45.566Z"
  },
  {
   "newsroom_id": "local",
@@ -1401,7 +1401,7 @@
   "engagement": 23,
   "type": "Uncategorised",
   "id": 108,
-  "ingested_at": "2026-05-20T06:34:52.394Z"
+  "ingested_at": "2026-05-20T07:23:45.567Z"
  },
  {
   "newsroom_id": "local",
@@ -1414,7 +1414,7 @@
   "engagement": 58,
   "type": "Uncategorised",
   "id": 109,
-  "ingested_at": "2026-05-20T06:34:52.395Z"
+  "ingested_at": "2026-05-20T07:23:45.567Z"
  },
  {
   "newsroom_id": "local",
@@ -1427,7 +1427,7 @@
   "engagement": 22,
   "type": "Uncategorised",
   "id": 110,
-  "ingested_at": "2026-05-20T06:34:52.395Z"
+  "ingested_at": "2026-05-20T07:23:45.568Z"
  },
  {
   "newsroom_id": "local",
@@ -1440,7 +1440,7 @@
   "engagement": 45,
   "type": "Uncategorised",
   "id": 111,
-  "ingested_at": "2026-05-20T06:34:52.396Z"
+  "ingested_at": "2026-05-20T07:23:45.568Z"
  },
  {
   "newsroom_id": "local",
@@ -1453,7 +1453,7 @@
   "engagement": 30,
   "type": "Uncategorised",
   "id": 112,
-  "ingested_at": "2026-05-20T06:34:52.396Z"
+  "ingested_at": "2026-05-20T07:23:45.569Z"
  },
  {
   "newsroom_id": "local",
@@ -1466,7 +1466,7 @@
   "engagement": 1056,
   "type": "Uncategorised",
   "id": 113,
-  "ingested_at": "2026-05-20T06:34:52.397Z"
+  "ingested_at": "2026-05-20T07:23:45.569Z"
  },
  {
   "newsroom_id": "local",
@@ -1479,7 +1479,7 @@
   "engagement": 109,
   "type": "Uncategorised",
   "id": 114,
-  "ingested_at": "2026-05-20T06:34:52.397Z"
+  "ingested_at": "2026-05-20T07:23:45.570Z"
  },
  {
   "newsroom_id": "local",
@@ -1492,7 +1492,7 @@
   "engagement": 29,
   "type": "Uncategorised",
   "id": 115,
-  "ingested_at": "2026-05-20T06:34:52.397Z"
+  "ingested_at": "2026-05-20T07:23:45.570Z"
  },
  {
   "newsroom_id": "local",
@@ -1505,7 +1505,7 @@
   "engagement": 50,
   "type": "Opinion",
   "id": 116,
-  "ingested_at": "2026-05-20T06:34:52.398Z"
+  "ingested_at": "2026-05-20T07:23:45.571Z"
  },
  {
   "newsroom_id": "local",
@@ -1518,7 +1518,7 @@
   "engagement": 40,
   "type": "Uncategorised",
   "id": 117,
-  "ingested_at": "2026-05-20T06:34:52.398Z"
+  "ingested_at": "2026-05-20T07:23:45.571Z"
  },
  {
   "newsroom_id": "local",
@@ -1531,7 +1531,7 @@
   "engagement": 121,
   "type": "Opinion",
   "id": 118,
-  "ingested_at": "2026-05-20T06:34:52.399Z"
+  "ingested_at": "2026-05-20T07:23:45.572Z"
  },
  {
   "newsroom_id": "local",
@@ -1544,7 +1544,7 @@
   "engagement": 40,
   "type": "Uncategorised",
   "id": 119,
-  "ingested_at": "2026-05-20T06:34:52.399Z"
+  "ingested_at": "2026-05-20T07:23:45.572Z"
  },
  {
   "newsroom_id": "local",
@@ -1557,6 +1557,6 @@
   "engagement": 19,
   "type": "Opinion",
   "id": 120,
-  "ingested_at": "2026-05-20T06:34:52.400Z"
+  "ingested_at": "2026-05-20T07:23:45.573Z"
  }
 ]
