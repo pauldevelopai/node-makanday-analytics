@@ -1,6 +1,8 @@
 **MakanDay Audience Signal**
+https://github.com/pauldevelopai/node-makanday-analytics/
 
-This is your newsroom’s audience-analytics app. It reads a Word document of your published stories and their Facebook reach + engagement, and tells you what your audience actually rewards. It runs on your own computer. Your data stays on your computer (and in your GitHub copy of this app, which you control).
+This is your newsroom’s audience-analytics app. It reads a Word document of your published stories and their Facebook reach + engagement, and tells you what your audience actually rewards. 
+The app will initially run locally on one laptop and the code adjusted and developed by you (the process on how to do this is described below), and then it will be uploaded to being live on the web once ready.
 
 This guide gets it running. No prior coding experience is needed.
 
@@ -159,3 +161,5 @@ What you expected to happen.
 What actually happened (paste any error messages exactly).
 A screenshot if you can.
 You’re not bothering him by asking. Setup questions are normal. The point of the Nodes system is that newsrooms own their tools — and that means the first hour of figuring it out is part of the job, for him too.
+
+
