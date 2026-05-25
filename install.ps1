@@ -1,4 +1,4 @@
-# install.ps1 — one-command installer for the MakanDay Audience Signal Node (Windows).
+# install.ps1 — one-command installer for the Audience Signal Node (Windows).
 #
 # A newsroom runs ONE line in the built-in PowerShell — nothing to install by hand:
 #
@@ -23,8 +23,8 @@ $Repo    = if ($env:GROUNDED_REPO)         { $env:GROUNDED_REPO }         else {
 $Ref     = if ($env:GROUNDED_REF)          { $env:GROUNDED_REF }          else { 'main' }
 $NodeVer = if ($env:GROUNDED_NODE_VERSION) { $env:GROUNDED_NODE_VERSION } else { '20.18.1' }
 $Root    = if ($env:GROUNDED_HOME)         { $env:GROUNDED_HOME }         else { Join-Path $env:USERPROFILE 'GROUNDED' }
-$AppDir  = Join-Path $Root 'makanday-analytics'
-$Name    = 'MakanDay Audience Signal'
+$AppDir  = Join-Path $Root 'node-analytics'
+$Name    = 'Audience Signal'
 $Port    = if ($env:PORT) { $env:PORT } else { '3000' }
 
 function Say($m) { Write-Host "  $m" }

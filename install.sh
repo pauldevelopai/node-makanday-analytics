@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# install.sh — one-command installer for the MakanDay Audience Signal Node (macOS).
+# install.sh — one-command installer for the Audience Signal Node (macOS).
 #
 # A newsroom runs ONE line in the built-in Terminal app — nothing to install by hand:
 #
@@ -25,8 +25,8 @@ REPO="${GROUNDED_REPO:-pauldevelopai/node-analytics}"
 REF="${GROUNDED_REF:-main}"
 NODE_VERSION="${GROUNDED_NODE_VERSION:-20.18.1}"
 GROUNDED_HOME="${GROUNDED_HOME:-$HOME/GROUNDED}"
-APP_DIR="$GROUNDED_HOME/makanday-analytics"
-DISPLAY_NAME="MakanDay Audience Signal"
+APP_DIR="$GROUNDED_HOME/node-analytics"
+DISPLAY_NAME="Audience Signal"
 PORT="${PORT:-3000}"
 
 say() { printf "  %s\n" "$*"; }

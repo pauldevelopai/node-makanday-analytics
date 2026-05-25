@@ -1,4 +1,4 @@
-// lib/playground/makanday-analytics/tests/ingest.test.js
+// tests/ingest.test.js
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { parseMatrixHtml, ingestMatrix } from "../lib/ingest.js";
@@ -48,7 +48,7 @@ test("flags rows with no parseable date but still keeps them", () => {
 test("ingestMatrix drives the host facade correctly (mock host)", async () => {
   const calls = [];
   const host = {
-    tablePrefix: "node_makanday_analytics_",
+    tablePrefix: "node_analytics_",
     parse: { docxToHtml: async () => html },
     db: {
       tx: async fn => fn({ query: async (t, sql, p) => { calls.push([t, sql.split("\n")[0].trim(), p]); return { rows: [] }; } })
@@ -59,5 +59,5 @@ test("ingestMatrix drives the host facade correctly (mock host)", async () => {
   assert.equal(res.storyCount, 5);
   assert.equal(res.quality.warnings >= 2, true);          // date + reach/typo
   // ingest.js no longer logs — that's now the handler's job. Only DB calls expected.
-  assert.ok(calls.every(c => c[0].startsWith("node_makanday_analytics_")));
+  assert.ok(calls.every(c => c[0].startsWith("node_analytics_")));
 });

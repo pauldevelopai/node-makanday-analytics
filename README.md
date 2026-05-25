@@ -1,4 +1,4 @@
-**MakanDay Audience Signal**
+**Audience Signal**
 https://github.com/pauldevelopai/node-analytics/
 
 This is your newsroom’s audience-analytics app. It reads a Word document of your published stories and their Facebook reach + engagement, and tells you what your audience actually rewards.

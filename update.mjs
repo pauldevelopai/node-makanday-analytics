@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * update.mjs — cross-platform "get the latest version" for MakanDay Audience Signal.
+ * update.mjs — cross-platform "get the latest version" for Audience Signal.
  *
  * Called from Update.command (Mac) and Update.bat (Windows). The newsroom
  * never touches this file directly.
@@ -47,7 +47,7 @@ function bail(msg) {
   process.exit(1);
 }
 
-console.log("\n  ╭─ MakanDay Audience Signal · Update ─╮\n");
+console.log("\n  ╭─ Audience Signal · Update ─╮\n");
 
 // 1. Git available?
 if (!silent("git --version")) {

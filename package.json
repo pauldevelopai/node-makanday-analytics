@@ -1,8 +1,8 @@
 {
-  "name": "makanday-audience-analytics",
+  "name": "node-analytics",
   "version": "0.6.0",
   "private": true,
-  "description": "MakanDay Audience Signal — a Node on GROUNDED. Owned-data audience-resonance analytics for an investigative newsroom.",
+  "description": "Audience Signal — a Node on GROUNDED. Owned-data audience-resonance analytics for an investigative newsroom.",
   "license": "Apache-2.0",
   "type": "module",
   "engines": { "node": ">=20" },

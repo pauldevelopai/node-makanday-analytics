@@ -1,5 +1,5 @@
 @echo off
-REM Double-click this to update MakanDay Audience Signal to the latest version.
+REM Double-click this to update Audience Signal to the latest version.
 cd /d "%~dp0"
 
 where node >nul 2>nul

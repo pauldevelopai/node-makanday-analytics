@@ -26,22 +26,22 @@ local `file:` path to:
 (Or publish to npm under your scope if you want a versioned release —
 totally optional for the pilot.)
 
-### 2. `pauldevelopai/node-makanday-analytics`
+### 2. `pauldevelopai/node-analytics`
 The first Node. Apache-2.0. This is the one newsrooms fork.
 
 ```bash
-# In /home/claude/node-makanday-analytics
+# In /home/claude/node-analytics
 git init && git add . && git commit -m "v0.1.0: first Node"
-gh repo create pauldevelopai/node-makanday-analytics --public --source=. --push
+gh repo create pauldevelopai/node-analytics --public --source=. --push
 ```
 
 Subsequent Nodes follow the same pattern: `pauldevelopai/node-<slug>`.
 
 ## How a newsroom joins (and how you stay in)
 
-1. They follow the `README.md` and end up on your `node-makanday-analytics`
+1. They follow the `README.md` and end up on your `node-analytics`
    repo page. They click **Fork**.
-2. They now own e.g. `makandaymedia/node-makanday-analytics`.
+2. They now own e.g. `makandaymedia/node-analytics`.
 3. **Crucial onboarding step** — built into your first call with them:
    they go to *their* fork's **Settings → Collaborators → Add people**
    and add `pauldevelopai`. From this moment you can push directly to
@@ -60,15 +60,15 @@ Once collaborator access is set up, every situation you'll hit maps to
 one of four moves:
 
 **Improving something for everyone.** Edit upstream
-`pauldevelopai/node-makanday-analytics`. Push. Tell newsrooms (or set up
+`pauldevelopai/node-analytics`. Push. Tell newsrooms (or set up
 a Slack/WhatsApp broadcast) that an update is available. They sync their
 fork and pull (their README walks them through it).
 
 **Helping one newsroom unstick something.** Clone their fork (you're a
 collaborator):
 ```bash
-git clone https://github.com/<their-org>/node-makanday-analytics.git
-cd node-makanday-analytics
+git clone https://github.com/<their-org>/node-analytics.git
+cd node-analytics
 # open in Claude Code, fix, commit, push
 ```
 They restart their app and pick it up.
@@ -117,20 +117,20 @@ only `host.log` swaps implementation.
 
 ## Graduation: when a Node folds into GROUNDED proper
 
-The graduation criteria for `makanday-analytics` are in the Node's
+The graduation criteria for `analytics` are in the Node's
 manifest (when we finalise it for GROUNDED side): ≥3 newsrooms running,
 ≥50 generated briefs, ≥60% accept rate. When met:
 
-1. In the GROUNDED monorepo, create `lib/nodes/makanday-analytics/` and
-   `app/nodes/makanday-analytics/` matching the layout we designed in the
+1. In the GROUNDED monorepo, create `lib/nodes/analytics/` and
+   `app/nodes/analytics/` matching the layout we designed in the
    earlier `grounded-playground.zip` deliverable (the host facade,
    route helper, Next.js routes are already drafted).
 2. Copy the Node's `lib/analytics.js`, `lib/beats.js`, `lib/ingest.js`,
-   `lib/handlers.js` into `lib/nodes/makanday-analytics/`. No code
+   `lib/handlers.js` into `lib/nodes/analytics/`. No code
    changes — only the host implementation underneath swaps.
 3. Write the Postgres migration `001_stories.sql` (already drafted in
-   the earlier deliverable — `pg_makanday_analytics_*` → renamed
-   `node_makanday_analytics_*`).
+   the earlier deliverable — `pg_analytics_*` → renamed
+   `node_analytics_*`).
 4. Add the thin Next.js route handlers under `app/nodes/.../api/`.
 5. Drop the `@developai/grounded-node-runtime` dependency from this Node.
 6. Run the GROUNDED integration steps (the `INTEGRATION.md` deliverable).

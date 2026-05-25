@@ -1,5 +1,5 @@
 #!/bin/bash
-# Double-click this to update MakanDay Audience Signal to the latest version.
+# Double-click this to update Audience Signal to the latest version.
 # The first time, your Mac may say "cannot verify the developer". Right-click
 # this file → Open → Open in the dialog. That happens once.
 

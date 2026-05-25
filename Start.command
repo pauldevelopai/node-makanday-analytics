@@ -1,5 +1,5 @@
 #!/bin/bash
-# Double-click this to launch MakanDay Audience Signal.
+# Double-click this to launch Audience Signal.
 # The first time, your Mac may say "cannot verify the developer". Right-click
 # this file → Open → Open in the dialog. That happens once.
 

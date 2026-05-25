@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>MakanDay Audience Signal</title>
+<title>Audience Signal</title>
 <link rel="stylesheet" href="/grounded-chrome.css" />
 <script src="/grounded-chrome.js" defer></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -132,8 +132,8 @@ tr:hover td{background:var(--ink2)}
 <div class="wrap">
   <div class="mast">
     <div>
-      <div class="kicker"><span class="dot"></span> MakanDay · Audience Signal Node · running locally</div>
-      <h1>MakanDay <span>Audience Signal</span></h1>
+      <div class="kicker"><span class="dot"></span> <span id="brand-kicker">Audience Signal Node · running locally</span></div>
+      <h1 id="brand-h1"><span>Audience Signal</span></h1>
     </div>
     <div class="mast-meta">
       MATRIX &nbsp;<select id="picker" style="display:none"></select>
@@ -253,7 +253,7 @@ tr:hover td{background:var(--ink2)}
       <div class="sec-t">Activity log</div>
       <div class="sec-d">Every ingest, every brief, every error — timestamped, with the prompt
         and full response Claude/GPT returned. This file lives at
-        <code>data/processed/node_makanday_analytics_activity.json</code> and is part of
+        <code id="activity-file">data/processed/node_analytics_activity.json</code> and is part of
         what gets shared with Develop AI for improving GROUNDED.</div>
       <table><thead><tr><th>When</th><th>Operation</th><th>Source</th><th>Provider / Model</th><th class="r">Duration</th><th>Details</th></tr></thead>
       <tbody id="activity-tb"></tbody></table>
@@ -270,7 +270,7 @@ tr:hover td{background:var(--ink2)}
   </div>
 
   <div class="foot">
-    MakanDay Audience Signal &mdash; a Node on GROUNDED, running on your computer<br>
+    <span id="brand-foot">Audience Signal &mdash; a Node on GROUNDED, running on your computer</span><br>
     Edit your taxonomy in <code>lib/beats.js</code>. Drop new matrices into <code>data/raw/</code> or upload via the page above.
   </div>
 </div>

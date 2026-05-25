@@ -4,9 +4,24 @@ const fmt = n => n >= 1000 ? (n / 1000).toFixed(n >= 10000 ? 0 : 1) + "k" : Stri
 
 let REPORT = null, CURRENT = null;
 
+// Newsroom-driven branding — fills the masthead, title and footer from
+// whatever /api/setup reports (NEWSROOM env / saved meta). No name is baked
+// into the HTML; this is the single place the dashboard learns who it's for.
+function applyBrand(setup) {
+  const product = setup.productName || "Audience Signal";
+  const nr = setup.newsroom;
+  const full = nr ? `${nr} ${product}` : product;
+  document.title = full;
+  const k = $("#brand-kicker");   if (k) k.textContent = `${nr ? nr + " · " : ""}${product} Node · running locally`;
+  const h = $("#brand-h1");       if (h) h.innerHTML = `${nr ? escapeHtml(nr) + " " : ""}<span>${escapeHtml(product)}</span>`;
+  const f = $("#brand-foot");     if (f) f.textContent = `${full} — a Node on GROUNDED, running on your computer`;
+  const af = $("#activity-file"); if (af && setup.activityFile) af.textContent = setup.activityFile;
+}
+
 async function boot() {
   // Three states: setup → empty → dashboard.
   const setup = await fetch("/api/setup").then(r => r.json()).catch(() => ({ configured: false }));
+  applyBrand(setup);
   if (!setup.configured) { showSetup(); return; }
   $("#open-setup").style.display = "inline-block";
 
