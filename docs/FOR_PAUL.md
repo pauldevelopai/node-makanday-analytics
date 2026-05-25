@@ -37,32 +37,40 @@ gh repo create pauldevelopai/node-analytics --public --source=. --push
 
 Subsequent Nodes follow the same pattern: `pauldevelopai/node-<slug>`.
 
-## How a newsroom joins (and how you stay in)
+## How a newsroom joins
 
-1. They follow the `README.md` and end up on your `node-analytics`
-   repo page. They click **Fork**.
-2. They now own e.g. `makandaymedia/node-analytics`.
-3. **Crucial onboarding step** — built into your first call with them:
-   they go to *their* fork's **Settings → Collaborators → Add people**
-   and add `pauldevelopai`. From this moment you can push directly to
-   their fork.
-4. Their `.env` (their Anthropic key) is gitignored — your commits never
-   touch it. Their `data/` is committed — you can pull it any time.
+There are two tiers, and **the default is central — no fork, no GitHub
+account.**
 
-The "add Paul as collaborator" step is one click for them. Put it in the
-newsroom onboarding call as a non-negotiable. After it's done, you have
-full collaborator access to every Node fork you've onboarded — equivalent
-to having local working copies on every newsroom laptop.
+**Central (default, for non-technical newsrooms).** They run the one-command
+installer from the `README.md` (`nodes.developai.co.za/analytics/{mac,windows}`,
+which redirect to `install.sh` / `install.ps1`). It downloads the app from
+`pauldevelopai/node-analytics` over plain HTTPS — no fork, no git, no Node or
+VS Code to install by hand. To update, they re-run the same command; it always
+pulls the latest. You ship fixes by pushing to `main`. Their activity reaches
+you via the **telemetry beacon** (see below), since there's no fork to harvest.
 
-## Your four operating modes
+**Fork (optional, for technically comfortable newsrooms).** Documented in the
+README's "Advanced" section. They fork `pauldevelopai/node-analytics`, then —
+the one step that matters — add `pauldevelopai` as a collaborator on *their*
+fork (**Settings → Collaborators → Add people**). From then you can push
+directly to their fork and pull their committed `data/` any time. Their `.env`
+(their API key) is gitignored, so your commits never touch it.
 
-Once collaborator access is set up, every situation you'll hit maps to
-one of four moves:
+Reach for the fork tier only when a newsroom wants to customise the code, or
+you specifically want direct push access to their copy. For everyone else,
+central is simpler on both sides.
+
+## Your operating modes
 
 **Improving something for everyone.** Edit upstream
-`pauldevelopai/node-analytics`. Push. Tell newsrooms (or set up
-a Slack/WhatsApp broadcast) that an update is available. They sync their
-fork and pull (their README walks them through it).
+`pauldevelopai/node-analytics`, push to `main`. Central-install newsrooms get
+it automatically the next time they run the command; fork-tier newsrooms sync
+their fork and pull (their README walks them through it). A Slack/WhatsApp
+broadcast to say "an update's ready" is enough.
+
+The remaining moves apply to **fork-tier** newsrooms, where you hold
+collaborator access:
 
 **Helping one newsroom unstick something.** Clone their fork (you're a
 collaborator):
@@ -84,11 +92,17 @@ iteration is fast. This is the move for live training sessions.
 
 ## Pulling newsroom activity for cohort visibility
 
-Per the "data is shared" decision, each Node logs every operation (ingest,
-brief, error) — with full prompt and response text for briefs — to
-`data/processed/node_<slug>_activity.json`, committed to the newsroom's
-fork. The newsroom can see their own history in the **Activity** tab of
-their dashboard; you pull the cohort-wide view.
+Each Node logs every operation (ingest, brief, error) — with full prompt and
+response text for briefs — to `data/processed/node_<slug>_activity.json` in
+the newsroom's install. The newsroom sees their own history in the **Activity**
+tab; you pull the cohort-wide view by one of two channels:
+
+- **Central-install newsrooms (default, no fork):** activity reaches you via
+  the **telemetry beacon** in the runtime — the first-boot beacon is already
+  wired, and once GROUNDED is hosted, Nodes POST events to its endpoint. This
+  is the primary channel now that most newsrooms don't fork.
+- **Fork-tier newsrooms:** the activity file is committed to their fork, so the
+  `gh`-based harvest script below pulls it straight from GitHub.
 
 The harvest script lives in its own repo: `grounded-cohort-harvest`. Set
 it up once on your Mac:
