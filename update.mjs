@@ -24,7 +24,7 @@
 import { execSync } from "node:child_process";
 import { existsSync, writeFileSync } from "node:fs";
 
-const UPSTREAM = "https://github.com/pauldevelopai/node-makanday-analytics.git";
+const UPSTREAM = "https://github.com/pauldevelopai/node-analytics.git";
 
 function silent(cmd) {
   try { execSync(cmd, { stdio: "ignore" }); return true; }

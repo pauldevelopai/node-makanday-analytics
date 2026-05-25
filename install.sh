@@ -21,7 +21,7 @@
 set -euo pipefail
 
 # ── Settings (defaults are the real values; env vars override them for testing) ──
-REPO="${GROUNDED_REPO:-pauldevelopai/node-makanday-analytics}"
+REPO="${GROUNDED_REPO:-pauldevelopai/node-analytics}"
 REF="${GROUNDED_REF:-main}"
 NODE_VERSION="${GROUNDED_NODE_VERSION:-20.18.1}"
 GROUNDED_HOME="${GROUNDED_HOME:-$HOME/GROUNDED}"

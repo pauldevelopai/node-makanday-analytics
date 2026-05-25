@@ -19,7 +19,7 @@
 $ErrorActionPreference = 'Stop'
 
 # ── Settings (defaults are the real values; env vars override them for testing) ──
-$Repo    = if ($env:GROUNDED_REPO)         { $env:GROUNDED_REPO }         else { 'pauldevelopai/node-makanday-analytics' }
+$Repo    = if ($env:GROUNDED_REPO)         { $env:GROUNDED_REPO }         else { 'pauldevelopai/node-analytics' }
 $Ref     = if ($env:GROUNDED_REF)          { $env:GROUNDED_REF }          else { 'main' }
 $NodeVer = if ($env:GROUNDED_NODE_VERSION) { $env:GROUNDED_NODE_VERSION } else { '20.18.1' }
 $Root    = if ($env:GROUNDED_HOME)         { $env:GROUNDED_HOME }         else { Join-Path $env:USERPROFILE 'GROUNDED' }

@@ -1,5 +1,5 @@
 **MakanDay Audience Signal**
-https://github.com/pauldevelopai/node-makanday-analytics/
+https://github.com/pauldevelopai/node-analytics/
 
 This is your newsroom’s audience-analytics app. It reads a Word document of your published stories and their Facebook reach + engagement, and tells you what your audience actually rewards.
 
@@ -110,7 +110,7 @@ Email Paul at Develop AI. Include what step you were on, what you expected, what
 
 *Most newsrooms can ignore this section.* The one command above is all you need. This is for newsrooms comfortable with GitHub who want their **own forked copy** of the code — for example to make their own changes, or so Develop AI can push fixes directly to them.
 
-1. **Fork the app.** Sign in at github.com, go to https://github.com/pauldevelopai/node-makanday-analytics, click **Fork**, then **Create fork**. You now own a copy under your username.
+1. **Fork the app.** Sign in at github.com, go to https://github.com/pauldevelopai/node-analytics, click **Fork**, then **Create fork**. You now own a copy under your username.
 2. **Add Develop AI as a collaborator** (so Paul can push fixes and pull your activity for cohort training): on *your* fork, go to **Settings → Collaborators → Add people** and add `pauldevelopai`.
 3. **Get it onto your computer.** Easiest is **GitHub Desktop** (desktop.github.com) — install it, sign in, and clone your fork with one click. No command line needed.
 4. **Run it.** Double-click `Start.command` (Mac) or `Start.bat` (Windows) in the folder. The first launch may need Node.js installed from nodejs.org.
