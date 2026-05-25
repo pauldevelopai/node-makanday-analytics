@@ -86,11 +86,13 @@ and data are kept.
 
 ## A note on your data
 
-Your uploaded matrices and results live in your fork's `data/` folder. By
-default that's committed — Paul can see your activity to help improve the Node
-across the cohort. If you ever need to work with **confidential material**
-(unpublished sources, sensitive documents), talk to Paul *first* — the setup
-needs adjusting so that data never leaves your machine.
+Your uploaded matrices and results live in your copy's `data/` folder, and they
+**stay on your computer.** `data/` is gitignored, so your data is never
+committed, never pushed to GitHub, and never travels with the code — not even
+when you push code changes to your fork. And it works the other way too: when
+you fork or download the Node, **no one else's data comes with it** — you always
+start with a blank slate and add your own. Develop AI can't see your stories
+unless you deliberately choose to share them.
 
 ---
 

@@ -47,30 +47,30 @@ installer from the `README.md` (`nodes.developai.co.za/analytics/{mac,windows}`,
 which redirect to `install.sh` / `install.ps1`). It downloads the app from
 `pauldevelopai/node-analytics` over plain HTTPS — no fork, no git, no Node or
 VS Code to install by hand. To update, they re-run the same command; it always
-pulls the latest. You ship fixes by pushing to `main`. Their activity reaches
-you via the **telemetry beacon** (see below), since there's no fork to harvest.
+pulls the latest. You ship fixes by pushing to `main`. Their data stays entirely
+on their own machine, and the runtime has no outbound telemetry — so a central
+install sends nothing back to you (see *Cohort visibility* below).
 
 **Fork (optional, for technically comfortable newsrooms).** Documented in the
 README's "Advanced" section. They fork `pauldevelopai/node-analytics`, then —
 the one step that matters — add `pauldevelopai` as a collaborator on *their*
-fork (**Settings → Collaborators → Add people**). From then you can push
-directly to their fork and pull their committed `data/` any time. Their `.env`
-(their API key) is gitignored, so your commits never touch it.
+fork (**Settings → Collaborators → Add people**). From then you can push fixes
+directly to their fork. Their `data/` and `.env` are gitignored — they live only
+on the newsroom's machine and never reach GitHub, so your commits never touch
+them (and there's nothing of theirs to pull from the fork).
 
 Reach for the fork tier only when a newsroom wants to customise the code, or
 you specifically want direct push access to their copy. For everyone else,
 central is simpler on both sides.
 
 **A fork doubles as a newsroom's identity** — there's no login system in the
-Node, so a newsroom's GitHub fork *is* their "account": their adapted code and
-their committed `data/` live there, and it's theirs forever. Keep upstream
-`pauldevelopai/node-analytics` as the **clean template** so a fresh fork starts
-empty. (Caveat for now: MakanDay's `data/` is still committed upstream from the
-pre-rename days. When you stand up `makandaymedia`'s fork, move their `data/`
-into it and strip it from upstream — until then a *new* fork inherits MakanDay's
-data and has to clear it.) The newsroom-facing adapt-and-contribute-back flow is
-in `docs/MAKE_IT_YOUR_OWN.md`. A real multi-tenant login/accounts model is a
-later, hosted-GROUNDED concern.
+Node, so a newsroom's GitHub fork *is* their "account": their adapted **code**
+lives there, and it's theirs forever. **Data never travels with the code** —
+`data/` is gitignored, so it stays on each newsroom's own machine; upstream and
+every fork are data-free, and a fresh clone / fork / install starts empty.
+MakanDay's data now lives only in their own install, never in a repo. The
+newsroom-facing adapt-and-contribute-back flow is in `docs/MAKE_IT_YOUR_OWN.md`.
+A real multi-tenant login/accounts model is a later, hosted-GROUNDED concern.
 
 ## Your operating modes
 
@@ -101,44 +101,26 @@ credit in the commit message.
 commits; they pull. The Node's dev server hot-reloads (`npm run dev`) so
 iteration is fast. This is the move for live training sessions.
 
-## Pulling newsroom activity for cohort visibility
+## Cohort visibility (and why there isn't any yet)
 
-Each Node logs every operation (ingest, brief, error) — with full prompt and
-response text for briefs — to `data/processed/node_<slug>_activity.json` in
-the newsroom's install. The newsroom sees their own history in the **Activity**
-tab; you pull the cohort-wide view by one of two channels:
+Each Node logs every operation (ingest, brief, error — with full prompt and
+response text for briefs) to `data/processed/node_<slug>_activity.json`. But
+that file is **gitignored like the rest of `data/`**, so it stays on the
+newsroom's own machine. They see their own history in the **Activity** tab;
+nothing leaves their computer.
 
-- **Central-install newsrooms (default, no fork):** activity reaches you via
-  the **telemetry beacon** in the runtime — the first-boot beacon is already
-  wired, and once GROUNDED is hosted, Nodes POST events to its endpoint. This
-  is the primary channel now that most newsrooms don't fork.
-- **Fork-tier newsrooms:** the activity file is committed to their fork, so the
-  `gh`-based harvest script below pulls it straight from GitHub.
+So **there is no automatic cohort view today.** The old model committed the
+activity file to each fork and harvested it with `gh` — that's retired now that
+data never touches a repo (that privacy guarantee is the whole point). The
+runtime also has no outbound telemetry: nothing phones home.
 
-The harvest script lives in its own repo: `grounded-cohort-harvest`. Set
-it up once on your Mac:
-
-```bash
-cd /Users/paulmcnally/Downloads/grounded-cohort-harvest
-chmod +x harvest.mjs
-# Edit forks.json to add newsrooms as they onboard
-./harvest.mjs
-```
-
-Output lands in `./harvest/<timestamp>/`:
-- `summary.txt` — read in two minutes (totals, provider mix, most recent
-  activity per newsroom)
-- `cohort-activity.json` — every event, every newsroom, sorted by time
-
-Run weekly during pilot, daily during active onboarding. The script uses
-`gh` to fetch only the activity file from each fork (no full clone), so
-it's fast even with a dozen newsrooms.
-
-When to graduate this: at 5+ Nodes across a dozen newsrooms, move
-harvested events into a Postgres table. When GROUNDED is on Lightsail,
-flip to the push model — Nodes POST events to a telemetry endpoint and
-the harvest script becomes a backup channel. Node code doesn't change;
-only `host.log` swaps implementation.
+To get cohort visibility back, build an **opt-in telemetry beacon**: the Node
+POSTs a *minimal, consented* event (e.g. "brief generated", counts, model,
+accept/reject — **not** story text or matrices) to a GROUNDED endpoint the
+newsroom can see and switch off. Do this once GROUNDED is hosted. Until then,
+ask newsrooms directly or have them screenshot their Activity tab. Whatever you
+build, keep the rule the data model now enforces: **a newsroom's content stays
+on the newsroom's machine unless they explicitly choose to share it.**
 
 ## Graduation: when a Node folds into GROUNDED proper
 

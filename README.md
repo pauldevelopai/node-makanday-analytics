@@ -86,7 +86,7 @@ Some work computers are locked down by an IT department and block this kind of s
 **Anything else**
 Email Paul with: what you were doing, what you expected, what actually happened (paste any error text exactly), and a screenshot if you can.
 
-If you ever want to use this Node for confidential material (e.g. unpublished sources), talk to Paul first — the setup needs adjusting so that data doesn’t leave your machine.
+**Your data stays on your computer.** The matrices you upload and the results live only in this Node's `data/` folder on your machine — nothing is uploaded, committed, or shared anywhere. (Working with especially sensitive sources? Nothing changes by default — but feel free to flag it to Paul if you want a second look at the setup.)
 
 ---
 

@@ -11,9 +11,11 @@ Thumbs.db
 *.log
 .vscode/
 
-# Intentionally NOT ignored (Paul / Develop AI uses these for training):
-#   data/raw/           — your uploaded Word matrices
-#   data/processed/     — the parsed stories + quality reports
-#
-# If your Node ever handles confidential material, talk to Paul before
-# committing data — the Node setup may need adjusting first.
+# Newsroom data — stays on THIS computer, never committed.
+# No one's data travels with the code: a fresh clone / fork / install starts
+# empty, and each install's uploaded matrices and results live only in its own
+# data/ folder. (The .gitkeep files just preserve the empty folders.)
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
