@@ -42,55 +42,94 @@ Anthropic (Claude): go to console.anthropic.com, click Sign up, use your work em
 OpenAI (GPT): go to platform.openai.com/api-keys, sign up, click Create new secret key, copy the key (starts with sk-), paste it somewhere safe. Then go to Settings → Billing and add £5 or $5 of credit.
 Keep your key private — don’t email it, don’t share it, don’t put it in a public document. In Part 5 the app will save it in a file on your own computer that never gets uploaded to GitHub.
 
-**Part 4 — Get the app onto your computer**
-This is the GitHub bit. GitHub is a website where the code for this app lives. You’ll make your own personal copy of it on GitHub (called a fork), and then download that copy onto your computer. Your copy is yours forever — even if Develop AI disappears tomorrow, your copy keeps working.
+Part 4 — Get the app onto your computer
+This is the GitHub bit. GitHub is a website where the app's code lives. You'll make your own personal copy of it on GitHub (called a fork), then download that copy onto your computer.
+Your copy is yours forever — even if Develop AI disappears tomorrow, your copy keeps working.
 
-Step 4a — Make a GitHub account (if you don’t have one)
-Go to: github.com
-Click Sign up and follow the steps. Use your work email.
+**Step 4a — Make a GitHub account**
+Skip this step if you already have one.
 
-Step 4b — Fork the app to your own account
-Once signed in to GitHub, go to: https://github.com/pauldevelopai/node-makanday-analytics (Paul will give you this exact link.)
-In the top-right of that page, click the button labelled Fork.
-On the next screen, click the green Create fork button. (You can leave all the settings as they are.)
-After a moment, GitHub shows you a copy of the project — but this time under your username. Look at the top-left to confirm: it should say your-username / node-makanday-analytics.
-You now own a copy. Keep this browser tab open — we’ll need it.
+Go to github.com
+Click Sign up
+Follow the steps using your work email
 
-Step 4c — Download your copy to your computer
-On your fork’s page, find the green Code button (above the file list). Click it.
-In the menu that drops down, click Download ZIP.
-The ZIP file lands in your Downloads folder.
-Unzip it (double-click on Mac; right-click → Extract All on Windows). You’ll get a folder called something like node-makanday-analytics-main.
-Move that folder somewhere sensible. Drag it into your Documents folder. Rename it if you want — MakanDay Analytics is fine.
+**Step 4b — Fork the app to your own account**
 
-Step 4d — Open the folder in VS Code
-Open VS Code (the app you installed in Part 2).
+Sign in to GitHub
+Go to https://github.com/pauldevelopai/node-makanday-analytics
+In the top-right of the page, click Fork
+On the next screen, click the green Create fork button (leave all settings as they are)
+
+After a moment, you'll see a copy of the project under your username. Check the top-left — it should read:
+your-username / node-makanday-analytics
+You now own a copy. Keep this browser tab open — you'll need it for the next step.
+
+**Step 4c — Download your copy to your computer**
+
+On your fork's page, find the green Code button (above the file list) and click it
+In the dropdown menu, click Download ZIP
+The ZIP file lands in your Downloads folder
+Unzip it:
+
+Mac: double-click the ZIP
+Windows: right-click → Extract All
+
+You'll get a folder called something like node-makanday-analytics-main
+Drag that folder into your Documents folder
+Rename it to something cleaner — MakanDay Analytics works well
+
+**Step 4d — Open the folder in VS Code**
+
+Open VS Code (the app you installed in Part 2)
 In the top menu, click File → Open Folder…
-Choose the folder you just moved (MakanDay Analytics or whatever you called it). Click Open / Select Folder.
-VS Code may ask “Do you trust the authors of the files in this folder?” Click Yes, I trust the authors.
-On the left side of VS Code you should now see a list of file names and folders: data, lib, public, tests, index.js, package.json, and so on. That’s the app.
+Choose the folder you just moved (MakanDay Analytics)
+Click Open (Mac) or Select Folder (Windows)
+If VS Code asks "Do you trust the authors of the files in this folder?", click Yes, I trust the authors
+
+On the left side of VS Code you should now see a list of files and folders:
+data
+lib
+public
+tests
+index.js
+package.json
+That's the app.
 
 **Part 5 — Run the app for the first time**
-We’re nearly there. Two commands to type, then the app opens.
-Step 5a — Open VS Code’s terminal
-In VS Code, in the top menu, click View → Terminal.
-A new panel opens at the bottom of VS Code with a white prompt. This is the terminal — where we type commands.
-You should see something like your-name@computer MakanDay Analytics % or PS C:\Users\your-name\Documents\MakanDay Analytics> at the prompt. The important thing: the prompt should mention your folder name.
-Step 5b — Install the app’s parts
-Click in the terminal so it’s focused. Type exactly this and press Enter:
+You're nearly there. Two commands to type, then the app opens.
+
+**Step 5a — Open VS Code's terminal**
+
+In VS Code, click View → Terminal in the top menu
+A new panel opens at the bottom of VS Code with a prompt
+
+This is the terminal — where you type commands.
+You should see something like:
+your-name@computer MakanDay Analytics %
+Or on Windows:
+PS C:\Users\your-name\Documents\MakanDay Analytics>
+The important thing: the prompt should mention your folder name.
+
+**Step 5b — Install the app's parts**
+
+Click inside the terminal so it's focused
+Type this exactly and press Enter:
+
 npm install
-Lots of text scrolls by. This takes 30–60 seconds. It’s downloading the pieces the app needs.
-When it finishes, you’ll see a fresh prompt (the line waiting for your next command). No big “Success!” message — silence means success.
-If you see an error that says command not found: npm, Node.js didn’t install correctly. Quit VS Code, restart your computer, and try Step 5b again from a fresh VS Code window. If still broken, go back to Part 1.
-Step 5c — Start the app
+Lots of text scrolls by. This takes 30–60 seconds — it's downloading the pieces the app needs.
+When it finishes, you'll see a fresh prompt (an empty line waiting for your next command). There's no big "Success!" message — silence means success.
+
+If you see an error saying command not found: npm: Node.js didn't install correctly. Quit VS Code, restart your computer, and try Step 5b again from a fresh VS Code window. If it's still broken, go back to Part 1.
+
+**Step 5c — Start the app**
 In the same terminal, type:
 npm start
-After a moment, you’ll see:
+After a moment, you'll see:
 ✓ MakanDay Audience Signal is running.
-✓ Open this in your web browser:  http://localhost:3000
+✓ Open this in your web browser: http://localhost:3000
 
-  Press Ctrl+C in this window to stop it.
-Leave this terminal window open. As long as it says “is running”, the app is alive. If you close it, the app stops.
+Press Ctrl+C in this window to stop it.
+Leave this terminal window open. As long as it says "is running", the app is alive. If you close the terminal, the app stops.
 
 **Part 6 — Open the app, add your key, upload your matrix**
 Open your web browser. In the address bar, type: localhost:3000 then press Enter.
