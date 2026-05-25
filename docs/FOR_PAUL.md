@@ -61,6 +61,17 @@ Reach for the fork tier only when a newsroom wants to customise the code, or
 you specifically want direct push access to their copy. For everyone else,
 central is simpler on both sides.
 
+**A fork doubles as a newsroom's identity** — there's no login system in the
+Node, so a newsroom's GitHub fork *is* their "account": their adapted code and
+their committed `data/` live there, and it's theirs forever. Keep upstream
+`pauldevelopai/node-analytics` as the **clean template** so a fresh fork starts
+empty. (Caveat for now: MakanDay's `data/` is still committed upstream from the
+pre-rename days. When you stand up `makandaymedia`'s fork, move their `data/`
+into it and strip it from upstream — until then a *new* fork inherits MakanDay's
+data and has to clear it.) The newsroom-facing adapt-and-contribute-back flow is
+in `docs/MAKE_IT_YOUR_OWN.md`. A real multi-tenant login/accounts model is a
+later, hosted-GROUNDED concern.
+
 ## Your operating modes
 
 **Improving something for everyone.** Edit upstream
