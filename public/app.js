@@ -20,12 +20,12 @@ function applyBrand(setup) {
 
 async function boot() {
   // Three states: setup → empty → dashboard.
-  const setup = await fetch("/api/setup").then(r => r.json()).catch(() => ({ configured: false }));
+  const setup = await fetch("api/setup").then(r => r.json()).catch(() => ({ configured: false }));
   applyBrand(setup);
   if (!setup.configured) { showSetup(); return; }
   $("#open-setup").style.display = "inline-block";
 
-  const sources = await fetch("/api/sources").then(r => r.json()).catch(() => []);
+  const sources = await fetch("api/sources").then(r => r.json()).catch(() => []);
   if (!sources.length) { showEmpty(); return; }
   const picker = $("#picker");
   picker.innerHTML = sources.map(s => `<option value="${s.source_label}">${s.source_label} · ${s.n}</option>`).join("");
@@ -76,7 +76,7 @@ $("#setup-save")?.addEventListener("click", async () => {
   if (!apiKey) { errBox.textContent = "Paste your API key first."; errBox.classList.add("on"); return; }
   const btn = $("#setup-save"); btn.disabled = true; btn.textContent = "Saving…";
   try {
-    const res = await fetch("/api/setup", {
+    const res = await fetch("api/setup", {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ provider: chosenProvider, apiKey })
     });
@@ -92,7 +92,7 @@ $("#setup-save")?.addEventListener("click", async () => {
 
 async function load(source) {
   CURRENT = source;
-  REPORT = await fetch(`/api/report?source=${encodeURIComponent(source)}`).then(r => r.json());
+  REPORT = await fetch(`api/report?source=${encodeURIComponent(source)}`).then(r => r.json());
   if (REPORT.empty) { showEmpty(); return; }
   showDash();
   $("#m-n").textContent = REPORT.topline.stories;
@@ -186,7 +186,7 @@ function renderTimeline() {
 }
 
 async function renderQuality() {
-  const q = await fetch(`/api/quality?source=${encodeURIComponent(CURRENT)}`).then(r => r.json()).catch(() => null);
+  const q = await fetch(`api/quality?source=${encodeURIComponent(CURRENT)}`).then(r => r.json()).catch(() => null);
   if (!q || q.empty) { $("#q-grid").innerHTML = ""; $("#q-tb").innerHTML = `<tr><td colspan="4" class="dim">No quality report.</td></tr>`; return; }
   const cells = [
     ["Stories kept", q.story_count, "ok"],
@@ -204,7 +204,7 @@ async function renderQuality() {
 }
 
 async function renderActivity() {
-  const data = await fetch("/api/activity").then(r => r.json()).catch(() => ({ activity: [] }));
+  const data = await fetch("api/activity").then(r => r.json()).catch(() => ({ activity: [] }));
   const rows = (data.activity || []).slice().reverse();   // newest first
   if (!rows.length) {
     $("#activity-tb").innerHTML = `<tr><td colspan="6" class="dim">No activity yet — upload a matrix or generate a brief.</td></tr>`;
@@ -247,7 +247,7 @@ $("#gen").addEventListener("click", async function () {
   btn.disabled = true; btn.textContent = "Reading signal…";
   out.className = ""; out.innerHTML = '<span class="spin"></span><span class="placeholder">Claude is reading the signal…</span>';
   try {
-    const data = await fetch("/api/brief", {
+    const data = await fetch("api/brief", {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ source: CURRENT })
     }).then(r => r.json());
@@ -281,7 +281,7 @@ async function upload(file) {
   empty.classList.add("busy");
   const fd = new FormData(); fd.append("file", file); fd.append("sourceLabel", file.name.replace(/\.[^.]+$/, ""));
   try {
-    const res = await fetch("/api/ingest", { method: "POST", body: fd });
+    const res = await fetch("api/ingest", { method: "POST", body: fd });
     const data = await res.json();
     if (!res.ok || data.error) throw new Error(data.error || "Upload failed");
     await boot();
