@@ -41,7 +41,8 @@ createServer({
   nodeVersion: pkg.version,
 });
 
-// Opt-in, identified local-install telemetry — OFF unless GROUNDED_TELEMETRY=on.
-// Fire-and-forget: never blocks or breaks the app. Sends only an install id,
-// version, OS, the newsroom name, and activity counts — never story content.
+// Identified local-install telemetry — ON by default; opt out with
+// GROUNDED_TELEMETRY=off. Fire-and-forget: never blocks or breaks the app.
+// Sends only an install id, version, OS, the newsroom name, and activity
+// counts — never story content.
 maybeSendBeacon({ host, slug: SLUG }).catch(() => {});
