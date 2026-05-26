@@ -99,7 +99,14 @@ const nameOf = (u) => u.email || null;
 function readUser(req) {
   const token = req.cookies?.[AUTH_COOKIE];
   if (!token) return null;
-  try { return jwt.verify(token, JWT_SECRET); } catch { return null; }
+  try { return jwt.verify(token, JWT_SECRET); }
+  catch (e) {
+    // The cookie is present but verification failed — almost always means this
+    // process's JWT_SECRET doesn't match the secret the tracker SIGNS with.
+    console.warn(`[auth] '${AUTH_COOKIE}' cookie present but JWT verify FAILED: ${e.message}. ` +
+      `Does this app's JWT_SECRET match the tracker's config.jwtSecret?`);
+    return null;
+  }
 }
 
 const app = express();
@@ -150,6 +157,12 @@ app.post("/api/ingest", upload.single("file"), async (req, res) => {
 app.use(express.static(join(__dirname, "public"), { index: false }));
 app.get("*", (req, res) => {
   if (!readUser(req)) {
+    // Diagnostic (names only, never values): if this shows the cookie IS
+    // present but we still bounce, it's a JWT_SECRET mismatch (see readUser);
+    // if it shows AUTH_COOKIE is not 'holly_token', the process is running old
+    // code or a stale AUTH_COOKIE env.
+    const present = Object.keys(req.cookies || {});
+    console.log(`[auth] bounce → login. expecting '${AUTH_COOKIE}'; cookies received: ${present.join(", ") || "(none)"}`);
     const next = APP_URL ? `?next=${encodeURIComponent(APP_URL)}` : "";
     return res.redirect(`${LOGIN_URL}${next}`);
   }
