@@ -74,7 +74,11 @@ const PORT = process.env.PORT || 3002;
 const JWT_SECRET = process.env.JWT_SECRET;
 const AUTH_COOKIE = process.env.AUTH_COOKIE || "holly_token";
 const LOGIN_URL = process.env.LOGIN_URL || "/login";
-const APP_URL = process.env.APP_URL || ""; // public URL of this app, for post-login return
+// Public path of this app, used as ?next= so the tracker login returns the user
+// HERE after sign-in (Caddy strips the /nodes/analytics/app prefix before the
+// request reaches us, so we can't derive it from the request — hence a default).
+// Must be an in-app path starting with "/" (the tracker login only honours those).
+const APP_URL = process.env.APP_URL || "/nodes/analytics/app/";
 
 if (!JWT_SECRET) {
   console.error("FATAL: JWT_SECRET not set — it must match the tracker's config.jwtSecret.");
