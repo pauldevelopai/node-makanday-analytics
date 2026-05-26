@@ -4,18 +4,18 @@
  * Runs on the GROUNDED box behind Caddy. Reuses the Node's existing handlers
  * (lib/handlers.js) UNCHANGED, but swaps the local file host for a per-request
  * Postgres host scoped to the signed-in newsroom (lib/pg-host.js), and reuses
- * the tracker's (holly's) login: it verifies the tracker_token JWT cookie the
- * browser already sends, with the same secret.
+ * the tracker's login: it verifies the holly_token JWT cookie the browser
+ * already sends, with the same secret.
  *
  * The LOCAL install path (index.js + the lite host) is untouched — this is a
  * separate, server-only entrypoint started with `npm run start:hosted`.
  *
  * Required env (set in an env file on the box, never committed):
- *   JWT_SECRET     = holly's config.jwtSecret (to verify tracker_token)
+ *   JWT_SECRET     = the tracker's config.jwtSecret (to verify holly_token)
  *   ANTHROPIC_API_KEY = the shared GROUNDED key (server makes the AI calls)
  *   PGHOST/PGUSER/PGPASSWORD/PGDATABASE/PGPORT  OR  DATABASE_URL  (the box's Postgres)
  * Optional:
- *   PORT (default 3002), AUTH_COOKIE (default tracker_token),
+ *   PORT (default 3002), AUTH_COOKIE (default holly_token — the tracker's cookie),
  *   LOGIN_URL (default /login), APP_URL (for post-login return), MODEL
  */
 
@@ -72,7 +72,7 @@ const INDEX_HTML = readFileSync(join(__dirname, "public", "index.html"), "utf8")
 
 const PORT = process.env.PORT || 3002;
 const JWT_SECRET = process.env.JWT_SECRET;
-const AUTH_COOKIE = process.env.AUTH_COOKIE || "tracker_token";
+const AUTH_COOKIE = process.env.AUTH_COOKIE || "holly_token";
 const LOGIN_URL = process.env.LOGIN_URL || "/login";
 const APP_URL = process.env.APP_URL || ""; // public URL of this app, for post-login return
 
