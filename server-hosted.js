@@ -47,14 +47,13 @@ if (!JWT_SECRET) {
 const pool = new Pool(process.env.DATABASE_URL ? { connectionString: process.env.DATABASE_URL } : {});
 await ensureSchema(pool);
 
-// Which field in holly's JWT identifies a *newsroom* (the tenant). holly has an
-// Organisations model, so an org id is preferred; fall back to the user id.
-// CONFIRM against holly's jwt.sign payload and tighten before go-live.
-const tenantOf = (u) => String(
-  u.organisationId ?? u.organisation_id ?? u.orgId ?? u.org_id ??
-  u.newsroomId ?? u.id ?? u.userId ?? "unknown"
-);
-const nameOf = (u) => u.organisation || u.organisationName || u.newsroom || u.name || null;
+// holly's tracker_token payload is { id, email, role, sector_ids } — there is NO
+// organisation/newsroom id in it, so we scope per user account. In the pilot each
+// newsroom signs in with one account, so account == newsroom. (Sharing one
+// newsroom's data across several accounts would need an org id in the token, or a
+// users→organisations lookup — a later refinement.)
+const tenantOf = (u) => String(u.id);
+const nameOf = (u) => u.email || null;
 
 function readUser(req) {
   const token = req.cookies?.[AUTH_COOKIE];
