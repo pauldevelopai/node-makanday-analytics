@@ -65,7 +65,7 @@ const NAV_HTML = `<style id="g-nav-style">
 #g-nav .g-logout button:hover{color:#1A202C;border-color:#CBD5E1}
 </style>
 <nav id="g-nav"><div class="g-bar">
-  <a class="g-brand" href="/"><b>Grounded: AI&nbsp;Legal</b><span>Global AI lawsuits &amp; regulations tracker</span></a>
+  <a class="g-brand" href="/"><b>Grounded</b><span>Newsroom-owned AI &middot; by Develop&nbsp;AI</span></a>
   <div class="g-links">
     <a href="/">Home</a>
     <a href="/legal/lawsuits">Lawsuits</a>
