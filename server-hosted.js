@@ -119,13 +119,72 @@ document.querySelectorAll('#g-local .gl-copy').forEach(function(b){
 });
 </script></footer>`;
 
+// ── Feedback widget, injected only in hosted mode ───────────────────────────
+// Hosted Node users are signed-in tracker accounts, so feedback POSTs straight
+// to the tracker's existing /api/feedback (same origin → the cookie rides along)
+// and lands in the admin feedback list like any other submission.
+const FEEDBACK_HTML = `<style>
+#g-fb-btn{position:fixed;right:18px;bottom:18px;z-index:99990;background:#c4761b;color:#fff;border:none;border-radius:999px;padding:11px 18px;font:600 13px -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.3)}
+#g-fb-btn:hover{background:#a8543a}
+#g-fb-panel{position:fixed;right:18px;bottom:66px;z-index:99991;width:320px;max-width:calc(100vw - 36px);background:#1c1a14;border:1px solid #3a352a;border-radius:10px;padding:16px;display:none;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#ede4d3;box-shadow:0 10px 30px rgba(0,0,0,.45)}
+#g-fb-panel.open{display:block}
+#g-fb-panel h4{margin:0 0 8px;font-size:14px;font-weight:600}
+#g-fb-types{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
+#g-fb-types button{background:#0d0c0a;border:1px solid #3a352a;color:#a89e88;border-radius:5px;padding:5px 9px;font-size:11px;cursor:pointer}
+#g-fb-types button.on{background:#c4761b;color:#fff;border-color:#c4761b}
+#g-fb-panel textarea{width:100%;min-height:78px;background:#0d0c0a;color:#ede4d3;border:1px solid #3a352a;border-radius:6px;padding:9px;font:inherit;font-size:13px;resize:vertical}
+#g-fb-rowx{display:flex;gap:6px;margin-top:8px}
+#g-fb-rowx select{flex:1;background:#0d0c0a;color:#ede4d3;border:1px solid #3a352a;border-radius:5px;padding:7px;font-size:12px}
+#g-fb-send{background:#c4761b;color:#fff;border:none;border-radius:5px;padding:7px 16px;font:600 13px inherit;cursor:pointer}
+#g-fb-send:disabled{opacity:.6;cursor:wait}
+#g-fb-result{font-size:12px;margin-top:8px}
+</style>
+<button id="g-fb-btn" type="button">Feedback</button>
+<div id="g-fb-panel">
+  <h4>Send feedback to Develop AI</h4>
+  <div id="g-fb-types">
+    <button data-c="bug" type="button">Bug</button>
+    <button data-c="feature" class="on" type="button">Feature</button>
+    <button data-c="improvement" type="button">Improvement</button>
+    <button data-c="ui" type="button">UI</button>
+  </div>
+  <textarea id="g-fb-text" placeholder="A bug, an idea, a question — anything."></textarea>
+  <div id="g-fb-rowx">
+    <select id="g-fb-pri"><option value="low">Low priority</option><option value="medium" selected>Medium priority</option><option value="high">High priority</option></select>
+    <button id="g-fb-send" type="button">Send</button>
+  </div>
+  <div id="g-fb-result"></div>
+</div>
+<script>
+(function(){
+  var btn=document.getElementById('g-fb-btn'),panel=document.getElementById('g-fb-panel'),
+      text=document.getElementById('g-fb-text'),send=document.getElementById('g-fb-send'),
+      pri=document.getElementById('g-fb-pri'),result=document.getElementById('g-fb-result'),cat='feature';
+  btn.addEventListener('click',function(){panel.classList.toggle('open');if(panel.classList.contains('open'))text.focus();});
+  document.querySelectorAll('#g-fb-types button').forEach(function(b){
+    b.addEventListener('click',function(){cat=b.getAttribute('data-c');document.querySelectorAll('#g-fb-types button').forEach(function(x){x.classList.toggle('on',x===b);});});
+  });
+  send.addEventListener('click',function(){
+    var content=text.value.trim();
+    if(!content){result.style.color='#d9543f';result.textContent='Write a message first.';return;}
+    send.disabled=true;result.style.color='#a89e88';result.textContent='Sending...';
+    fetch('/api/feedback',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',
+      body:JSON.stringify({content:content,category:cat,priority:pri.value,page:location.pathname})})
+      .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+      .then(function(){result.style.color='#7fae6a';result.textContent='Sent — thanks!';text.value='';setTimeout(function(){panel.classList.remove('open');result.textContent='';},1600);})
+      .catch(function(e){result.style.color='#d9543f';result.textContent='Could not send ('+e.message+').';})
+      .finally(function(){send.disabled=false;});
+  });
+})();
+</script>`;
+
 const escHtml = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) =>
   ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
 // Built once; the per-user email is substituted per request in pageFor().
 const INDEX_HTML = readFileSync(join(__dirname, "public", "index.html"), "utf8")
   .replace("<body>", `<body>\n${NAV_HTML}`)
-  .replace("</body>", `${LOCAL_FOOTER_HTML}\n</body>`);
+  .replace("</body>", `${LOCAL_FOOTER_HTML}\n${FEEDBACK_HTML}\n</body>`);
 
 const pageFor = (user) => INDEX_HTML.replace(/__GROUNDED_USER__/g, escHtml(user && user.email));
 
