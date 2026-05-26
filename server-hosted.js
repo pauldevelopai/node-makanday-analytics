@@ -157,12 +157,36 @@ const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 25 
 app.post("/api/ingest", upload.single("file"), async (req, res) => {
   try {
     if (!req.file) throw new Error("Choose a file to upload first.");
+    const buf = req.file.buffer;
+
+    // A .docx is a ZIP: it must start with the local-file-header magic
+    // "PK\x03\x04" and end with the end-of-central-directory magic "PK\x05\x06".
+    // This lets us distinguish three failure modes precisely (and tell the user
+    // which one), instead of mammoth's cryptic "could not find the body element":
+    //   - wrong file (no PK header)  → not a Word .docx at all
+    //   - PK header but no EOCD      → the upload was TRUNCATED in transit
+    //                                  (e.g. a reverse-proxy request-body limit)
+    const startsPK = buf.length >= 4 && buf[0] === 0x50 && buf[1] === 0x4b && buf[2] === 0x03 && buf[3] === 0x04;
+    const hasEOCD = buf.includes(Buffer.from([0x50, 0x4b, 0x05, 0x06]));
+    console.log(`[ingest] name="${req.file.originalname}" type="${req.file.mimetype}" ` +
+      `size=${buf.length}B startsPK=${startsPK} hasEOCD=${hasEOCD}`);
+
+    if (!startsPK) {
+      throw new Error("This doesn't look like a Word .docx file. If it's an old .doc or a Google Doc, open it in Word and 'Save As' .docx, then upload that.");
+    }
+    if (!hasEOCD) {
+      throw new Error(`The uploaded file looks cut off (${buf.length} bytes, incomplete ZIP) — the upload was truncated in transit, not a problem with your document. Please tell Paul: the hosted upload body limit is too small.`);
+    }
+
     const out = await handlers.postIngest(hostFor(req), {
-      buffer: req.file.buffer,
+      buffer: buf,
       sourceLabel: (req.body && req.body.sourceLabel) || req.file.originalname.replace(/\.[^.]+$/, "")
     });
     res.json(out);
-  } catch (e) { res.status(500).json({ error: e.message }); }
+  } catch (e) {
+    console.error("[ingest] failed:", e.message);
+    res.status(500).json({ error: e.message });
+  }
 });
 
 // Static assets are public (just frontend code). The page itself is gated:
