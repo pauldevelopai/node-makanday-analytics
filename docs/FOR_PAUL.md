@@ -43,7 +43,7 @@ There are two tiers, and **the default is central — no fork, no GitHub
 account.**
 
 **Central (default, for non-technical newsrooms).** They run the one-command
-installer from the `README.md` (`nodes.developai.co.za/analytics/{mac,windows}`,
+installer from the `README.md` (`grounded.developai.co.za/nodes/analytics/{mac,windows}`,
 which redirect to `install.sh` / `install.ps1`). It downloads the app from
 `pauldevelopai/node-analytics` over plain HTTPS — no fork, no git, no Node or
 VS Code to install by hand. To update, they re-run the same command; it always
