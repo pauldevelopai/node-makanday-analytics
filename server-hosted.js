@@ -21,7 +21,12 @@
  *   LOGIN_URL (default /login), APP_URL (for post-login return), MODEL
  */
 
-import "dotenv/config";
+import dotenv from "dotenv";
+// Make the box's .env file authoritative: with override:true it wins over any
+// stale value pm2 may have captured into the process environment at start time
+// (otherwise editing .env — e.g. fixing ANTHROPIC_API_KEY — silently has no
+// effect). Matches how the tracker loads its own config.
+dotenv.config({ override: true });
 import express from "express";
 import multer from "multer";
 import cookieParser from "cookie-parser";
