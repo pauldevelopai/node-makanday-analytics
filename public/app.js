@@ -45,6 +45,7 @@ function showEmpty() {
   $("#setup").style.display = "none";
   $("#empty").style.display = "block";
   $("#dash").style.display = "none";
+  if (typeof resetUpload === "function") resetUpload();
 }
 function showDash() {
   $("#setup").style.display = "none";
@@ -271,26 +272,67 @@ $("#gen").addEventListener("click", async function () {
   btn.disabled = false;
 });
 
-// ── Upload (empty-state + "upload another") ─────────────────────────────────
+// ── Upload: choose/drop → stage → explicit Run → process ────────────────────
 const empty = $("#empty"), input = $("#file-input"), errBox = $("#upload-error");
+const chooseBox = $("#choose"), stagedBox = $("#staged"), processingBox = $("#processing");
+const stagedNameEl = $("#staged-name"), runBtn = $("#run-btn");
+let stagedFile = null;
+
 function showUploadError(msg) { errBox.textContent = msg; errBox.style.display = "block"; }
 function clearUploadError() { errBox.textContent = ""; errBox.style.display = "none"; }
-async function upload(file) {
-  if (!file) return;
+
+// Reset the empty state back to the "choose a file" step.
+function resetUpload() {
+  stagedFile = null;
+  if (input) input.value = "";
+  if (chooseBox) chooseBox.style.display = "block";
+  if (stagedBox) stagedBox.style.display = "none";
+  if (processingBox) processingBox.style.display = "none";
+  empty.classList.remove("busy");
   clearUploadError();
+}
+
+// A file was picked/dropped — hold it and show the Run button (don't upload yet).
+function stageFile(file) {
+  if (!file) return;
+  stagedFile = file;
+  clearUploadError();
+  stagedNameEl.textContent = file.name;
+  chooseBox.style.display = "none";
+  processingBox.style.display = "none";
+  stagedBox.style.display = "block";
+}
+
+// Run button — now (and only now) do the upload, with a visible processing state.
+async function runUpload() {
+  if (!stagedFile) return;
+  clearUploadError();
+  stagedBox.style.display = "none";
+  processingBox.style.display = "block";
   empty.classList.add("busy");
-  const fd = new FormData(); fd.append("file", file); fd.append("sourceLabel", file.name.replace(/\.[^.]+$/, ""));
+  const fd = new FormData();
+  fd.append("file", stagedFile);
+  fd.append("sourceLabel", stagedFile.name.replace(/\.[^.]+$/, ""));
   try {
     const res = await fetch("api/ingest", { method: "POST", body: fd });
     const data = await res.json();
     if (!res.ok || data.error) throw new Error(data.error || "Upload failed");
     await boot();
-  } catch (e) { showUploadError(e.message); empty.classList.remove("busy"); }
+  } catch (e) {
+    showUploadError(e.message);
+    // Back to the staged step so they can retry without re-choosing the file.
+    processingBox.style.display = "none";
+    stagedBox.style.display = "block";
+    empty.classList.remove("busy");
+  }
 }
-input.addEventListener("change", () => upload(input.files[0]));
+
+input.addEventListener("change", () => stageFile(input.files[0]));
+runBtn.addEventListener("click", runUpload);
+$("#choose-different").addEventListener("click", e => { e.preventDefault(); resetUpload(); });
 ;["dragenter", "dragover"].forEach(ev => empty.addEventListener(ev, e => { e.preventDefault(); empty.classList.add("over"); }));
 ;["dragleave", "drop"].forEach(ev => empty.addEventListener(ev, e => { e.preventDefault(); empty.classList.remove("over"); }));
-empty.addEventListener("drop", e => { const f = e.dataTransfer.files[0]; if (f) upload(f); });
+empty.addEventListener("drop", e => { const f = e.dataTransfer.files && e.dataTransfer.files[0]; if (f) stageFile(f); });
 
 function escapeHtml(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
 

@@ -41,6 +41,15 @@ button.up{margin-left:8px}
 .empty .or{font-family:var(--mono);font-size:11px;color:var(--paper-dim);margin:14px 0 0;letter-spacing:.18em;text-transform:uppercase}
 .empty input[type=file]{display:none}
 .empty.busy label{background:var(--line);color:var(--paper-dim);cursor:wait}
+.staged-name{font-family:var(--mono);font-size:14px;color:var(--paper);margin:0 auto 22px;word-break:break-all;max-width:560px}
+.run-analyze{font-family:var(--mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;background:var(--signal);color:var(--ink);border:none;padding:14px 32px;cursor:pointer;font-weight:600;transition:.15s}
+.run-analyze:hover{background:var(--paper)}
+.run-analyze:disabled{background:var(--line);color:var(--paper-dim);cursor:wait}
+#choose-different{color:var(--signal);text-decoration:none}
+#choose-different:hover{text-decoration:underline}
+.spin-lg{width:34px;height:34px;border:3px solid var(--line);border-top-color:var(--signal);border-radius:50%;animation:sp .8s linear infinite;margin:0 auto 22px}
+#processing-note{color:var(--paper-dim);max-width:600px;margin:0 auto}
+#processing-note code{font-family:var(--mono);font-size:12.5px;color:var(--signal)}
 
 /* setup screen */
 .setup{margin:50px 0;padding:0;border:1px solid var(--line);background:var(--ink2)}
@@ -186,12 +195,30 @@ tr:hover td{background:var(--ink2)}
   </div>
 
   <div id="empty" class="empty" style="display:none">
-    <h2>Upload your matrix to get started</h2>
-    <p>Drag your <b>Stories Produced 2025 Social Media Matrix</b> &mdash; a Word
-      (.docx / .doc) or PDF file &mdash; here, or click below.</p>
-    <label for="file-input">Choose file</label>
-    <input id="file-input" type="file" accept=".docx,.doc,.pdf">
-    <div class="or">or drop the file anywhere in this box</div>
+    <div id="choose">
+      <h2>Upload your matrix to get started</h2>
+      <p>Drag your <b>Stories Produced 2025 Social Media Matrix</b> &mdash; a Word
+        (.docx / .doc) or PDF file &mdash; here, or click below.</p>
+      <label for="file-input">Choose file</label>
+      <input id="file-input" type="file" accept=".docx,.doc,.pdf">
+      <div class="or">or drop the file anywhere in this box</div>
+    </div>
+
+    <div id="staged" style="display:none">
+      <h2>Ready to analyse</h2>
+      <p class="staged-name" id="staged-name"></p>
+      <button id="run-btn" class="run-analyze">Run analysis</button>
+      <div class="or"><a href="#" id="choose-different">choose a different file</a></div>
+    </div>
+
+    <div id="processing" style="display:none">
+      <div class="spin-lg"></div>
+      <h2>Reading your file&hellip;</h2>
+      <p id="processing-note">Pulling the matrix out of your document. A Word
+        <code>.docx</code> is near-instant; a <code>.doc</code> or PDF is read by AI
+        and can take up to a minute &mdash; this is normal, please don&rsquo;t close the tab.</p>
+    </div>
+
     <div id="upload-error" class="err" style="display:none"></div>
   </div>
 
