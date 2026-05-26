@@ -4,8 +4,10 @@
  * Runs on the GROUNDED box behind Caddy. Reuses the Node's existing handlers
  * (lib/handlers.js) UNCHANGED, but swaps the local file host for a per-request
  * Postgres host scoped to the signed-in newsroom (lib/pg-host.js), and reuses
- * the tracker's login: it verifies the holly_token JWT cookie the browser
- * already sends, with the same secret.
+ * the tracker's login: it verifies the tracker's JWT cookie the browser already
+ * sends, with the same secret. (The cookie name has changed across rebrands —
+ * holly_token → tracker_token → ... — so readUser accepts whichever cookie
+ * verifies with JWT_SECRET rather than hardcoding one name.)
  *
  * The LOCAL install path (index.js + the lite host) is untouched — this is a
  * separate, server-only entrypoint started with `npm run start:hosted`.
@@ -15,7 +17,7 @@
  *   ANTHROPIC_API_KEY = the shared GROUNDED key (server makes the AI calls)
  *   PGHOST/PGUSER/PGPASSWORD/PGDATABASE/PGPORT  OR  DATABASE_URL  (the box's Postgres)
  * Optional:
- *   PORT (default 3002), AUTH_COOKIE (default holly_token — the tracker's cookie),
+ *   PORT (default 3002), AUTH_COOKIE (first cookie name to try; default tracker_token),
  *   LOGIN_URL (default /login), APP_URL (for post-login return), MODEL
  */
 
@@ -72,7 +74,7 @@ const INDEX_HTML = readFileSync(join(__dirname, "public", "index.html"), "utf8")
 
 const PORT = process.env.PORT || 3002;
 const JWT_SECRET = process.env.JWT_SECRET;
-const AUTH_COOKIE = process.env.AUTH_COOKIE || "holly_token";
+const AUTH_COOKIE = process.env.AUTH_COOKIE || "tracker_token";
 const LOGIN_URL = process.env.LOGIN_URL || "/login";
 // Public path of this app, used as ?next= so the tracker login returns the user
 // HERE after sign-in (Caddy strips the /nodes/analytics/app prefix before the
@@ -97,16 +99,27 @@ const tenantOf = (u) => String(u.id);
 const nameOf = (u) => u.email || null;
 
 function readUser(req) {
-  const token = req.cookies?.[AUTH_COOKIE];
-  if (!token) return null;
-  try { return jwt.verify(token, JWT_SECRET); }
-  catch (e) {
-    // The cookie is present but verification failed — almost always means this
-    // process's JWT_SECRET doesn't match the secret the tracker SIGNS with.
-    console.warn(`[auth] '${AUTH_COOKIE}' cookie present but JWT verify FAILED: ${e.message}. ` +
-      `Does this app's JWT_SECRET match the tracker's config.jwtSecret?`);
-    return null;
+  const cookies = req.cookies || {};
+  // The tracker has renamed its auth cookie across rebrands (holly_token →
+  // tracker_token → ...). Rather than depend on one name, accept whichever
+  // cookie carries a token our shared JWT_SECRET can verify. AUTH_COOKIE is
+  // tried first; unrelated cookies (e.g. AIKit's) simply won't verify and are
+  // skipped. Override/disable the name guess with AUTH_COOKIE if needed.
+  const names = [AUTH_COOKIE, ...Object.keys(cookies)].filter((n, i, a) => n && a.indexOf(n) === i);
+  let sawToken = false;
+  for (const name of names) {
+    const token = cookies[name];
+    if (!token) continue;
+    sawToken = true;
+    try { return jwt.verify(token, JWT_SECRET); } catch { /* try the next cookie */ }
   }
+  if (sawToken) {
+    // A token arrived but none verified — almost always a JWT_SECRET mismatch
+    // with the secret the tracker SIGNS with.
+    console.warn(`[auth] cookie(s) present (${Object.keys(cookies).join(", ")}) but none verified with ` +
+      `JWT_SECRET — does this app's JWT_SECRET match the tracker's config.jwtSecret?`);
+  }
+  return null;
 }
 
 const app = express();
