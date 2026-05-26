@@ -56,7 +56,7 @@ if [ "$need_node" -eq 1 ]; then
   esac
   node_home="$APP_DIR/.node"
   if [ ! -x "$node_home/$nbuild/bin/node" ]; then
-    say "Setting up a private copy of Node just for this app (one-time, ~40 MB)…"
+    say "Setting up a private copy of Node just for this app (one-time, ~40 MB)..."
     mkdir -p "$node_home"
     curl -fsSL "https://nodejs.org/dist/v${NODE_VERSION}/${nbuild}.tar.gz" \
       | tar -xz -C "$node_home" \
@@ -79,7 +79,7 @@ if [ -n "${GROUNDED_SRC_DIR:-}" ]; then
   # Test hook: assemble from a local checkout instead of downloading.
   mkdir -p "$tmp/src" && cp -R "$GROUNDED_SRC_DIR/." "$tmp/src/" && got_code=1
 else
-  say "Downloading the latest $DISPLAY_NAME…"
+  say "Downloading the latest $DISPLAY_NAME..."
   if curl -fsSL "https://codeload.github.com/$REPO/tar.gz/refs/heads/$REF" | tar -xz -C "$tmp" 2>/dev/null; then
     # The tarball unpacks to a single <repo>-<ref> directory.
     extracted="$(find "$tmp" -mindepth 1 -maxdepth 1 -type d | head -n1)"
@@ -116,7 +116,7 @@ cd "$APP_DIR"
 # ── 3. Install the app's parts (only when something changed) ─────────────────
 post_sig="$(shasum "$APP_DIR/package.json" 2>/dev/null | awk '{print $1}')"
 if [ ! -d node_modules ] || [ "$pre_sig" != "$post_sig" ]; then
-  say "Installing the app's parts (the first time takes a minute)…"
+  say "Installing the app's parts (the first time takes a minute)..."
   npm install --no-audit --no-fund --loglevel=error \
     || die "Couldn't install the app's parts. Run the command again; if it keeps failing, email Paul."
   ok "Parts installed."
@@ -124,7 +124,7 @@ fi
 
 # ── 4. Launch ────────────────────────────────────────────────────────────────
 rm -rf "$tmp"; trap - EXIT
-ok "Starting $DISPLAY_NAME…"
+ok "Starting $DISPLAY_NAME..."
 printf "\n  Your dashboard will open at  http://localhost:%s\n" "$PORT"
 printf "  Leave this Terminal window open while you use the app.\n"
 printf "  To stop the app: press Ctrl+C here, or just close this window.\n"
