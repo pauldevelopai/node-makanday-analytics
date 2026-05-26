@@ -9,11 +9,22 @@
   "scripts": {
     "start": "node index.js",
     "dev": "node --watch index.js",
+    "start:hosted": "node server-hosted.js",
     "test": "node --test tests/*.test.js"
   },
   "dependencies": {
     "@developai/grounded-node-runtime": "github:pauldevelopai/grounded-node-runtime#main",
     "dotenv": "^16.4.5"
+  },
+  "comment_hostedDependencies": "Only server-hosted.js (online multi-tenant mode) uses these. In optionalDependencies so a flaky build of a server-only dep (e.g. pg native bits) can never break a newsroom's local install.",
+  "optionalDependencies": {
+    "express": "^4.21.1",
+    "multer": "^1.4.5-lts.1",
+    "cookie-parser": "^1.4.7",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.13.1",
+    "@anthropic-ai/sdk": "^0.32.1",
+    "mammoth": "^1.8.0"
   },
   "_publishing_notes": {
     "switch_runtime_to_github_when_published": "github:pauldevelopai/grounded-node-runtime#main"
