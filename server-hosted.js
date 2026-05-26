@@ -25,6 +25,7 @@ import multer from "multer";
 import cookieParser from "cookie-parser";
 import jwt from "jsonwebtoken";
 import pg from "pg";
+import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import * as handlers from "./lib/handlers.js";
@@ -32,6 +33,42 @@ import { createPgHost, ensureSchema } from "./lib/pg-host.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const { Pool } = pg;
+
+// ── Consistent GROUNDED nav, injected only in hosted mode ──────────────────
+// The local install (index.js) serves public/index.html untouched. Online,
+// the Node lives under the same domain as the tracker + front door, so we
+// inject the same nav the rest of grounded.developai.co.za uses — the menu is
+// then visible and consistent across every Node page. Absolute paths resolve
+// against the domain root, so they reach the tracker regardless of the
+// /nodes/analytics/app/ subpath the app itself is mounted on.
+const NAV_HTML = `<style id="g-nav-style">
+#g-nav{border-bottom:1px solid #E2E8F0;background:#fff;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif}
+#g-nav .g-bar{max-width:1180px;margin:0 auto;padding:12px 26px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+#g-nav .g-brand{text-decoration:none;color:#1A202C;display:flex;flex-direction:column;line-height:1.2}
+#g-nav .g-brand b{font-size:18px;font-weight:700;letter-spacing:-0.01em}
+#g-nav .g-brand span{font-size:11px;color:#718096;font-weight:500}
+#g-nav .g-links{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+#g-nav .g-links a{padding:8px 12px;border-radius:6px;font-size:14px;font-weight:500;color:#718096;text-decoration:none}
+#g-nav .g-links a:hover{color:#1A202C}
+#g-nav .g-links a.active{font-weight:600;color:#1A202C;background:#EEF2FF}
+</style>
+<nav id="g-nav"><div class="g-bar">
+  <a class="g-brand" href="/"><b>Grounded: AI&nbsp;Legal</b><span>Global AI lawsuits &amp; regulations tracker</span></a>
+  <div class="g-links">
+    <a href="/">Home</a>
+    <a href="/legal/lawsuits">Lawsuits</a>
+    <a href="/legal/regulations">Regulations</a>
+    <a href="/legal/explore">Connections</a>
+    <a href="/legal/use-cases">Use cases</a>
+    <a href="/tools/">Tools</a>
+    <a href="/legal/sources">Sources</a>
+    <a href="/legal/submit">Submit</a>
+    <a href="/nodes/" class="active">Nodes</a>
+  </div>
+</div></nav>`;
+
+const INDEX_HTML = readFileSync(join(__dirname, "public", "index.html"), "utf8")
+  .replace("<body>", `<body>\n${NAV_HTML}`);
 
 const PORT = process.env.PORT || 3002;
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -112,7 +149,7 @@ app.get("*", (req, res) => {
     const next = APP_URL ? `?next=${encodeURIComponent(APP_URL)}` : "";
     return res.redirect(`${LOGIN_URL}${next}`);
   }
-  res.sendFile(join(__dirname, "public", "index.html"));
+  res.type("html").send(INDEX_HTML);
 });
 
 app.listen(PORT, () => {
