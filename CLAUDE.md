@@ -1,0 +1,28 @@
+# node-analytics — "Audience Signal" (the reference GROUNDED Node)
+
+A Node on **Grounded** (newsroom-owned AI by Develop AI). Reads a newsroom's
+published-story performance matrix and shows what their audience actually rewards
+(engagement *rate*, not raw reach). This is the canonical Node — copy its shape
+when building new ones.
+
+## Two entrypoints, same handlers
+- **`index.js`** (LOCAL): `createLiteHost` + `createServer({ slug:"analytics", host, handlers })` from `@developai/grounded-node-runtime`. Storage = JSON files, the user's own AI key.
+- **`server-hosted.js`** (ONLINE): `await createHostedServer({ slug:"analytics", productName:"Audience Signal", handlers, ensureSchema, staticDir })`. ~25 lines — all auth/host/routes/chrome come from the runtime. Runs on the box as pm2 `audience-signal` on :3002, reached at `/nodes/analytics/app/`.
+
+The handlers (`lib/handlers.js`, `lib/ingest.js`, `lib/analytics.js`, `lib/beats.js`) are written ONLY against the host interface, so they're identical in both modes. Don't put `fs`/`pg`/`express` in them.
+
+## Key pieces
+- **`lib/ingest.js`** — `ingestMatrix` is format-aware (`lib/extract.js` magic-byte detect): `.docx` → free regex table parse; `.doc`/PDF → text extracted (`pdf-parse`/`word-extractor`, lazy) then structured by the AI (`lib/ai-extract.js`, TSV output). `.doc`/PDF therefore need an AI key; `.docx` is free.
+- **`lib/schema.js`** — the hosted Postgres tables (`node_analytics_stories`, `node_analytics_quality`). The generic `node_analytics_activity` table is the runtime's.
+- **`lib/beacon.js`** — opt-OUT local-install telemetry (ON by default; `GROUNDED_TELEMETRY=off` to disable). Sends only counts/version/OS/newsroom name, never story content. Shows in the tracker's Nodes admin.
+- **`public/`** — the dashboard. Uses RELATIVE `api/...` + asset paths so it works at `/` (local) and under `/nodes/analytics/app/` (hosted). Don't hardcode leading-slash API paths.
+- **`install.sh` / `install.ps1`** — one-command installers. bash-3.2 GOTCHA: use ASCII `...` never `…` (a multibyte char right after `$var` crashes macOS bash).
+
+## Deps
+`@developai/grounded-node-runtime` (pinned to a tag, e.g. `#v0.8.0`) + dotenv + pdf-parse + word-extractor. The runtime brings express/multer/mammoth/anthropic + lazy pg/cookie-parser/jsonwebtoken — don't re-declare them here.
+
+## Deploy (box)
+`cd /home/ubuntu/node-analytics && git pull && npm install && pm2 restart audience-signal`.
+If hosted code looks stale after a runtime bump: `rm -rf node_modules/@developai && npm install` (npm github-dep cache). `.env` must hold a real `sk-ant-` `ANTHROPIC_API_KEY` (it was once a placeholder → 401s) + `JWT_SECRET` matching the tracker.
+
+See the tracker repo's `CLAUDE.md` for the system map; `pauldevelopai/nodes` → `ADD_A_NODE.md` to add a new Node.
