@@ -19,7 +19,7 @@ The handlers (`lib/handlers.js`, `lib/ingest.js`, `lib/analytics.js`, `lib/beats
 - **`install.sh` / `install.ps1`** — one-command installers. bash-3.2 GOTCHA: use ASCII `...` never `…` (a multibyte char right after `$var` crashes macOS bash).
 
 ## Deps
-`@developai/grounded-node-runtime` (pinned to a tag, e.g. `#v0.8.0`) + dotenv + pdf-parse + word-extractor. The runtime brings express/multer/mammoth/anthropic + lazy pg/cookie-parser/jsonwebtoken — don't re-declare them here.
+`@developai/grounded-node-runtime` (pinned to a tag, currently `#v0.9.0`) + dotenv + pdf-parse + word-extractor. The runtime brings express/multer/mammoth/anthropic + lazy pg/cookie-parser/jsonwebtoken — don't re-declare them here.
 
 ## Deploy (box)
 `cd /home/ubuntu/node-analytics && git pull && npm install && pm2 restart audience-signal`.
