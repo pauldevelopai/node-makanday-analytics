@@ -1,6 +1,6 @@
 {
   "name": "node-analytics",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "private": true,
   "description": "Audience Signal — a Node on GROUNDED. Owned-data audience-resonance analytics for an investigative newsroom.",
   "license": "Apache-2.0",
