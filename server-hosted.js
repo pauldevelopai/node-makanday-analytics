@@ -21,6 +21,7 @@ import { dirname, join } from "node:path";
 import { createHostedServer } from "@developai/grounded-node-runtime";
 import * as handlers from "./lib/handlers.js";
 import { ensureSchema } from "./lib/schema.js";
+import { mountAnalyticsRoutes } from "./lib/routes.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const pkg = JSON.parse(readFileSync(join(__dirname, "package.json"), "utf8"));
@@ -30,6 +31,8 @@ await createHostedServer({
   productName: "Audience Signal",
   handlers,
   ensureSchema,
+  // Custom routes (per-request newsroom-scoped host) + the no-cache app shell.
+  mountRoutes: (app, { hostFor }) => mountAnalyticsRoutes(app, hostFor),
   nodeVersion: pkg.version,
   staticDir: join(__dirname, "public"),
 });
