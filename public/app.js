@@ -76,19 +76,20 @@ $("#setup-save")?.addEventListener("click", async () => {
   errBox.classList.remove("on");
   const apiKey = $("#setup-key-input").value.trim();
   if (!apiKey) { errBox.textContent = "Paste your API key first."; errBox.classList.add("on"); return; }
-  const btn = $("#setup-save"); btn.disabled = true; btn.textContent = "Saving…";
+  const btn = $("#setup-save"); btn.disabled = true; const old = btn.textContent; btn.textContent = "Checking…";
   try {
     const res = await fetch("api/setup", {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ provider: chosenProvider, apiKey })
     });
-    const data = await res.json();
-    if (!res.ok || data.error) throw new Error(data.error || "Save failed");
+    const data = await res.json().catch(() => ({}));
+    // postSetup live-validates the key and returns { ok, message, verified, warning }.
+    if (!data.ok) { errBox.textContent = data.message || data.error || "Save failed."; errBox.classList.add("on"); return; }
     await boot();
   } catch (e) {
-    errBox.textContent = e.message; errBox.classList.add("on");
+    errBox.textContent = "Network error: " + e.message; errBox.classList.add("on");
   } finally {
-    btn.disabled = false; btn.textContent = "Save and continue";
+    btn.disabled = false; btn.textContent = old;
   }
 });
 
