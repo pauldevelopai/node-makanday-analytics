@@ -81,6 +81,11 @@ button.up{margin-left:8px}
 .key-link{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--paper-dim);text-decoration:none;border-bottom:1px dotted var(--paper-dim)}
 .key-link:hover{color:var(--signal);border-bottom-color:var(--signal)}
 
+.nl{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--paper-dim);display:block;margin-bottom:5px}
+.ni,.nt{width:100%;background:var(--ink2);color:var(--paper);border:1px solid var(--line);padding:10px 12px;font-size:14px;border-radius:6px;font-family:var(--serif)}
+.nt{min-height:60px;resize:vertical}
+.ni:focus,.nt:focus{outline:none;border-color:var(--signal)}
+@media(max-width:780px){#v-newsroom [style*="grid-template-columns:1fr 1fr 1fr"]{grid-template-columns:1fr!important}}
 .topline{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin:30px 0 6px}
 .stat{background:var(--ink2);padding:18px 20px}
 .stat .l{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--paper-dim)}
@@ -235,9 +240,14 @@ tr:hover td{background:var(--ink2)}
   </div>
 
   <div id="dash" style="display:none">
+    <div id="context-banner" style="display:none;margin:18px 0;padding:14px 18px;border:1px solid var(--signal);background:var(--ink2);border-radius:6px;font-size:14.5px;color:var(--paper)">
+      <b>Help the Node read your data in context.</b> Tell it where you publish and who your audience is — it sharpens every analysis and the recommendations.
+      <button class="toggle on" id="banner-go" style="margin:8px 0 0">Add your newsroom context →</button>
+    </div>
     <div class="topline" id="topline"></div>
     <div class="tabs">
       <button class="tab" data-v="sources">Sources</button>
+      <button class="tab" data-v="newsroom">Newsroom</button>
       <button class="tab" data-v="readership">Readership</button>
       <button class="tab" data-v="recommend">Recommendations</button>
       <button class="tab on" data-v="beats">Beats</button>
@@ -272,6 +282,26 @@ tr:hover td{background:var(--ink2)}
       <div id="readership-stats" class="topline" style="margin-bottom:18px"></div>
       <div id="readership-prompt"></div>
       <div id="readership-body"></div>
+    </div>
+    <div id="v-newsroom" class="view">
+      <div class="sec-h">Who you are · where you publish · who you serve</div>
+      <div class="sec-t">Newsroom context</div>
+      <div class="sec-d">The Node uses this to interpret your data and ground its recommendations. The shared fields (about / audience / beats) also sync to your <b>Grounded Newsroom Profile</b>, so other tools and Nodes benefit too. Stored with your newsroom.</div>
+      <div style="max-width:760px;display:grid;gap:14px">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+          <div><label class="nl">Country</label><input id="ctx-country" type="text" class="ni" placeholder="e.g. Zambia"></div>
+          <div><label class="nl">Region / province</label><input id="ctx-region" type="text" class="ni" placeholder="e.g. Copperbelt"></div>
+          <div><label class="nl">City</label><input id="ctx-city" type="text" class="ni" placeholder="e.g. Kitwe"></div>
+        </div>
+        <div><label class="nl">Languages</label><input id="ctx-languages" type="text" class="ni" placeholder="e.g. English, Bemba"></div>
+        <div><label class="nl">Audience — who reads you</label><textarea id="ctx-audience" class="nt" placeholder="e.g. urban working-age readers, civil servants, the diaspora"></textarea></div>
+        <div><label class="nl">About the newsroom</label><textarea id="ctx-about" class="nt" placeholder="A sentence or two on who you are and what you do."></textarea></div>
+        <div><label class="nl">Beats / focus</label><textarea id="ctx-beats_note" class="nt" placeholder="The topics you cover or want to be known for."></textarea></div>
+        <div style="display:flex;gap:12px;align-items:center">
+          <button class="btn" id="ctx-save">Save context</button>
+          <span id="ctx-status" class="dim mono" style="font-size:12px"></span>
+        </div>
+      </div>
     </div>
     <div id="v-recommend" class="view">
       <div class="sec-h">Forward-looking · grounded in your audience data + newsroom context</div>

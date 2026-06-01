@@ -105,6 +105,7 @@ async function load(source, fit) {
   renderTrend(); renderFormat(); renderHeadline(); renderTimeline();
   renderWords(); renderSentiment(); renderComparePicker();
   renderReadership();
+  refreshContextBanner();
   renderGems(); renderTiming(); renderOutliers();
   $("#score-out").innerHTML = "";
   renderQuality();
@@ -568,12 +569,57 @@ function renderReadership() {
     }).join("") + `</tbody></table>`;
 }
 
+// ── Newsroom context (#8/#10) ────────────────────────────────────────────────
+const CTX_FIELDS = ["country", "region", "city", "languages", "audience", "about", "beats_note"];
+function ctxThin(c) { return !c || !(c.country || c.region) || !c.audience; }
+function updateContextBanner(ctx) { const b = $("#context-banner"); if (b) b.style.display = ctxThin(ctx) ? "block" : "none"; }
+async function refreshContextBanner() {
+  const ctx = await fetch("api/context").then(r => r.json()).then(d => d.context).catch(() => null);
+  updateContextBanner(ctx);
+}
+async function loadContext() {
+  const ctx = await fetch("api/context").then(r => r.json()).then(d => d.context || {}).catch(() => ({}));
+  // Prefill the shared fields from the tracker Newsroom Profile when the node has
+  // none. '/api/newsroom-profile' (root path) hits the tracker on the hosted origin;
+  // locally it 404s and we just skip.
+  let prof = null;
+  try { prof = await fetch("/api/newsroom-profile", { credentials: "include" }).then(r => r.ok ? r.json() : null); } catch (e) { /* not hosted */ }
+  const fromProf = { about: prof && prof.about, audience: prof && prof.audience, beats_note: prof && prof.beats };
+  CTX_FIELDS.forEach(f => { const el = $("#ctx-" + f); if (el) el.value = ctx[f] || fromProf[f] || ""; });
+  const st = $("#ctx-status"); if (st) st.textContent = ctx.updated_at ? "Saved " + new Date(ctx.updated_at).toLocaleString() : "";
+}
+async function saveContext() {
+  const fields = {}; CTX_FIELDS.forEach(f => { const el = $("#ctx-" + f); fields[f] = el ? el.value.trim() : ""; });
+  const st = $("#ctx-status"), btn = $("#ctx-save");
+  btn.disabled = true; st.textContent = "Saving…";
+  try {
+    const d = await fetch("api/context", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(fields) }).then(r => r.json());
+    // Sync overlapping fields to the tracker Newsroom Profile, preserving its other
+    // fields (PUT replaces the whole row). Best-effort; silent if not hosted.
+    try {
+      const prof = (await fetch("/api/newsroom-profile", { credentials: "include" }).then(r => r.ok ? r.json() : {})) || {};
+      const merged = {
+        about: fields.about || prof.about || "", beats: fields.beats_note || prof.beats || "",
+        audience: fields.audience || prof.audience || "", strengths: prof.strengths || "",
+        style_notes: prof.style_notes || "", trusted_sources: prof.trusted_sources || "",
+      };
+      await fetch("/api/newsroom-profile", { method: "PUT", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify(merged) });
+    } catch (e) { /* not hosted / not signed in */ }
+    st.textContent = "Saved.";
+    updateContextBanner(d.context);
+  } catch (e) { st.textContent = "Save failed: " + e.message; }
+  finally { btn.disabled = false; }
+}
+$("#ctx-save")?.addEventListener("click", saveContext);
+$("#banner-go")?.addEventListener("click", () => document.querySelector('.tab[data-v="newsroom"]')?.click());
+
 document.querySelector(".tabs")?.addEventListener("click", e => {
   const t = e.target.closest(".tab[data-v]"); if (!t) return;
   document.querySelectorAll(".tab[data-v]").forEach(x => x.classList.remove("on"));
   document.querySelectorAll(".view").forEach(x => x.classList.remove("on"));
   t.classList.add("on"); $("#v-" + t.dataset.v).classList.add("on");
   if (t.dataset.v === "sources") renderSources();
+  if (t.dataset.v === "newsroom") loadContext();
 });
 
 $("#gen").addEventListener("click", async function () {
