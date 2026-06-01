@@ -234,7 +234,10 @@ tr:hover td{background:var(--ink2)}
       <button class="tab" data-v="trend">Rising / Fading</button>
       <button class="tab" data-v="format">Format</button>
       <button class="tab" data-v="headline">Headline Signal</button>
+      <button class="tab" data-v="words">Words</button>
+      <button class="tab" data-v="sentiment">Sentiment</button>
       <button class="tab" data-v="timeline">Timeline</button>
+      <button class="tab" data-v="compare">Compare</button>
       <button class="tab" data-v="quality">Data Quality</button>
       <button class="tab" data-v="activity">Activity</button>
       <button class="tab" data-v="brief">AI Brief</button>
@@ -273,12 +276,51 @@ tr:hover td{background:var(--ink2)}
     <div id="v-headline" class="view">
       <div class="sec-h">Headline shape vs resonance</div>
       <div class="sec-t">Does the way a hed is written change conversion?</div>
-      <table><thead><tr><th>Feature</th><th class="r">With (n)</th><th class="r">Rate w/</th><th class="r">Rate w/o</th><th class="r">Δ</th></tr></thead><tbody id="hl-tb"></tbody></table>
+      <table><thead><tr><th>Feature</th><th class="r">With (n)</th><th class="r">Rate w/</th><th class="r">Rate w/o</th><th class="r">Δ</th><th>Real?</th></tr></thead><tbody id="hl-tb"></tbody></table>
+      <div class="sec-d" style="margin-top:10px">★ = statistically significant (the difference is unlikely to be chance, ~95%).</div>
+    </div>
+    <div id="v-words" class="view">
+      <div class="sec-h">Which words &amp; phrases move engagement</div>
+      <div class="sec-t">Median rate of headlines that use a term vs those that don&rsquo;t</div>
+      <div class="sec-d">Only terms in several headlines are shown, so these aren&rsquo;t one-off flukes. ★ = statistically significant.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:6px" id="words-cols">
+        <div>
+          <div class="sec-t" style="color:var(--good)">Lifts engagement &uarr;</div>
+          <table><thead><tr><th>Term</th><th class="r">n</th><th class="r">w/</th><th class="r">w/o</th><th class="r">Δ</th><th></th></tr></thead><tbody id="words-up"></tbody></table>
+        </div>
+        <div>
+          <div class="sec-t" style="color:var(--alert)">Drags it down &darr;</div>
+          <table><thead><tr><th>Term</th><th class="r">n</th><th class="r">w/</th><th class="r">w/o</th><th class="r">Δ</th><th></th></tr></thead><tbody id="words-down"></tbody></table>
+        </div>
+      </div>
+    </div>
+    <div id="v-sentiment" class="view">
+      <div class="sec-h">Headline emotion vs resonance · offline (AFINN-165)</div>
+      <div class="sec-t">Does positive or negative framing convert better?</div>
+      <div class="sec-d">Each headline scored for emotional valence with the open-source AFINN-165 lexicon — on your computer, no AI key needed.</div>
+      <div id="sentiment-callout" class="sec-d" style="margin:6px 0 12px"></div>
+      <div id="sentiment"></div>
     </div>
     <div id="v-timeline" class="view">
       <div class="sec-h">Monthly medians</div>
       <div class="sec-t">Is the audience warming or cooling?</div>
       <div id="timeline"></div>
+    </div>
+    <div id="v-compare" class="view">
+      <div class="sec-h">Period-over-period · what actually changed</div>
+      <div class="sec-t">Compare this upload against another — did what you changed move the audience?</div>
+      <div class="ai-bar" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:6px 0 14px">
+        <span class="t">Compare current against:</span>
+        <select id="cmp-pick" style="display:inline-block"></select>
+      </div>
+      <div id="cmp-empty" class="sec-d">Pick another upload above to see the difference. (You need at least two uploads.)</div>
+      <div id="cmp-out" style="display:none">
+        <div class="topline" id="cmp-topline" style="margin-bottom:18px"></div>
+        <div class="sec-t">Beats — biggest movers</div>
+        <table><thead><tr><th>Beat</th><th class="r">Now</th><th class="r">Was</th><th class="r">Δ</th><th>Change</th></tr></thead><tbody id="cmp-beats"></tbody></table>
+        <div class="sec-t" style="margin-top:18px">Format — biggest movers</div>
+        <table><thead><tr><th>Format</th><th class="r">Now</th><th class="r">Was</th><th class="r">Δ</th><th>Change</th></tr></thead><tbody id="cmp-formats"></tbody></table>
+      </div>
     </div>
     <div id="v-quality" class="view">
       <div class="sec-h">Ingestion integrity</div>

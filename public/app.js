@@ -2,7 +2,7 @@
 const $ = s => document.querySelector(s);
 const fmt = n => n >= 1000 ? (n / 1000).toFixed(n >= 10000 ? 0 : 1) + "k" : String(Math.round(n));
 
-let REPORT = null, CURRENT = null;
+let REPORT = null, CURRENT = null, ALL_SOURCES = [];
 
 // Newsroom-driven branding — fills the masthead, title and footer from
 // whatever /api/setup reports (NEWSROOM env / saved meta). No name is baked
@@ -26,6 +26,7 @@ async function boot() {
   $("#open-setup").style.display = "inline-block";
 
   const sources = await fetch("api/sources").then(r => r.json()).catch(() => []);
+  ALL_SOURCES = sources;
   if (!sources.length) { showEmpty(); return; }
   const picker = $("#picker");
   picker.innerHTML = sources.map(s => `<option value="${s.source_label}">${s.source_label} · ${s.n}</option>`).join("");
@@ -101,6 +102,7 @@ async function load(source, fit) {
   $("#m-n").textContent = REPORT.topline.stories;
   renderTopline(); renderBeats(); renderBeatsControls(); renderSignal("rate");
   renderTrend(); renderFormat(); renderHeadline(); renderTimeline();
+  renderWords(); renderSentiment(); renderComparePicker();
   renderQuality();
   renderActivity();
   $("#ai-out").className = "placeholder";
@@ -132,7 +134,7 @@ function renderTopline() {
 }
 
 function renderBeats() {
-  const rows = REPORT.byBeat.map(b => ({ ...b, _meta: `[${b.n}]` }));
+  const rows = REPORT.byBeat.map(b => ({ ...b, _meta: `[${b.n}]${b.significant ? " ★" : ""}` }));
   bars($("#beats"), rows, r => r.beat, r => r.medianRate, v => v.toFixed(2) + "%");
 }
 
@@ -178,7 +180,7 @@ function renderSignal(mode) {
       <td><span class="pill ${bcls}">${d.band}</span></td>
       <td class="r mono">${d.reach.toLocaleString()}</td>
       <td class="r mono">${d.engagement}</td>
-      <td class="r rate ${cls}">${d.rate.toFixed(2)}%</td></tr>`;
+      <td class="r rate ${cls}" title="95% confidence: ${d.ciLo}–${d.ciHi}%">${d.rate.toFixed(2)}%</td></tr>`;
   }).join("");
 }
 $("#sg-rate").onclick = function () { this.classList.add("on"); $("#sg-reach").classList.remove("on"); renderSignal("rate"); };
@@ -197,7 +199,7 @@ function renderTrend() {
 }
 
 function renderFormat() {
-  const rows = REPORT.byFormat.map(f => ({ ...f, _meta: `[${f.n}] · med reach ${fmt(f.medianReach)}` }));
+  const rows = REPORT.byFormat.map(f => ({ ...f, _meta: `[${f.n}]${f.significant ? " ★" : ""} · med reach ${fmt(f.medianReach)}` }));
   bars($("#format"), rows, r => r.type, r => r.medianRate, v => v.toFixed(2) + "%", 0.6);
 }
 
@@ -210,13 +212,106 @@ function renderHeadline() {
       <td class="r mono">${h.withN}</td>
       <td class="r mono">${h.withRate.toFixed(2)}%</td>
       <td class="r mono">${h.withoutRate.toFixed(2)}%</td>
-      <td class="r delta ${d >= 0 ? "up" : "down"}">${d >= 0 ? "+" : ""}${d.toFixed(2)}</td></tr>`;
+      <td class="r delta ${d >= 0 ? "up" : "down"}">${d >= 0 ? "+" : ""}${d.toFixed(2)}</td>
+      <td class="mono">${h.significant ? "★" : "—"}</td></tr>`;
   }).join("");
 }
 
 function renderTimeline() {
   const rows = REPORT.timeline.map(m => ({ ...m, _meta: `[${m.n}] · rate ${m.medianRate.toFixed(2)}%` }));
   bars($("#timeline"), rows, r => r.label || r.month, r => r.medianReach, v => fmt(v), 0);
+}
+
+// ── Words: which terms move engagement ───────────────────────────────────────
+function wordRows(list) {
+  if (!list || !list.length) return `<tr><td colspan="6" class="dim">Not enough repeated terms yet — needs more stories.</td></tr>`;
+  return list.map(t => `<tr>
+    <td class="tt">${escapeHtml(t.term)}${t.type === "phrase" ? ' <span class="dim mono">· phrase</span>' : ""}</td>
+    <td class="r mono">${t.n}</td>
+    <td class="r mono">${t.withRate.toFixed(2)}%</td>
+    <td class="r mono">${t.withoutRate.toFixed(2)}%</td>
+    <td class="r delta ${t.lift >= 0 ? "up" : "down"}">${t.lift >= 0 ? "+" : ""}${t.lift.toFixed(2)}</td>
+    <td class="mono">${t.significant ? "★" : ""}</td></tr>`).join("");
+}
+function renderWords() {
+  const w = REPORT.wordSignal || { lifters: [], draggers: [] };
+  $("#words-up").innerHTML = wordRows(w.lifters);
+  $("#words-down").innerHTML = wordRows(w.draggers);
+}
+
+// ── Sentiment: headline emotion vs resonance ─────────────────────────────────
+function renderSentiment() {
+  const s = REPORT.sentiment || { groups: [] };
+  const labelMap = { negative: "Negative framing", neutral: "Neutral", positive: "Positive framing" };
+  const rows = s.groups.map(g => ({ ...g, label2: labelMap[g.label] || g.label, _meta: `[${g.n}] · med reach ${fmt(g.medianReach)}` }));
+  bars($("#sentiment"), rows, r => r.label2, r => r.medianRate, v => v.toFixed(2) + "%", 0.6);
+  const c = $("#sentiment-callout");
+  const nv = s.negativeVsPositive;
+  if (!nv) { c.innerHTML = ""; return; }
+  const winner = nv.negRate >= nv.posRate ? "Negative" : "Positive";
+  const hi = Math.max(nv.negRate, nv.posRate).toFixed(2), lo = Math.min(nv.negRate, nv.posRate).toFixed(2);
+  c.innerHTML = nv.significant
+    ? `<b>${winner}-framed headlines convert better</b> — ${hi}% vs ${lo}%, and the gap is statistically significant. ★`
+    : `Negative ${nv.negRate}% vs positive ${nv.posRate}% — the difference isn’t statistically significant (could be chance).`;
+}
+
+// ── Compare: period-over-period ──────────────────────────────────────────────
+const signedPct = v => (v >= 0 ? "+" : "") + v.toFixed(2) + "%";
+const signedInt = v => (v >= 0 ? "+" : "−") + fmt(Math.abs(v));
+
+function renderComparePicker() {
+  const pick = $("#cmp-pick");
+  if (!pick) return;
+  const others = (ALL_SOURCES || []).filter(s => s.source_label !== CURRENT);
+  $("#cmp-empty").style.display = "block";
+  $("#cmp-out").style.display = "none";
+  if (!others.length) {
+    pick.innerHTML = `<option value="">(no other uploads)</option>`;
+    pick.disabled = true;
+    $("#cmp-empty").textContent = "You need at least two uploads to compare. Upload another matrix to use this.";
+    return;
+  }
+  pick.disabled = false;
+  pick.innerHTML = `<option value="">— choose an upload —</option>` +
+    others.map(s => `<option value="${escapeHtml(s.source_label)}">${escapeHtml(s.source_label)} · ${s.n}</option>`).join("");
+  pick.onchange = async () => {
+    const base = pick.value;
+    if (!base) { $("#cmp-empty").style.display = "block"; $("#cmp-out").style.display = "none"; return; }
+    const rep = await fetch(`api/report?source=${encodeURIComponent(CURRENT)}&baseline=${encodeURIComponent(base)}`)
+      .then(r => r.json()).catch(() => ({}));
+    renderComparison(rep.comparison);
+  };
+}
+
+function cmpRows(list) {
+  if (!list || !list.length) return `<tr><td colspan="5" class="dim">No overlap to compare.</td></tr>`;
+  return list.map(x => {
+    const pill = x.status === "new" ? `<span class="pill exceptional">new</span>`
+      : x.status === "gone" ? `<span class="pill low">gone</span>`
+      : `<span class="pill ${x.delta >= 0 ? "exceptional" : "low"}">${x.status}</span>`;
+    return `<tr>
+      <td class="tt">${escapeHtml(x.name)}</td>
+      <td class="r mono">${x.currentRate == null ? "—" : x.currentRate.toFixed(2) + "%"}</td>
+      <td class="r mono">${x.baselineRate == null ? "—" : x.baselineRate.toFixed(2) + "%"}</td>
+      <td class="r delta ${x.delta >= 0 ? "up" : "down"}">${x.delta == null ? "—" : (x.delta >= 0 ? "+" : "") + x.delta.toFixed(2)}</td>
+      <td>${pill}</td></tr>`;
+  }).join("");
+}
+
+function renderComparison(cmp) {
+  if (!cmp) { $("#cmp-empty").style.display = "block"; $("#cmp-out").style.display = "none"; return; }
+  $("#cmp-empty").style.display = "none";
+  $("#cmp-out").style.display = "block";
+  const t = cmp.topline;
+  const cells = [
+    ["Median eng. rate", t.current.medianRate.toFixed(2) + "%", signedPct(t.rateDelta)],
+    ["Median reach", fmt(t.current.medianReach), signedInt(t.reachDelta)],
+    ["Stories", t.current.stories, signedInt(t.storiesDelta)]
+  ];
+  $("#cmp-topline").innerHTML = cells.map(c =>
+    `<div class="stat"><div class="l">${c[0]} <span class="dim">vs ${escapeHtml(cmp.labels.baseline)}</span></div><div class="v">${c[1]} <small>${c[2]}</small></div></div>`).join("");
+  $("#cmp-beats").innerHTML = cmpRows(cmp.beats);
+  $("#cmp-formats").innerHTML = cmpRows(cmp.formats);
 }
 
 async function renderQuality() {

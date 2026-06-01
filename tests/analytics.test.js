@@ -67,10 +67,10 @@ test("reachGiants surfaces the loud-but-weak story", () => {
   assert.equal(g[0].n, 5); // 60k reach, 0.5% rate -> worst converter at top of the giants
 });
 
-test("signalLeaders sorted by rate desc within the reach-qualified set", () => {
-  // sample reaches are all comfortably above the floor → straight rate-desc.
+test("signalLeaders ranked by Wilson lower bound within the reach-qualified set", () => {
+  // sample reaches all clear the floor → list is globally Wilson-lower-bound desc.
   const s = signalLeaders(enrich(sample));
-  for (let i = 1; i < s.length; i++) assert.ok(s[i - 1].rate >= s[i].rate);
+  for (let i = 1; i < s.length; i++) assert.ok(s[i - 1].wlb >= s[i].wlb);
 });
 
 test("signalLeaders demotes a low-reach fluke below real wins", () => {
