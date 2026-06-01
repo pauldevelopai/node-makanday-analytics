@@ -39,11 +39,34 @@ test("recovers engagement from the reach/reach typo", () => {
   assert.ok(issues.some(i => i.n === 4 && i.field === "engagement"));
 });
 
+test("reach and engagement parse thousands separators identically (commas or dots)", () => {
+  const doc =
+    "<table>" +
+    tableRow(1, "Comma format 1st April 2025", "Post reach 1,307, post engagement 1,045 (news article)") +
+    tableRow(2, "Dot format 2nd April 2025", "Post reach 1.307, post engagement 1.045 (news article)") +
+    "</table>";
+  const { rows } = parseMatrixHtml(doc);
+  assert.equal(rows[0].reach, 1307);
+  assert.equal(rows[0].engagement, 1045);
+  // The dot-separated row must parse to the same integers — not 13075 / 1 / etc.
+  assert.equal(rows[1].reach, 1307);
+  assert.equal(rows[1].engagement, 1045);
+});
+
 test("flags rows with no parseable date but still keeps them", () => {
   const { rows, issues } = parseMatrixHtml(html);
   assert.ok(rows.some(r => r.n === 5));
   assert.ok(issues.some(i => i.n === 5 && i.field === "date"));
 });
+
+// Minimal buffer that passes detectFormat() as a complete .docx: ZIP local-file
+// header (PK\x03\x04) + the end-of-central-directory marker (PK\x05\x06). The
+// real parsing is mocked via host.parse.docxToHtml, so the body is irrelevant.
+const fakeDocx = Buffer.concat([
+  Buffer.from([0x50, 0x4b, 0x03, 0x04]),
+  Buffer.from("zip-body"),
+  Buffer.from([0x50, 0x4b, 0x05, 0x06])
+]);
 
 test("ingestMatrix drives the host facade correctly (mock host)", async () => {
   const calls = [];
@@ -55,7 +78,7 @@ test("ingestMatrix drives the host facade correctly (mock host)", async () => {
     },
     log: { run: async m => calls.push(["log", m.op || m.kind]) }
   };
-  const res = await ingestMatrix(host, Buffer.from("x"), "matrix-2025");
+  const res = await ingestMatrix(host, fakeDocx, "matrix-2025");
   assert.equal(res.storyCount, 5);
   assert.equal(res.quality.warnings >= 2, true);          // date + reach/typo
   // ingest.js no longer logs — that's now the handler's job. Only DB calls expected.

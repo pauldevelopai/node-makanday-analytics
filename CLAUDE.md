@@ -13,7 +13,9 @@ The handlers (`lib/handlers.js`, `lib/ingest.js`, `lib/analytics.js`, `lib/beats
 
 ## Key pieces
 - **`lib/ingest.js`** — `ingestMatrix` is format-aware (`lib/extract.js` magic-byte detect): `.docx` → free regex table parse; `.doc`/PDF → text extracted (`pdf-parse`/`word-extractor`, lazy) then structured by the AI (`lib/ai-extract.js`, TSV output). `.doc`/PDF therefore need an AI key; `.docx` is free.
-- **`lib/schema.js`** — the hosted Postgres tables (`node_analytics_stories`, `node_analytics_quality`). The generic `node_analytics_activity` table is the runtime's.
+- **`lib/beats.js`** — the beat taxonomy. `DEFAULT_BEATS` is **generic** (works for any newsroom); `EXAMPLE_BEATS_ZAMBIA` is the old hand-tuned MakanDay set, kept as a reference. `tagBeats`/`enrich`/`fullReport` all take an optional taxonomy arg; `byBeat`/`risingFading` derive beat names from the tagged rows, so they're taxonomy-agnostic.
+- **`lib/ai-beats.js`** — opt-in "fit beats to my coverage": an AI reads the newsroom's headlines and proposes a taxonomy (TSV → `{name, keywords[]}`), `compileBeats` turns it into the `{name: RegExp}` shape, and it's stored via `host.store` (collection `config`, key `beats`). Triggered through `GET /api/report?fit=1` (the runtime only exposes query params on that route); `fit=0` reverts to the default. Applied by `getReport`/`postBrief` via `loadBeats`.
+- **`lib/schema.js`** — the hosted Postgres tables (`node_analytics_stories`, `node_analytics_quality`). The generic `node_analytics_activity` + `node_analytics_store` tables are the runtime's.
 - **`lib/beacon.js`** — opt-OUT local-install telemetry (ON by default; `GROUNDED_TELEMETRY=off` to disable). Sends only counts/version/OS/newsroom name, never story content. Shows in the tracker's Nodes admin.
 - **`public/`** — the dashboard. Uses RELATIVE `api/...` + asset paths so it works at `/` (local) and under `/nodes/analytics/app/` (hosted). Don't hardcode leading-slash API paths.
 - **`install.sh` / `install.ps1`** — one-command installers. bash-3.2 GOTCHA: use ASCII `...` never `…` (a multibyte char right after `$var` crashes macOS bash).

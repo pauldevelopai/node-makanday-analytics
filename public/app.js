@@ -91,13 +91,15 @@ $("#setup-save")?.addEventListener("click", async () => {
   }
 });
 
-async function load(source) {
+async function load(source, fit) {
   CURRENT = source;
-  REPORT = await fetch(`api/report?source=${encodeURIComponent(source)}`).then(r => r.json());
+  let url = `api/report?source=${encodeURIComponent(source)}`;
+  if (fit !== undefined) url += `&fit=${fit}`;
+  REPORT = await fetch(url).then(r => r.json());
   if (REPORT.empty) { showEmpty(); return; }
   showDash();
   $("#m-n").textContent = REPORT.topline.stories;
-  renderTopline(); renderBeats(); renderSignal("rate");
+  renderTopline(); renderBeats(); renderBeatsControls(); renderSignal("rate");
   renderTrend(); renderFormat(); renderHeadline(); renderTimeline();
   renderQuality();
   renderActivity();
@@ -134,8 +136,39 @@ function renderBeats() {
   bars($("#beats"), rows, r => r.beat, r => r.medianRate, v => v.toFixed(2) + "%");
 }
 
+// Beat-taxonomy status + the "fit to my coverage" control.
+function renderBeatsControls() {
+  const status = $("#beats-status"), reset = $("#reset-beats"), err = $("#beats-err");
+  if (err) { err.style.display = "none"; err.textContent = ""; }
+  const ai = REPORT.beatsSource === "ai";
+  if (status) {
+    status.textContent = ai
+      ? `Beats fitted to your coverage (${(REPORT.beatNames || []).length})`
+      : "Using the generic default beats";
+  }
+  if (reset) reset.style.display = ai ? "inline" : "none";
+  if (REPORT.beatsError && err) { err.textContent = REPORT.beatsError; err.style.display = "block"; }
+}
+
+$("#fit-beats")?.addEventListener("click", async function () {
+  if (!CURRENT) return;
+  const btn = this; btn.disabled = true; btn.textContent = "Reading your coverage…";
+  try { await load(CURRENT, 1); } finally { btn.disabled = false; btn.textContent = "Fit beats to my coverage"; }
+});
+
+$("#reset-beats")?.addEventListener("click", async function (e) {
+  e.preventDefault();
+  if (CURRENT) await load(CURRENT, 0);
+});
+
 function renderSignal(mode) {
   const rows = mode === "reach" ? REPORT.reachGiants : REPORT.signalLeaders;
+  const note = $("#signal-note");
+  if (note) {
+    note.textContent = mode === "reach" || !REPORT.reachFloor
+      ? ""
+      : `Ranked among stories that reached at least ${fmt(REPORT.reachFloor)} people — so a lucky tiny post can’t crowd out real wins.`;
+  }
   $("#signal-tb").innerHTML = rows.map(d => {
     const cls = d.rate >= 2 ? "hi" : d.rate < 1 ? "lo" : "";
     const bcls = d.band === "exceptional" ? "exceptional" : d.band === "low" ? "low" : "";
@@ -183,7 +216,7 @@ function renderHeadline() {
 
 function renderTimeline() {
   const rows = REPORT.timeline.map(m => ({ ...m, _meta: `[${m.n}] · rate ${m.medianRate.toFixed(2)}%` }));
-  bars($("#timeline"), rows, r => r.month, r => r.medianReach, v => fmt(v), 0);
+  bars($("#timeline"), rows, r => r.label || r.month, r => r.medianReach, v => fmt(v), 0);
 }
 
 async function renderQuality() {
@@ -211,7 +244,10 @@ async function renderActivity() {
     $("#activity-tb").innerHTML = `<tr><td colspan="6" class="dim">No activity yet — upload a matrix or generate a brief.</td></tr>`;
     return;
   }
-  $("#activity-tb").innerHTML = rows.map(r => {
+  const note = data.truncated
+    ? `<tr><td colspan="6" class="dim">Showing the most recent ${rows.length} entries — older activity stays in the log file.</td></tr>`
+    : "";
+  $("#activity-tb").innerHTML = note + rows.map(r => {
     const when = (r.ts || "").replace("T", " ").slice(0, 19);
     const op = r.op || r.kind || "—";
     const src = r.source || r.source_label || "—";

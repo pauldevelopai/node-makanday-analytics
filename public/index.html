@@ -244,6 +244,12 @@ tr:hover td{background:var(--ink2)}
       <div class="sec-h">Topic clustering · keyword-tagged, editable in <code>lib/beats.js</code></div>
       <div class="sec-t">Which beats actually move the audience</div>
       <div class="sec-d">Ranked by <b>median engagement rate</b>, not volume.</div>
+      <div class="ai-bar" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:6px 0 14px">
+        <span id="beats-status" class="t"></span>
+        <button class="btn" id="fit-beats">Fit beats to my coverage</button>
+        <a href="#" id="reset-beats" style="display:none;color:var(--signal);font-family:var(--mono);font-size:12px">reset to default</a>
+      </div>
+      <div id="beats-err" class="err" style="display:none;margin:0 0 12px"></div>
       <div id="beats"></div>
     </div>
     <div id="v-signal" class="view">
@@ -252,6 +258,7 @@ tr:hover td{background:var(--ink2)}
       <button class="toggle on" id="sg-rate">By engagement rate</button>
       <button class="toggle" id="sg-reach">Reach giants that under-converted</button>
       <table><thead><tr><th>Story</th><th>Beat</th><th>Band</th><th class="r">Reach</th><th class="r">Eng.</th><th class="r">Rate</th></tr></thead><tbody id="signal-tb"></tbody></table>
+      <div id="signal-note" class="sec-t" style="margin-top:10px;font-size:12.5px;color:var(--paper-dim)"></div>
     </div>
     <div id="v-trend" class="view">
       <div class="sec-h">First half vs second half of the year</div>

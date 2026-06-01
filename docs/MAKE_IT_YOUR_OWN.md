@@ -16,14 +16,15 @@ On GitHub, your **fork** is your own copy of the Node under your account. It's
 the closest thing to a "login" for a Node:
 
 - Your **changes** to the code live in your fork.
-- Your **data** — the matrices you upload and the results — is committed to
-  your fork too.
-- It's **yours forever.** Even if Develop AI disappears tomorrow, your fork
-  keeps working.
+- Your **data** — the matrices you upload and the results — stays on *your
+  computer*. It's never committed or pushed, so it doesn't travel with the code
+  (see "A note on your data" at the bottom).
+- It's **yours forever.** Even if Develop AI disappears tomorrow, your fork (and
+  the data on your computer) keeps working.
 
 A brand-new newsroom forks the clean template and starts empty. You, having
-used it, have your stories already loaded in *your* fork. Same Node, different
-copies — that's the whole idea.
+used it, have your stories already loaded in *your local copy*. Same Node,
+different copies — that's the whole idea.
 
 ---
 
@@ -49,7 +50,14 @@ Open the folder in any editor (VS Code is free and common). The most useful
 things to edit are written to be edited:
 
 - `lib/beats.js` — your beat taxonomy (the keywords that sort stories into
-  beats). Make it match how *your* newsroom thinks about its coverage.
+  beats). It ships with a **generic default** that works for any newsroom, plus
+  a worked example (`EXAMPLE_BEATS_ZAMBIA`) you can copy from. Two ways to make
+  it match how *your* newsroom thinks about its coverage:
+  - **In the app:** click **Fit beats to my coverage** on the Beats tab — an AI
+    reads your headlines and fits the beats for you (click *reset to default* to
+    undo). No code needed.
+  - **By hand:** edit `DEFAULT_BEATS` in `lib/beats.js` (each beat is a name and
+    the keywords that signal it).
 - `lib/analytics.js` — how the numbers are computed.
 - `public/` — the dashboard itself.
 
