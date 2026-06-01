@@ -605,6 +605,40 @@ $("#gen").addEventListener("click", async function () {
   btn.disabled = false;
 });
 
+// ── Recommendations (#9) — strategy advice grounded in the audience data ──────
+function mdToHtml(md) {
+  const esc = (md || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/^## (.+)$/gm, "<h3>$1</h3>").replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+  let buf = "", inList = false;
+  for (let ln of esc.split("\n")) {
+    ln = ln.trim();
+    if (ln.startsWith("- ")) { if (!inList) { buf += "<ul>"; inList = true; } buf += "<li>" + ln.slice(2) + "</li>"; continue; }
+    if (inList) { buf += "</ul>"; inList = false; }
+    if (ln.startsWith("<h3>")) buf += ln; else if (ln) buf += "<p>" + ln + "</p>";
+  }
+  if (inList) buf += "</ul>";
+  return buf;
+}
+$("#rec-gen")?.addEventListener("click", async function () {
+  const btn = this, out = $("#rec-out");
+  if (!CURRENT) { out.className = ""; out.innerHTML = '<p class="dim">Upload a source first.</p>'; return; }
+  btn.disabled = true; btn.textContent = "Analysing…";
+  out.className = ""; out.innerHTML = '<span class="spin"></span><span class="placeholder">Reading your audience data…</span>';
+  try {
+    const data = await fetch("api/recommend", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ source: CURRENT })
+    }).then(r => r.json());
+    if (data.error) throw new Error(data.error);
+    out.innerHTML = mdToHtml(data.recommendations || "");
+    btn.textContent = "Regenerate";
+  } catch (e) {
+    out.innerHTML = `<p style="color:var(--alert)"><strong>Unavailable.</strong> ${e.message}. Check your AI key, then retry.</p>`;
+    btn.textContent = "Retry";
+  }
+  btn.disabled = false;
+});
+
 // ── Upload: choose/drop → stage → explicit Run → process ────────────────────
 const empty = $("#empty"), input = $("#file-input"), errBox = $("#upload-error");
 const chooseBox = $("#choose"), stagedBox = $("#staged"), processingBox = $("#processing");

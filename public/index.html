@@ -239,6 +239,7 @@ tr:hover td{background:var(--ink2)}
     <div class="tabs">
       <button class="tab" data-v="sources">Sources</button>
       <button class="tab" data-v="readership">Readership</button>
+      <button class="tab" data-v="recommend">Recommendations</button>
       <button class="tab on" data-v="beats">Beats</button>
       <button class="tab" data-v="signal">Signal Leaders</button>
       <button class="tab" data-v="trend">Rising / Fading</button>
@@ -271,6 +272,16 @@ tr:hover td{background:var(--ink2)}
       <div id="readership-stats" class="topline" style="margin-bottom:18px"></div>
       <div id="readership-prompt"></div>
       <div id="readership-body"></div>
+    </div>
+    <div id="v-recommend" class="view">
+      <div class="sec-h">Forward-looking · grounded in your audience data + newsroom context</div>
+      <div class="sec-t">Where to put your resources next</div>
+      <div class="sec-d">Ask the Node to read your audience data and recommend which topics to follow and where to invest for the most engagement. The more context it has (your location & audience), the sharper the advice.</div>
+      <div class="ai-box">
+        <div class="ai-bar"><div class="t">⌁ Audience-strategy recommendations</div>
+          <button class="btn" id="rec-gen">Recommend where to focus</button></div>
+        <div class="ai-body"><div class="placeholder" id="rec-out">No recommendations yet. Press the button — it reads the source you're viewing.</div></div>
+      </div>
     </div>
     <div id="v-beats" class="view on">
       <div class="sec-h">Topic clustering · keyword-tagged, editable in <code>lib/beats.js</code></div>
