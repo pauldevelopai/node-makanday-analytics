@@ -15,7 +15,7 @@
     "test": "node --test tests/*.test.js"
   },
   "dependencies": {
-    "@developai/grounded-node-runtime": "github:pauldevelopai/grounded-node-runtime#v0.11.1",
+    "@developai/grounded-node-runtime": "github:pauldevelopai/grounded-node-runtime#v0.12.1",
     "dotenv": "^16.4.5"
   },
   "comment_dependencies": "The runtime provides BOTH entrypoints (createServer local, createHostedServer online) and all their deps (express/multer/mammoth/anthropic + lazy pg/cookie-parser/jsonwebtoken). This Node only adds pdf-parse + word-extractor, used by lib/extract.js for .pdf / legacy .doc uploads (lazy-imported; a .docx-only install never loads them). Optional so a flaky build can't break a local install.",
