@@ -12,8 +12,12 @@ function applyBrand(setup) {
   const nr = setup.newsroom;
   const full = nr ? `${nr} ${product}` : product;
   document.title = full;
+  // Only prefix the big headline with a display-friendly newsroom name. An email
+  // address or a long id (the hosted per-user newsroom) is shown in the kicker
+  // line above instead of dominating the masthead.
+  const nrInHeadline = nr && !nr.includes("@") && nr.length <= 24 ? nr : null;
   const k = $("#brand-kicker");   if (k) k.textContent = `${nr ? nr + " · " : ""}${product} Node · running locally`;
-  const h = $("#brand-h1");       if (h) h.innerHTML = `${nr ? escapeHtml(nr) + " " : ""}<span>${escapeHtml(product)}</span>`;
+  const h = $("#brand-h1");       if (h) h.innerHTML = `${nrInHeadline ? escapeHtml(nrInHeadline) + " " : ""}<span>${escapeHtml(product)}</span>`;
   const f = $("#brand-foot");     if (f) f.textContent = `${full} — a Node on GROUNDED, running on your computer`;
   const af = $("#activity-file"); if (af && setup.activityFile) af.textContent = setup.activityFile;
 }
