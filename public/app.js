@@ -179,8 +179,11 @@ function renderSignal(mode) {
   $("#signal-tb").innerHTML = rows.map(d => {
     const cls = d.rate >= 2 ? "hi" : d.rate < 1 ? "lo" : "";
     const bcls = d.band === "exceptional" ? "exceptional" : d.band === "low" ? "low" : "";
+    const titleHtml = d.url
+      ? `<a href="${escapeHtml(d.url)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-decoration-color:var(--line)">${escapeHtml(d.title)}</a>`
+      : escapeHtml(d.title);
     return `<tr>
-      <td class="tt">${escapeHtml(d.title)} <span class="dim mono">· ${d.month}</span></td>
+      <td class="tt">${titleHtml} <span class="dim mono">· ${d.month}</span></td>
       <td><span class="pill">${d.beats[0]}</span></td>
       <td><span class="pill ${bcls}">${d.band}</span></td>
       <td class="r mono">${d.reach.toLocaleString()}</td>
@@ -613,6 +616,49 @@ async function saveContext() {
 $("#ctx-save")?.addEventListener("click", saveContext);
 $("#banner-go")?.addEventListener("click", () => document.querySelector('.tab[data-v="newsroom"]')?.click());
 
+// ── Stories & links (#5) ─────────────────────────────────────────────────────
+async function renderStories() {
+  const body = $("#stories-body"); if (!body || !CURRENT) return;
+  const d = await fetch("api/links?source=" + encodeURIComponent(CURRENT)).then(r => r.json()).catch(() => ({ stories: [] }));
+  const miss = $("#stories-missing");
+  if (miss) miss.textContent = d.missing ? `${d.missing} of ${d.total} still need a link.` : (d.total ? "All stories linked." : "");
+  body.innerHTML = `<table><thead><tr><th>#</th><th>Story</th><th>Link</th></tr></thead><tbody>` +
+    (d.stories || []).map(s => `<tr><td class="mono dim">${s.n}</td><td class="tt">${escapeHtml(s.title)}</td>
+      <td>${s.url
+        ? `<a href="${escapeHtml(s.url)}" target="_blank" rel="noopener" class="mono" style="color:var(--signal);font-size:12px">${escapeHtml(s.url.length > 50 ? s.url.slice(0, 48) + "…" : s.url)}</a>`
+        : `<input type="url" data-n="${s.n}" class="ni link-in" placeholder="https://… paste the article link" style="font-size:12px;padding:6px 8px">`}</td></tr>`).join("") +
+    `</tbody></table>`;
+}
+$("#stories-save")?.addEventListener("click", async function () {
+  const inputs = [...document.querySelectorAll("#stories-body .link-in")].filter(i => i.value.trim());
+  const status = $("#stories-status");
+  if (!inputs.length) { status.textContent = "No new links entered."; return; }
+  const links = inputs.map(i => ({ n: Number(i.dataset.n), url: i.value.trim() }));
+  this.disabled = true; status.textContent = "Saving…";
+  try {
+    const d = await fetch("api/links", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ source: CURRENT, links }) }).then(r => r.json());
+    status.textContent = `Saved ${d.saved} link(s).`;
+    await renderStories(); load(CURRENT);
+  } catch (e) { status.textContent = "Save failed: " + e.message; }
+  finally { this.disabled = false; }
+});
+
+$("#stories-scrape")?.addEventListener("click", async function () {
+  const status = $("#stories-status");
+  if (!CURRENT) return;
+  this.disabled = true; const old = this.textContent; this.textContent = "Reading…";
+  status.textContent = "Fetching linked articles — this can take a minute…";
+  try {
+    const d = await fetch("api/scrape?source=" + encodeURIComponent(CURRENT), { method: "POST" }).then(r => r.json());
+    if (!d.ok) throw new Error(d.message || "scrape failed");
+    status.textContent = d.attempted
+      ? `Read ${d.scraped} of ${d.attempted} (${d.blocked} blocked, ${d.failed} failed). ${d.linked} linked in total.`
+      : (d.linked ? "All linked stories already read." : "No linked stories yet — add links first.");
+    load(CURRENT);
+  } catch (e) { status.textContent = "Couldn't read stories: " + e.message; }
+  finally { this.disabled = false; this.textContent = old; }
+});
+
 document.querySelector(".tabs")?.addEventListener("click", e => {
   const t = e.target.closest(".tab[data-v]"); if (!t) return;
   document.querySelectorAll(".tab[data-v]").forEach(x => x.classList.remove("on"));
@@ -620,6 +666,7 @@ document.querySelector(".tabs")?.addEventListener("click", e => {
   t.classList.add("on"); $("#v-" + t.dataset.v).classList.add("on");
   if (t.dataset.v === "sources") renderSources();
   if (t.dataset.v === "newsroom") loadContext();
+  if (t.dataset.v === "stories") renderStories();
 });
 
 $("#gen").addEventListener("click", async function () {

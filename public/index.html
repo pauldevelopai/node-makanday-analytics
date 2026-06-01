@@ -248,6 +248,7 @@ tr:hover td{background:var(--ink2)}
     <div class="tabs">
       <button class="tab" data-v="sources">Sources</button>
       <button class="tab" data-v="newsroom">Newsroom</button>
+      <button class="tab" data-v="stories">Stories</button>
       <button class="tab" data-v="readership">Readership</button>
       <button class="tab" data-v="recommend">Recommendations</button>
       <button class="tab on" data-v="beats">Beats</button>
@@ -282,6 +283,18 @@ tr:hover td{background:var(--ink2)}
       <div id="readership-stats" class="topline" style="margin-bottom:18px"></div>
       <div id="readership-prompt"></div>
       <div id="readership-body"></div>
+    </div>
+    <div id="v-stories" class="view">
+      <div class="sec-h">Link to the actual stories · the more links, the richer the data</div>
+      <div class="sec-t">Stories &amp; links</div>
+      <div class="sec-d">When a story links to its published article, the Node can read the real text and learn about your coverage. Fill in any missing links and Save. <span id="stories-missing" class="dim"></span></div>
+      <div id="stories-body"></div>
+      <div style="margin-top:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <button class="btn" id="stories-save">Save links</button>
+        <button class="toggle" id="stories-scrape">Read linked stories</button>
+        <span id="stories-status" class="dim mono" style="font-size:12px"></span>
+      </div>
+      <div class="sec-d" style="margin-top:8px;font-size:13px">“Read linked stories” fetches each linked article's text and stores it so the Node learns your coverage — feeding finer topic detection and better recommendations. Public articles only; paywalled ones are skipped.</div>
     </div>
     <div id="v-newsroom" class="view">
       <div class="sec-h">Who you are · where you publish · who you serve</div>
