@@ -237,6 +237,8 @@ tr:hover td{background:var(--ink2)}
   <div id="dash" style="display:none">
     <div class="topline" id="topline"></div>
     <div class="tabs">
+      <button class="tab" data-v="sources">Sources</button>
+      <button class="tab" data-v="readership">Readership</button>
       <button class="tab on" data-v="beats">Beats</button>
       <button class="tab" data-v="signal">Signal Leaders</button>
       <button class="tab" data-v="trend">Rising / Fading</button>
@@ -255,6 +257,21 @@ tr:hover td{background:var(--ink2)}
       <button class="tab" data-v="brief">AI Brief</button>
     </div>
 
+    <div id="v-sources" class="view">
+      <div class="sec-h">Your audience data · multiple files, kept up to date</div>
+      <div class="sec-t">Sources</div>
+      <div class="sec-d">Every matrix you've added. Add more any time — they're all kept. Linked Google Sheets can be <b>refreshed</b> to pull the latest rows. Your data stays tied to your newsroom and persists across sign-ins.</div>
+      <div id="sources-list"></div>
+      <div style="margin-top:18px"><button class="btn" id="add-source-btn">+ Add another source</button></div>
+    </div>
+    <div id="v-readership" class="view">
+      <div class="sec-h">How many people are actually reading</div>
+      <div class="sec-t">Readership</div>
+      <div class="sec-d">Reach is how many the platform <em>served</em> (inflated by boosting). <b>Unique readers</b> and <b>pageviews</b> — when your data has them — are how many people actually read. Add those columns to your sheet to unlock the fuller picture.</div>
+      <div id="readership-stats" class="topline" style="margin-bottom:18px"></div>
+      <div id="readership-prompt"></div>
+      <div id="readership-body"></div>
+    </div>
     <div id="v-beats" class="view on">
       <div class="sec-h">Topic clustering · keyword-tagged, editable in <code>lib/beats.js</code></div>
       <div class="sec-t">Which beats actually move the audience</div>

@@ -104,6 +104,7 @@ async function load(source, fit) {
   renderTopline(); renderBeats(); renderBeatsControls(); renderSignal("rate");
   renderTrend(); renderFormat(); renderHeadline(); renderTimeline();
   renderWords(); renderSentiment(); renderComparePicker();
+  renderReadership();
   renderGems(); renderTiming(); renderOutliers();
   $("#score-out").innerHTML = "";
   renderQuality();
@@ -417,6 +418,7 @@ async function loadSheet() {
     const text = await res.text();
     if (/^\s*<(!doctype|html)/i.test(text)) throw new Error("Google returned a login page, not data — publish the sheet (File → Share → Publish to web → CSV) or set it to 'anyone with the link'.");
     const file = new File([text], "google-sheet.csv", { type: "text/csv" });
+    pendingSheetUrl = raw;   // remember the share URL so we can offer "Refresh from sheet"
     stageFile(file);
     runUpload();
   } catch (e) {
@@ -480,11 +482,98 @@ async function renderActivity() {
   }).join("");
 }
 
+// ── Sources management (#1, #3) ──────────────────────────────────────────────
+async function renderSources() {
+  const list = $("#sources-list");
+  if (!list) return;
+  const sources = await fetch("api/sources").then(r => r.json()).catch(() => []);
+  ALL_SOURCES = sources;
+  if (!sources.length) { list.innerHTML = `<div class="dim">No sources yet — add your first below.</div>`; return; }
+  list.innerHTML = sources.map(s => {
+    const active = s.source_label === CURRENT;
+    const kind = s.kind || "file";
+    const when = s.last_refreshed ? new Date(s.last_refreshed).toLocaleString() : "—";
+    const refreshBtn = (kind === "sheet" && s.sheet_url)
+      ? `<button class="toggle" data-refresh="${escapeHtml(s.source_label)}" data-url="${escapeHtml(s.sheet_url)}">↻ Refresh from sheet</button>` : "";
+    return `<div class="barrow" style="grid-template-columns:1fr auto;align-items:center">
+      <div>
+        <div class="barlbl"><b>${escapeHtml(s.source_label)}</b> ${active ? '<span class="pill exceptional">viewing</span>' : ""}</div>
+        <div class="dim mono" style="font-size:12px">${s.n} stories · ${kind}${kind === "sheet" ? " (linked)" : ""} · updated ${when}</div>
+      </div>
+      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end">
+        ${active ? "" : `<button class="toggle" data-view="${escapeHtml(s.source_label)}">View</button>`}
+        ${refreshBtn}
+        <button class="toggle" style="color:var(--alert);border-color:var(--alert)" data-del="${escapeHtml(s.source_label)}">Delete</button>
+      </div></div>`;
+  }).join("");
+}
+function setSource(label) {
+  const picker = $("#picker");
+  if (picker) picker.value = label;
+  load(label);
+}
+async function refreshSheet(label, sheetUrl, btn) {
+  const csvUrl = toCsvExportUrl(sheetUrl);
+  if (!csvUrl) { alert("The stored sheet link looks invalid."); return; }
+  if (btn) { btn.disabled = true; btn.textContent = "Refreshing…"; }
+  try {
+    const res = await fetch(csvUrl); const text = await res.text();
+    if (!res.ok || /^\s*<(!doctype|html)/i.test(text)) throw new Error("couldn't read the sheet (is it still shared/published?)");
+    const fd = new FormData();
+    fd.append("file", new File([text], label + ".csv", { type: "text/csv" }));
+    fd.append("sourceLabel", label);
+    const up = await fetch("api/ingest", { method: "POST", body: fd }); const d = await up.json();
+    if (!up.ok || d.error) throw new Error(d.error || "refresh failed");
+    await fetch("api/sources/" + encodeURIComponent(label), { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ sheet_url: sheetUrl }) });
+    await boot();
+  } catch (e) { alert("Refresh failed: " + e.message); }
+  finally { if (btn) { btn.disabled = false; btn.textContent = "↻ Refresh from sheet"; } }
+}
+$("#sources-list")?.addEventListener("click", async e => {
+  const v = e.target.closest("[data-view]"); if (v) return setSource(v.dataset.view);
+  const r = e.target.closest("[data-refresh]"); if (r) return refreshSheet(r.dataset.refresh, r.dataset.url, r);
+  const d = e.target.closest("[data-del]");
+  if (d && confirm(`Delete source "${d.dataset.del}" and all its stories? This can't be undone.`)) {
+    await fetch("api/sources/" + encodeURIComponent(d.dataset.del), { method: "DELETE" });
+    await boot();
+  }
+});
+$("#add-source-btn")?.addEventListener("click", () => showEmpty());
+
+// ── Readership (#4) ──────────────────────────────────────────────────────────
+function renderReadership() {
+  const rows = (REPORT && REPORT.stories) || [];
+  const stats = $("#readership-stats"), prompt = $("#readership-prompt"), body = $("#readership-body");
+  if (!stats) return;
+  const hasU = rows.some(r => r.unique_readers != null);
+  const hasPV = rows.some(r => r.pageviews != null);
+  const sum = k => rows.reduce((a, r) => a + (Number(r[k]) || 0), 0);
+  const cells = [["Stories", rows.length, ""], ["Total reach", fmt(sum("reach")), " served"]];
+  if (hasU) cells.push(["Unique readers", fmt(sum("unique_readers")), " people"]);
+  if (hasPV) cells.push(["Pageviews", fmt(sum("pageviews")), ""]);
+  stats.innerHTML = cells.map(c => `<div class="stat"><div class="l">${c[0]}</div><div class="v">${c[1]}<small>${c[2]}</small></div></div>`).join("");
+  const missing = [];
+  if (!hasU) missing.push("unique readers");
+  if (!hasPV) missing.push("pageviews");
+  prompt.innerHTML = missing.length
+    ? `<div class="err" style="border-color:var(--signal);color:var(--paper-dim)">Your data doesn't include <b>${missing.join(" or ")}</b> yet. Add a column named “unique readers” (or “users”, “visitors”) and/or “pageviews” (or “sessions”) to your sheet and re-upload — then this shows how many people actually read, not just the boosted reach.</div>`
+    : "";
+  if (!hasU && !hasPV) { body.innerHTML = ""; return; }
+  const keyOf = r => (r.unique_readers != null ? r.unique_readers : (r.pageviews != null ? r.pageviews : 0));
+  const sorted = [...rows].sort((a, b) => keyOf(b) - keyOf(a)).slice(0, 30);
+  body.innerHTML = `<table><thead><tr><th>Story</th><th class="r">Reach</th>${hasU ? '<th class="r">Unique readers</th>' : ""}${hasPV ? '<th class="r">Pageviews</th>' : ""}<th class="r">Eng. rate</th></tr></thead><tbody>` +
+    sorted.map(r => {
+      const rate = r.rate != null ? r.rate : (r.reach ? r.engagement / r.reach * 100 : null);
+      return `<tr><td class="tt">${escapeHtml(r.title)}</td><td class="r mono">${(r.reach || 0).toLocaleString()}</td>${hasU ? `<td class="r mono">${r.unique_readers != null ? r.unique_readers.toLocaleString() : "—"}</td>` : ""}${hasPV ? `<td class="r mono">${r.pageviews != null ? r.pageviews.toLocaleString() : "—"}</td>` : ""}<td class="r rate">${rate != null ? rate.toFixed(2) + "%" : "—"}</td></tr>`;
+    }).join("") + `</tbody></table>`;
+}
+
 document.querySelector(".tabs")?.addEventListener("click", e => {
   const t = e.target.closest(".tab[data-v]"); if (!t) return;
   document.querySelectorAll(".tab[data-v]").forEach(x => x.classList.remove("on"));
   document.querySelectorAll(".view").forEach(x => x.classList.remove("on"));
   t.classList.add("on"); $("#v-" + t.dataset.v).classList.add("on");
+  if (t.dataset.v === "sources") renderSources();
 });
 
 $("#gen").addEventListener("click", async function () {
@@ -521,6 +610,7 @@ const empty = $("#empty"), input = $("#file-input"), errBox = $("#upload-error")
 const chooseBox = $("#choose"), stagedBox = $("#staged"), processingBox = $("#processing");
 const stagedNameEl = $("#staged-name"), runBtn = $("#run-btn");
 let stagedFile = null;
+let pendingSheetUrl = null;   // set when the staged file came from a Google Sheet
 
 function showUploadError(msg) { errBox.textContent = msg; errBox.style.display = "block"; }
 function clearUploadError() { errBox.textContent = ""; errBox.style.display = "none"; }
@@ -554,13 +644,23 @@ async function runUpload() {
   stagedBox.style.display = "none";
   processingBox.style.display = "block";
   empty.classList.add("busy");
+  const label = stagedFile.name.replace(/\.[^.]+$/, "");
   const fd = new FormData();
   fd.append("file", stagedFile);
-  fd.append("sourceLabel", stagedFile.name.replace(/\.[^.]+$/, ""));
+  fd.append("sourceLabel", label);
   try {
     const res = await fetch("api/ingest", { method: "POST", body: fd });
     const data = await res.json();
     if (!res.ok || data.error) throw new Error(data.error || "Upload failed");
+    // If this came from a Google Sheet, associate the share URL so the dashboard
+    // can offer "Refresh from sheet" on this source later.
+    if (pendingSheetUrl) {
+      await fetch("api/sources/" + encodeURIComponent(label), {
+        method: "PUT", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sheet_url: pendingSheetUrl }),
+      }).catch(() => {});
+      pendingSheetUrl = null;
+    }
     await boot();
   } catch (e) {
     showUploadError(e.message);
