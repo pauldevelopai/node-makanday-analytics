@@ -201,11 +201,19 @@ tr:hover td{background:var(--ink2)}
   <div id="empty" class="empty" style="display:none">
     <div id="choose">
       <h2>Upload your matrix to get started</h2>
-      <p>Drag your <b>Stories Produced 2025 Social Media Matrix</b> &mdash; a Word
-        (.docx / .doc) or PDF file &mdash; here, or click below.</p>
+      <p>Drag your <b>Social Media Matrix</b> &mdash; a Word (.docx / .doc), PDF, or
+        spreadsheet (.csv) &mdash; here, or click below.</p>
       <label for="file-input">Choose file</label>
-      <input id="file-input" type="file" accept=".docx,.doc,.pdf">
+      <input id="file-input" type="file" accept=".docx,.doc,.pdf,.csv,.tsv,.txt">
       <div class="or">or drop the file anywhere in this box</div>
+      <div class="sheet-row" style="margin-top:22px;max-width:560px;margin-left:auto;margin-right:auto">
+        <div class="or" style="margin-bottom:8px">or link a Google Sheet</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
+          <input id="sheet-url" type="url" placeholder="https://docs.google.com/spreadsheets/d/…" style="flex:1;min-width:280px;font-family:var(--mono);font-size:13px;padding:10px 12px;background:var(--ink2);color:var(--paper);border:1px solid var(--line);border-radius:6px" />
+          <button id="sheet-btn" class="run-analyze" style="padding:10px 20px">Load sheet</button>
+        </div>
+        <div class="or" style="margin-top:8px;font-size:12px">In Google Sheets: <b>File → Share → Publish to web → CSV</b>, then paste that link (or a normal “anyone with the link” sheet URL).</div>
+      </div>
     </div>
 
     <div id="staged" style="display:none">
@@ -236,6 +244,10 @@ tr:hover td{background:var(--ink2)}
       <button class="tab" data-v="headline">Headline Signal</button>
       <button class="tab" data-v="words">Words</button>
       <button class="tab" data-v="sentiment">Sentiment</button>
+      <button class="tab" data-v="score">Score a headline</button>
+      <button class="tab" data-v="gems">Hidden Gems</button>
+      <button class="tab" data-v="timing">Best Day</button>
+      <button class="tab" data-v="outliers">Over/Under</button>
       <button class="tab" data-v="timeline">Timeline</button>
       <button class="tab" data-v="compare">Compare</button>
       <button class="tab" data-v="quality">Data Quality</button>
@@ -300,6 +312,45 @@ tr:hover td{background:var(--ink2)}
       <div class="sec-d">Each headline scored for emotional valence with the open-source AFINN-165 lexicon — on your computer, no AI key needed.</div>
       <div id="sentiment-callout" class="sec-d" style="margin:6px 0 12px"></div>
       <div id="sentiment"></div>
+    </div>
+    <div id="v-score" class="view">
+      <div class="sec-h">Predict before you publish</div>
+      <div class="sec-t">Type a draft headline &mdash; get its likely engagement rate, from your own history</div>
+      <div class="sec-d">Built only from <b>your</b> stories: beats, headline shape, high/low-converting words, and framing. Transparent &mdash; every adjustment is shown. Not a guarantee, a prior.</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 6px">
+        <input id="score-input" type="text" placeholder="e.g. Mining boom: inside the deal that left residents with nothing" style="flex:1;min-width:300px;font-size:14px;padding:11px 13px;background:var(--ink2);color:var(--paper);border:1px solid var(--line);border-radius:6px" />
+        <button id="score-btn" class="btn">Score it</button>
+      </div>
+      <div id="score-out"></div>
+    </div>
+    <div id="v-gems" class="view">
+      <div class="sec-h">Reach &times; rate &mdash; what to re-promote</div>
+      <div class="sec-t">Stories that resonated but barely reached anyone are your best boost candidates</div>
+      <div id="gem-grid" class="topline" style="margin-bottom:16px"></div>
+      <div class="sec-t" style="color:var(--good)">Hidden gems &mdash; low reach, high rate (boost these)</div>
+      <table><thead><tr><th>Story</th><th>Beat</th><th class="r">Reach</th><th class="r">Eng.</th><th class="r">Rate</th></tr></thead><tbody id="gems-tb"></tbody></table>
+      <div class="sec-t" style="color:var(--alert);margin-top:18px">Loud but hollow &mdash; high reach, low rate</div>
+      <table><thead><tr><th>Story</th><th>Beat</th><th class="r">Reach</th><th class="r">Eng.</th><th class="r">Rate</th></tr></thead><tbody id="duds-tb"></tbody></table>
+    </div>
+    <div id="v-timing" class="view">
+      <div class="sec-h">Day-of-week resonance</div>
+      <div class="sec-t">Which day your audience rewards most (median engagement rate)</div>
+      <div id="timing"></div>
+      <div id="timing-note" class="sec-d" style="margin-top:10px"></div>
+    </div>
+    <div id="v-outliers" class="view">
+      <div class="sec-h">Beat their own beat</div>
+      <div class="sec-t">Stories that punched above &mdash; or below &mdash; what their beat normally does</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:6px">
+        <div>
+          <div class="sec-t" style="color:var(--good)">Over-performers &uarr;</div>
+          <table><thead><tr><th>Story</th><th class="r">Rate</th><th class="r">Beat norm</th><th class="r">&Delta;</th></tr></thead><tbody id="over-tb"></tbody></table>
+        </div>
+        <div>
+          <div class="sec-t" style="color:var(--alert)">Under-performers &darr;</div>
+          <table><thead><tr><th>Story</th><th class="r">Rate</th><th class="r">Beat norm</th><th class="r">&Delta;</th></tr></thead><tbody id="under-tb"></tbody></table>
+        </div>
+      </div>
     </div>
     <div id="v-timeline" class="view">
       <div class="sec-h">Monthly medians</div>

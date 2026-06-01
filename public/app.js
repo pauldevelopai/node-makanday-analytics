@@ -103,6 +103,8 @@ async function load(source, fit) {
   renderTopline(); renderBeats(); renderBeatsControls(); renderSignal("rate");
   renderTrend(); renderFormat(); renderHeadline(); renderTimeline();
   renderWords(); renderSentiment(); renderComparePicker();
+  renderGems(); renderTiming(); renderOutliers();
+  $("#score-out").innerHTML = "";
   renderQuality();
   renderActivity();
   $("#ai-out").className = "placeholder";
@@ -313,6 +315,116 @@ function renderComparison(cmp) {
   $("#cmp-beats").innerHTML = cmpRows(cmp.beats);
   $("#cmp-formats").innerHTML = cmpRows(cmp.formats);
 }
+
+// ── Hidden gems / reach×rate quadrant ────────────────────────────────────────
+function storyRow(d, cols = 5) {
+  return `<tr>
+    <td class="tt">${escapeHtml(d.title)} <span class="dim mono">· ${escapeHtml(d.month || "")}</span></td>
+    <td><span class="pill">${escapeHtml(d.beat || "")}</span></td>
+    <td class="r mono">${(d.reach || 0).toLocaleString()}</td>
+    <td class="r mono">${d.engagement}</td>
+    <td class="r rate">${d.rate.toFixed(2)}%</td></tr>`;
+}
+function renderGems() {
+  const q = REPORT.quadrants || { counts: {}, hiddenGems: [], boostedDuds: [] };
+  const c = q.counts || {};
+  const cells = [
+    ["Hidden gems", c.hiddenGem || 0, "low reach · high rate"],
+    ["Stars", c.star || 0, "high reach · high rate"],
+    ["Boosted duds", c.boostedDud || 0, "high reach · low rate"],
+    ["Quiet", c.quiet || 0, "low reach · low rate"],
+  ];
+  $("#gem-grid").innerHTML = cells.map(x => `<div class="stat"><div class="l">${x[0]}</div><div class="v">${x[1]}<small> ${x[2]}</small></div></div>`).join("");
+  const rows = list => (list && list.length) ? list.map(d => storyRow(d)).join("") : `<tr><td colspan="5" class="dim">None in this set.</td></tr>`;
+  $("#gems-tb").innerHTML = rows(q.hiddenGems);
+  $("#duds-tb").innerHTML = rows(q.boostedDuds);
+}
+
+// ── Best day-of-week ─────────────────────────────────────────────────────────
+function renderTiming() {
+  const w = REPORT.weekday || { days: [], undated: 0, covered: 0 };
+  if (!w.days.length) {
+    $("#timing").innerHTML = `<div class="dim">No usable publication dates to compute day-of-week.</div>`;
+    $("#timing-note").textContent = "";
+    return;
+  }
+  const rows = w.days.map(d => ({ ...d, _meta: `[${d.n}]` }));
+  bars($("#timing"), rows, r => r.day, r => r.medianRate, v => v.toFixed(2) + "%");
+  $("#timing-note").textContent = `Based on ${w.covered} stories with a readable date${w.undated ? ` · ${w.undated} had no usable date` : ""}.`;
+}
+
+// ── Over / under performers ──────────────────────────────────────────────────
+function renderOutliers() {
+  const o = REPORT.outliers || { overPerformers: [], underPerformers: [] };
+  const rows = list => (list && list.length) ? list.map(s => `<tr>
+    <td class="tt">${escapeHtml(s.title)} <span class="dim mono">· ${escapeHtml(s.beat || "")}</span></td>
+    <td class="r mono">${s.rate.toFixed(2)}%</td>
+    <td class="r mono">${s.expected.toFixed(2)}%</td>
+    <td class="r delta ${s.residual >= 0 ? "up" : "down"}">${s.residual >= 0 ? "+" : ""}${s.residual.toFixed(2)}</td></tr>`).join("")
+    : `<tr><td colspan="4" class="dim">Not enough stories.</td></tr>`;
+  $("#over-tb").innerHTML = rows(o.overPerformers);
+  $("#under-tb").innerHTML = rows(o.underPerformers);
+}
+
+// ── Headline scorer ──────────────────────────────────────────────────────────
+async function runScore() {
+  const draft = $("#score-input").value.trim();
+  const out = $("#score-out");
+  if (!draft) { out.innerHTML = ""; return; }
+  out.innerHTML = '<span class="placeholder">Scoring against your history…</span>';
+  const rep = await fetch(`api/report?source=${encodeURIComponent(CURRENT)}&score=${encodeURIComponent(draft)}`).then(r => r.json()).catch(() => ({}));
+  const s = rep.scored;
+  if (!s || s.error) { out.innerHTML = `<div class="dim">${escapeHtml(s?.error || "Could not score.")}</div>`; return; }
+  const bcls = s.band === "exceptional" ? "exceptional" : s.band === "low" ? "low" : "";
+  const factors = (s.factors || []).map(f =>
+    `<tr><td>${escapeHtml(f.label)}</td><td class="r delta ${f.delta >= 0 ? "up" : "down"}">${f.delta >= 0 ? "+" : ""}${f.delta.toFixed(2)}</td></tr>`).join("");
+  out.innerHTML = `
+    <div class="topline" style="margin:14px 0">
+      <div class="stat"><div class="l">Predicted rate</div><div class="v">${s.predictedRate.toFixed(2)}<small>%</small></div></div>
+      <div class="stat"><div class="l">Band</div><div class="v"><span class="pill ${bcls}">${s.band}</span></div></div>
+      <div class="stat"><div class="l">Newsroom median</div><div class="v">${s.base.toFixed(2)}<small>%</small></div></div>
+    </div>
+    ${factors
+      ? `<div class="sec-t">Why this prediction</div><table><thead><tr><th>Factor</th><th class="r">Δ points</th></tr></thead><tbody>${factors}</tbody></table>`
+      : '<div class="dim">No strong signals matched this headline — predicted near the newsroom median.</div>'}`;
+}
+$("#score-btn")?.addEventListener("click", runScore);
+$("#score-input")?.addEventListener("keydown", e => { if (e.key === "Enter") runScore(); });
+
+// ── Load from a Google Sheet (client fetch → ingest as CSV) ───────────────────
+function toCsvExportUrl(input) {
+  let url;
+  try { url = new URL(String(input).trim()); } catch { return null; }
+  if (!/(^|\.)docs\.google\.com$/.test(url.hostname)) return null;
+  const gid = url.searchParams.get("gid") || (url.hash.match(/gid=(\d+)/) || [])[1] || "0";
+  let m = url.pathname.match(/\/spreadsheets\/d\/e\/([^/]+)/);   // published-to-web
+  if (m) return `https://docs.google.com/spreadsheets/d/e/${m[1]}/pub?output=csv&single=true&gid=${gid}`;
+  m = url.pathname.match(/\/spreadsheets\/d\/([^/]+)/);          // normal share link
+  if (m) return `https://docs.google.com/spreadsheets/d/${m[1]}/export?format=csv&gid=${gid}`;
+  return null;
+}
+async function loadSheet() {
+  const raw = $("#sheet-url").value.trim();
+  clearUploadError();
+  if (!raw) return;
+  const csvUrl = toCsvExportUrl(raw);
+  if (!csvUrl) { showUploadError("That doesn't look like a Google Sheets link."); return; }
+  const btn = $("#sheet-btn"); btn.disabled = true; btn.textContent = "Loading…";
+  try {
+    const res = await fetch(csvUrl);
+    if (!res.ok) throw new Error(`Couldn't read the sheet (HTTP ${res.status}).`);
+    const text = await res.text();
+    if (/^\s*<(!doctype|html)/i.test(text)) throw new Error("Google returned a login page, not data — publish the sheet (File → Share → Publish to web → CSV) or set it to 'anyone with the link'.");
+    const file = new File([text], "google-sheet.csv", { type: "text/csv" });
+    stageFile(file);
+    runUpload();
+  } catch (e) {
+    showUploadError(e.message + " — or download it as CSV (File → Download → Comma-separated values) and drop that file here.");
+  } finally {
+    btn.disabled = false; btn.textContent = "Load sheet";
+  }
+}
+$("#sheet-btn")?.addEventListener("click", loadSheet);
 
 async function renderQuality() {
   const q = await fetch(`api/quality?source=${encodeURIComponent(CURRENT)}`).then(r => r.json()).catch(() => null);
