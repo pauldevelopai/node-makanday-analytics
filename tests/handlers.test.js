@@ -13,22 +13,32 @@ test("getSetupStatus reports managed + configured in hosted mode", async () => {
   const s = await getSetupStatus(hostedHost);
   assert.equal(s.configured, true);
   assert.equal(s.managed, true);
+  assert.equal(s.activeProvider, "anthropic");   // Claude-only Node
   // Never leak which keys the shared box holds.
   assert.ok(!("hasAnthropicKey" in s));
-  assert.ok(!("hasOpenAIKey" in s));
 });
 
 test("postSetup refuses to write in hosted mode", async () => {
-  await assert.rejects(
-    () => postSetup(hostedHost, { provider: "anthropic", apiKey: "sk-ant-malicious-overwrite" }),
-    /managed centrally/i
-  );
+  // Contract: postSetup never throws — it returns { ok:false, message } so the
+  // browser can show feedback. Hosted mode must be a refused no-op.
+  const r = await postSetup(hostedHost, { provider: "anthropic", apiKey: "sk-ant-malicious-overwrite" });
+  assert.equal(r.ok, false);
+  assert.equal(r.serverManaged, true);
+  assert.match(r.message, /managed centrally/i);
 });
 
-test("postSetup still validates input in local mode", async () => {
-  // Bad provider is rejected before any .env write is attempted.
-  await assert.rejects(() => postSetup(localHost, { provider: "nope", apiKey: "x".repeat(20) }), /Anthropic or OpenAI/i);
-  await assert.rejects(() => postSetup(localHost, { provider: "anthropic", apiKey: "short" }), /key box/i);
+test("postSetup still validates input in local mode (Claude-only)", async () => {
+  // Non-Anthropic providers are refused before any .env write is attempted.
+  const bad = await postSetup(localHost, { provider: "openai", apiKey: "x".repeat(20) });
+  assert.equal(bad.ok, false);
+  assert.match(bad.message, /runs on Claude/i);
+  const short = await postSetup(localHost, { provider: "anthropic", apiKey: "short" });
+  assert.equal(short.ok, false);
+  assert.match(short.message, /key box/i);
+  // A long key that isn't sk-ant- is refused too.
+  const notAnt = await postSetup(localHost, { provider: "anthropic", apiKey: "sk-proj-" + "x".repeat(20) });
+  assert.equal(notAnt.ok, false);
+  assert.match(notAnt.message, /sk-ant-/);
 });
 
 test("getActivity caps to the most recent N, ascending, and flags truncation", async () => {

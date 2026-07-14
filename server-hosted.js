@@ -15,6 +15,9 @@
 import dotenv from "dotenv";
 dotenv.config({ override: true }); // the box's .env wins over any stale pm2 env
 
+// Claude-only (see index.js) — pin the runtime's provider-flexible AI to Anthropic.
+process.env.AI_PROVIDER = "anthropic";
+
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";

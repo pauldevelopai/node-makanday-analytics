@@ -12,6 +12,12 @@
  */
 
 import "dotenv/config";
+
+// Claude-only. The runtime is provider-flexible (it would auto-pick OpenAI if
+// an OPENAI_API_KEY is lying around in the environment) — pin it to Anthropic
+// so this Node always runs on Claude.
+process.env.AI_PROVIDER = "anthropic";
+
 import { createLiteHost, createServer } from "@developai/grounded-node-runtime";
 import * as handlers from "./lib/handlers.js";
 import { mountAnalyticsRoutes } from "./lib/routes.js";

@@ -11,12 +11,10 @@ If you get stuck on any step, that’s normal. Email Paul at Develop AI and tell
 
 **Before you start: have an AI key ready**
 
-The app uses an AI to write a short editorial read-out of your data. You need a key from one provider — **either** Anthropic (Claude) **or** OpenAI (GPT). You only need one.
+The app uses **Claude** (by Anthropic) to write a short editorial read-out of your data. You need one Anthropic API key.
 
 - **Easiest:** Paul gives you a key on your onboarding call. Have it pasted somewhere handy (a note, an email to yourself). Skip ahead to “Get it running”.
-- **Or sign up yourself:**
-  - Anthropic (Claude): go to console.anthropic.com → Sign up → API Keys → Create Key → copy the key (starts with `sk-ant-`). Then your name (top-right) → Billing → add £5/$5 of credit. That lasts weeks.
-  - OpenAI (GPT): go to platform.openai.com/api-keys → Create new secret key → copy it (starts with `sk-`). Then Settings → Billing → add £5/$5 of credit.
+- **Or sign up yourself:** go to console.anthropic.com → Sign up → API Keys → Create Key → copy the key (starts with `sk-ant-`). Then your name (top-right) → Billing → add £5/$5 of credit. That lasts weeks.
 
 Keep your key private — don’t share it or put it in a public document. The app saves it in a file on your own computer that never leaves your machine.
 
@@ -50,7 +48,7 @@ That’s it. Watch the messages scroll by. When it’s done you’ll see “**is
 
 **First time in the app**
 
-1. The very first time, the app shows a welcome screen asking which AI provider you use. Click **Anthropic** or **OpenAI**, paste your key into the box, and click **Save and continue**.
+1. The very first time, the app shows a welcome screen asking for your Anthropic API key. Paste it into the box and click **Save and continue**.
 2. Next you’ll see the dashboard with a big “**Upload your matrix to get started**” box. Drag your *Stories Produced 2025 Social Media Matrix* Word file into that box (or click **Choose Word file**).
 3. After a few seconds the dashboard fills in — beats, signal leaders, format, timeline, all of it.
 4. Click the **AI Brief** tab, then **Generate brief**. After 15–30 seconds you get the editorial read-out.
@@ -75,7 +73,7 @@ There’s nothing new to learn. **Any day you want to use the app — or to get 
 The app isn’t running. Look at the terminal window — does it still say “is running”? If you closed it, just paste the command again.
 
 **The welcome screen won’t accept my key**
-Make sure you copied the *whole* key (it’s a long string — `sk-ant-…` for Anthropic, `sk-…` for OpenAI). If you’re sure it’s right, your provider account may need credit added in its Billing section.
+Make sure you copied the *whole* key (it’s a long string starting `sk-ant-…`). If you’re sure it’s right, your Anthropic account may need credit added in its Billing section.
 
 **The AI brief says “Brief unavailable”**
 Usually your provider account is out of credit — top it up in its Billing page. Or your key is wrong — click **change api key** top-right and re-enter it.

@@ -60,10 +60,8 @@ button.up{margin-left:8px}
 .setup-hd{padding:20px 28px;border-bottom:1px solid var(--line)}
 .setup-hd h2{font-size:26px;font-weight:600;margin-bottom:6px}
 .setup-hd p{color:var(--paper-dim);font-size:15px;max-width:640px}
-.setup-body{padding:28px;display:grid;grid-template-columns:1fr 1fr;gap:0;background:var(--line);border-bottom:1px solid var(--line)}
-.setup-opt{background:var(--ink2);padding:24px;cursor:pointer;transition:.15s;border:2px solid transparent}
-.setup-opt:hover{background:var(--ink)}
-.setup-opt.on{border-color:var(--signal);background:var(--ink)}
+.setup-body{padding:28px;display:grid;grid-template-columns:1fr;gap:0;background:var(--line);border-bottom:1px solid var(--line)}
+.setup-opt{background:var(--ink);padding:24px;border:2px solid var(--signal)}
 .setup-opt h3{font-size:18px;font-weight:600;margin-bottom:4px}
 .setup-opt .price{font-family:var(--mono);font-size:11px;color:var(--paper-dim);letter-spacing:.04em;margin-bottom:10px}
 .setup-opt p{font-size:13px;color:var(--paper-dim);line-height:1.5}
@@ -171,28 +169,21 @@ tr:hover td{background:var(--ink2)}
   <div id="setup" class="setup" style="display:none">
     <div class="setup-hd">
       <h2>Welcome &mdash; let&rsquo;s set up your AI key</h2>
-      <p>Your Node uses AI to write the editorial brief. Pick whichever
-        provider you already have an account with (or pick whichever feels
-        easier &mdash; both work just as well for this app). You only need
-        <b>one</b> key. Cost is a few cents per brief.</p>
+      <p>Your Node uses <b>Claude</b> (by Anthropic) to write the editorial brief,
+        the recommendations, and the story ideas. You need one API key.
+        Cost is a few cents per brief.</p>
     </div>
     <div class="setup-body">
-      <div class="setup-opt on" data-provider="anthropic">
+      <div class="setup-opt" data-provider="anthropic">
         <h3>Anthropic &mdash; Claude</h3>
         <div class="price">default model: claude-haiku-4-5 &middot; ~$1/$5 per million tokens</div>
         <p>Get a key at <a href="https://console.anthropic.com" target="_blank" rel="noopener">console.anthropic.com</a> &rarr; API Keys.
           Add $5 to Billing. Your key starts with <code>sk-ant-</code>.</p>
       </div>
-      <div class="setup-opt" data-provider="openai">
-        <h3>OpenAI &mdash; GPT</h3>
-        <div class="price">default model: gpt-5.4-mini &middot; ~$0.75/$4.50 per million tokens</div>
-        <p>Get a key at <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">platform.openai.com/api-keys</a>.
-          Add $5 to Billing. Your key starts with <code>sk-</code>.</p>
-      </div>
     </div>
     <div class="setup-key">
-      <label for="setup-key-input">Paste your API key</label>
-      <input id="setup-key-input" type="password" autocomplete="off" placeholder="sk-ant-... or sk-...">
+      <label for="setup-key-input">Paste your Anthropic API key</label>
+      <input id="setup-key-input" type="password" autocomplete="off" placeholder="sk-ant-...">
     </div>
     <div class="setup-err" id="setup-err"></div>
     <div class="setup-actions">
@@ -454,7 +445,7 @@ tr:hover td{background:var(--ink2)}
       <div class="sec-h">Everything this Node has done · stays on this computer</div>
       <div class="sec-t">Activity log</div>
       <div class="sec-d">Every ingest, every brief, every error — timestamped, with the prompt
-        and full response Claude/GPT returned. This file lives at
+        and full response Claude returned. This file lives at
         <code id="activity-file">data/processed/node_analytics_activity.json</code> on your own
         machine. It is never committed or uploaded — nothing here leaves your computer.</div>
       <table><thead><tr><th>When</th><th>Operation</th><th>Source</th><th>Provider / Model</th><th class="r">Duration</th><th>Details</th></tr></thead>

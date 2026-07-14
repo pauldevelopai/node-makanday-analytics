@@ -5,6 +5,14 @@ published-story performance matrix and shows what their audience actually reward
 (engagement *rate*, not raw reach). This is the canonical Node — copy its shape
 when building new ones.
 
+**`WORKING.md` is the spec-vs-reality ledger** — what each feature is meant to do
+vs what was last verified working, dated. Update it after meaningful changes.
+
+**Claude-only (since 2026-07-14).** The runtime is provider-flexible, but both
+entrypoints pin `process.env.AI_PROVIDER = "anthropic"` so a stray `OPENAI_API_KEY`
+in the environment is never auto-picked. Setup accepts only `sk-ant-` keys and
+clears legacy OpenAI keys from `.env` on save.
+
 ## Two entrypoints, same handlers
 - **`index.js`** (LOCAL): `createLiteHost` + `createServer({ slug:"analytics", host, handlers })` from `@developai/grounded-node-runtime`. Storage = JSON files, the user's own AI key.
 - **`server-hosted.js`** (ONLINE): `await createHostedServer({ slug:"analytics", productName:"Audience Signal", handlers, ensureSchema, staticDir })`. ~25 lines — all auth/host/routes/chrome come from the runtime. Runs on the box as pm2 `audience-signal` on :3002, reached at `/nodes/analytics/app/`.

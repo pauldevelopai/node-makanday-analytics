@@ -147,25 +147,21 @@ both worlds — that's the whole point of having designed the host
 interface. The standalone Node and the integrated Node are the same code,
 two implementations underneath.
 
-## Provider flexibility (Anthropic + OpenAI) is standalone-only
+## Provider policy: Claude-only (OpenAI removed 2026-07-14)
 
-Runtime v0.2.0 supports both Anthropic and OpenAI as AI providers, auto-
-detecting from whichever API key is in the newsroom's `.env`. Default
-models are deliberately cheap (`claude-haiku-4-5` for Anthropic,
-`gpt-5.4-mini` for OpenAI). Both overridable via `MODEL=` env var; OpenAI
-calls additionally accept `OPENAI_BASE_URL=` so a newsroom can route
-through OpenRouter, Groq, or local Ollama if they prefer.
+The runtime remains provider-flexible (it can drive Anthropic or OpenAI),
+but this Node is **Claude-only** by decision: Grounded is newsroom-owned
+AI on Anthropic. Both entrypoints pin `process.env.AI_PROVIDER =
+"anthropic"` at boot so the runtime can never auto-pick OpenAI from a
+stray `OPENAI_API_KEY` in the environment; the setup screen accepts only
+an `sk-ant-` key; saving a key actively clears any legacy
+`OPENAI_API_KEY` from `.env`. Default model stays the cheap
+`claude-haiku-4-5`, overridable via `MODEL=`.
 
-**This is standalone-only**. GROUNDED's locked rule #1 (Haiku-only,
-hardcoded in `lib/claude.js`) still stands — when this Node graduates
-into the GROUNDED monorepo, the OpenAI path *is dropped* and the Node
-uses GROUNDED's Haiku-only wrapper. The dual-provider host-lite is a
-laptop-friendly convenience for the pilot, not a forever capability.
-
-If you ever want to relax locked rule #1 for OpenAI support in GROUNDED
-proper, that's a separate, bigger conversation. I'd push back on it —
-the locked rule has cost-control reasoning behind it that I'd want to
-preserve.
+(History: runtime v0.2.0 onwards supported dual providers as a
+standalone-pilot convenience, with `gpt-5.4-mini` as the OpenAI default
+and `OPENAI_BASE_URL` routing. That path was removed from this Node —
+see the git history if it ever needs resurrecting.)
 
 ## What's intentionally NOT here yet (and when to add it)
 

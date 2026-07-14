@@ -58,16 +58,7 @@ function showDash() {
   $("#dash").style.display = "block";
 }
 
-// ── Setup form ──────────────────────────────────────────────────────────────
-let chosenProvider = "anthropic";
-document.querySelectorAll(".setup-opt").forEach(el => {
-  el.addEventListener("click", () => {
-    document.querySelectorAll(".setup-opt").forEach(x => x.classList.remove("on"));
-    el.classList.add("on");
-    chosenProvider = el.dataset.provider;
-  });
-});
-
+// ── Setup form (Claude-only — Anthropic is the one provider this Node uses) ──
 $("#open-setup")?.addEventListener("click", e => {
   e.preventDefault();
   $("#setup-err").classList.remove("on");
@@ -84,7 +75,7 @@ $("#setup-save")?.addEventListener("click", async () => {
   try {
     const res = await fetch("api/setup", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ provider: chosenProvider, apiKey })
+      body: JSON.stringify({ provider: "anthropic", apiKey })
     });
     const data = await res.json().catch(() => ({}));
     // postSetup live-validates the key and returns { ok, message, verified, warning }.
