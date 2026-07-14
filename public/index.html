@@ -242,6 +242,7 @@ tr:hover td{background:var(--ink2)}
       <button class="tab" data-v="stories">Stories</button>
       <button class="tab" data-v="readership">Readership</button>
       <button class="tab" data-v="recommend">Recommendations</button>
+      <button class="tab" data-v="ideas">Story Ideas</button>
       <button class="tab on" data-v="beats">Beats</button>
       <button class="tab" data-v="signal">Signal Leaders</button>
       <button class="tab" data-v="trend">Rising / Fading</button>
@@ -315,6 +316,16 @@ tr:hover td{background:var(--ink2)}
         <div class="ai-bar"><div class="t">⌁ Audience-strategy recommendations</div>
           <button class="btn" id="rec-gen">Recommend where to focus</button></div>
         <div class="ai-body"><div class="placeholder" id="rec-out">No recommendations yet. Press the button — it reads the source you're viewing.</div></div>
+      </div>
+    </div>
+    <div id="v-ideas" class="view">
+      <div class="sec-h">What to write next · pitched from your audience's proven appetite</div>
+      <div class="sec-t">Story ideas</div>
+      <div class="sec-d">Claude reads what your audience has already rewarded — the top performers, hidden gems, rising beats, and lifting words — and pitches new, commissionable story ideas, each tied to the evidence that justifies it. Add your <b>newsroom context</b> to make the pitches fit your patch.</div>
+      <div class="ai-box">
+        <div class="ai-bar"><div class="t">⌁ Claude · commissioning ideas</div>
+          <button class="btn" id="ideas-gen">Generate story ideas</button></div>
+        <div class="ai-body"><div class="placeholder" id="ideas-out">No ideas yet. Press the button — it reads the source you're viewing.</div></div>
       </div>
     </div>
     <div id="v-beats" class="view on">

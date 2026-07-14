@@ -727,6 +727,27 @@ $("#rec-gen")?.addEventListener("click", async function () {
   btn.disabled = false;
 });
 
+// ── Story ideas — commissionable pitches from proven audience appetite ───────
+$("#ideas-gen")?.addEventListener("click", async function () {
+  const btn = this, out = $("#ideas-out");
+  if (!CURRENT) { out.className = ""; out.innerHTML = '<p class="dim">Upload a source first.</p>'; return; }
+  btn.disabled = true; btn.textContent = "Pitching…";
+  out.className = ""; out.innerHTML = '<span class="spin"></span><span class="placeholder">Reading what your audience rewards…</span>';
+  try {
+    const data = await fetch("api/ideas", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ source: CURRENT })
+    }).then(r => r.json());
+    if (data.error) throw new Error(data.error);
+    out.innerHTML = mdToHtml(data.ideas || "");
+    btn.textContent = "Pitch again";
+  } catch (e) {
+    out.innerHTML = `<p style="color:var(--alert)"><strong>Unavailable.</strong> ${e.message}. Check your AI key, then retry.</p>`;
+    btn.textContent = "Retry";
+  }
+  btn.disabled = false;
+});
+
 // ── Upload: choose/drop → stage → explicit Run → process ────────────────────
 const empty = $("#empty"), input = $("#file-input"), errBox = $("#upload-error");
 const chooseBox = $("#choose"), stagedBox = $("#staged"), processingBox = $("#processing");
