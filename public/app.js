@@ -55,6 +55,7 @@ function showEmpty() {
   $("#context-banner").style.display = "none";
   const picker = $("#picker"); if (picker) picker.style.display = "none";
   const um = $("#upload-more"); if (um) um.style.display = "none";
+  const rs = $("#refresh-sheet"); if (rs) rs.style.display = "none";
   document.querySelectorAll("#dash .view").forEach(v => v.classList.remove("on"));
   $("#v-locked").classList.add("on");
   const active = document.querySelector('.tab.on') || document.querySelector('.tab[data-v="beats"]') || document.querySelector('.tab');
@@ -111,6 +112,21 @@ function renderLocked(key) {
   if (desc) desc.textContent = info.d;
 }
 
+// Show the masthead "Refresh from sheet" button whenever the source you're viewing is a
+// linked Google Sheet — so you can re-pull new rows right where you are, not just from the
+// Sources tab. ("Upload another" beside it handles adding a separate matrix.)
+function updateSourceControls(source) {
+  const btn = $("#refresh-sheet");
+  if (!btn) return;
+  const meta = (ALL_SOURCES || []).find(s => s.source_label === source);
+  if (meta && meta.kind === "sheet" && meta.sheet_url) {
+    btn.style.display = "inline-block";
+    btn.onclick = () => refreshSheet(source, meta.sheet_url, btn);
+  } else {
+    btn.style.display = "none";
+  }
+}
+
 // ── Setup form (Claude-only — Anthropic is the one provider this Node uses) ──
 $("#open-setup")?.addEventListener("click", e => {
   e.preventDefault();
@@ -148,6 +164,7 @@ async function load(source, fit) {
   REPORT = await fetch(url).then(r => r.json());
   if (REPORT.empty) { showEmpty(); return; }
   showDash();
+  updateSourceControls(source);
   $("#m-n").textContent = REPORT.topline.stories;
   renderTopline(); renderBeats(); renderBeatsControls(); renderSignal("rate");
   renderTrend(); renderFormat(); renderHeadline(); renderTimeline();
@@ -648,7 +665,10 @@ function setSource(label) {
 async function refreshSheet(label, sheetUrl, btn) {
   const csvUrl = toCsvExportUrl(sheetUrl);
   if (!csvUrl) { alert("The stored sheet link looks invalid."); return; }
+  const before = (ALL_SOURCES || []).find(s => s.source_label === label)?.n;
+  const orig = btn ? btn.textContent : "";
   if (btn) { btn.disabled = true; btn.textContent = "Refreshing…"; }
+  let ok = false, afterN = null;
   try {
     const res = await fetch(csvUrl); const text = await res.text();
     if (!res.ok || /^\s*<(!doctype|html)/i.test(text)) throw new Error("couldn't read the sheet (is it still shared/published?)");
@@ -657,10 +677,24 @@ async function refreshSheet(label, sheetUrl, btn) {
     fd.append("sourceLabel", label);
     const up = await fetch("api/ingest", { method: "POST", body: fd }); const d = await up.json();
     if (!up.ok || d.error) throw new Error(d.error || "refresh failed");
+    afterN = d.storyCount;
     await fetch("api/sources/" + encodeURIComponent(label), { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ sheet_url: sheetUrl }) });
+    ok = true;
     await boot();
   } catch (e) { alert("Refresh failed: " + e.message); }
-  finally { if (btn) { btn.disabled = false; btn.textContent = "↻ Refresh from sheet"; } }
+  finally {
+    if (btn) {
+      btn.disabled = false;
+      if (ok) {
+        // brief confirmation of what changed, then back to normal
+        const delta = (before != null && afterN != null) ? afterN - before : null;
+        btn.textContent = `✓ ${afterN} rows${delta ? ` (${delta > 0 ? "+" : ""}${delta})` : ""}`;
+        setTimeout(() => { btn.textContent = orig || "↻ Refresh from sheet"; }, 3500);
+      } else {
+        btn.textContent = orig || "↻ Refresh from sheet";
+      }
+    }
+  }
 }
 $("#sources-list")?.addEventListener("click", async e => {
   const v = e.target.closest("[data-view]"); if (v) return setSource(v.dataset.view);
