@@ -43,19 +43,72 @@ async function boot() {
 
 function showSetup() {
   $("#setup").style.display = "block";
-  $("#empty").style.display = "none";
   $("#dash").style.display = "none";
 }
+// No data yet — but show the real dashboard tabs anyway, locked. Clicking a tab explains that
+// tool (renderLocked) and the #v-locked view carries the upload.
 function showEmpty() {
   $("#setup").style.display = "none";
-  $("#empty").style.display = "block";
-  $("#dash").style.display = "none";
+  $("#dash").style.display = "block";
+  $("#dash").classList.add("no-data");
+  $("#topline").style.display = "none";
+  $("#context-banner").style.display = "none";
+  const picker = $("#picker"); if (picker) picker.style.display = "none";
+  const um = $("#upload-more"); if (um) um.style.display = "none";
+  document.querySelectorAll("#dash .view").forEach(v => v.classList.remove("on"));
+  $("#v-locked").classList.add("on");
+  const active = document.querySelector('.tab.on') || document.querySelector('.tab[data-v="beats"]') || document.querySelector('.tab');
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("on"));
+  if (active) { active.classList.add("on"); renderLocked(active.dataset.v); }
   if (typeof resetUpload === "function") resetUpload();
 }
 function showDash() {
   $("#setup").style.display = "none";
-  $("#empty").style.display = "none";
   $("#dash").style.display = "block";
+  const wasLocked = $("#dash").classList.contains("no-data");
+  $("#dash").classList.remove("no-data");
+  $("#v-locked").classList.remove("on");
+  $("#topline").style.display = "";
+  if (wasLocked) {   // coming out of the locked state → land on a real view
+    document.querySelectorAll(".tab[data-v]").forEach(x => x.classList.remove("on"));
+    document.querySelectorAll("#dash .view").forEach(v => v.classList.remove("on"));
+    document.querySelector('.tab[data-v="beats"]')?.classList.add("on");
+    $("#v-beats")?.classList.add("on");
+  }
+}
+
+// What each tab does — shown in the locked view before data is uploaded, so the tabs are
+// self-explanatory instead of cryptic labels. Keyed by the tab's data-v.
+const LOCKED_DESC = {
+  sources:   { t: "Sources", d: "Every performance matrix you've uploaded. Add more any time, switch between them, and refresh linked Google Sheets." },
+  newsroom:  { t: "Newsroom context", d: "Tell the Node where you publish and who your audience is, so it reads your numbers in context and its advice fits your patch." },
+  stories:   { t: "Stories", d: "The full list of your stories and their engagement rates. Add article links so the Node can read your coverage and sharpen its topic detection." },
+  readership:{ t: "Readership", d: "Unique readers and pageviews rolled up — a truer measure of who you reached than boosted reach." },
+  recommend: { t: "Recommendations", d: "AI strategy: which beats and formats to grow, which to drop or rethink, and where to put your reporters — each tied to your own evidence." },
+  ideas:     { t: "Story Ideas", d: "AI pitches new, commissionable stories, each traceable to a proven past winner, a rising beat, or a word that lifts engagement." },
+  beats:     { t: "Beats", d: "What topics your audience rewards most, ranked by engagement rate — with a flag for which differences are statistically real." },
+  signal:    { t: "Signal Leaders", d: "Your genuine winners: the top stories by engagement rate, above a reach floor so they aren't tiny-sample flukes." },
+  trend:     { t: "Rising / Fading", d: "Which beats are gaining resonance with your audience and which are cooling, period over period." },
+  format:    { t: "Format", d: "Which formats — article, video, gallery — earn the most engagement per person reached." },
+  headline:  { t: "Headline Signal", d: "Which headline features (questions, numbers, length) lift or drag your engagement rate." },
+  words:     { t: "Words", d: "The specific words and phrases that lift or drag a headline's rate in your own history." },
+  sentiment: { t: "Sentiment", d: "Whether negative- or positive-framed headlines land better with your audience." },
+  score:     { t: "Score a headline", d: "Paste a draft headline and get a predicted engagement rate, built from what your audience has already rewarded." },
+  gems:      { t: "Hidden Gems", d: "Stories that resonated hard but were barely promoted — undervalued audience appetite worth revisiting." },
+  timing:    { t: "Best Day", d: "The day of the week your stories tend to land best." },
+  outliers:  { t: "Over / Under", d: "Stories that over- or under-performed the median for their beat." },
+  timeline:  { t: "Timeline", d: "Your engagement rate over time." },
+  compare:   { t: "Compare", d: "Put two periods side by side to see exactly what changed in what your audience rewards." },
+  quality:   { t: "Data Quality", d: "Any errors or warnings from reading your matrix, row by row, so you can fix the source data." },
+  history:   { t: "History", d: "Every brief, recommendation and set of story ideas kept — with the audience snapshot behind each — so decisions build on the last ones." },
+  activity:  { t: "Activity", d: "A log of everything the Node has done: every ingest, every AI call, every error, timestamped." },
+  brief:     { t: "AI Brief", d: "A decisive editorial read-out from Claude: the signal, what to commission more of, what's loud but hollow, and what to test next." },
+};
+function renderLocked(key) {
+  const info = LOCKED_DESC[key] || { t: "This tool", d: "" };
+  const title = $("#locked-title"), desc = $("#locked-desc");
+  if (title) title.textContent = info.t;
+  if (desc) desc.textContent = info.d;
 }
 
 // ── Setup form (Claude-only — Anthropic is the one provider this Node uses) ──
@@ -737,6 +790,14 @@ $("#stories-scrape")?.addEventListener("click", async function () {
 
 document.querySelector(".tabs")?.addEventListener("click", e => {
   const t = e.target.closest(".tab[data-v]"); if (!t) return;
+  // Before any data: the tabs are live, but clicking one explains that tool and keeps the
+  // upload — it doesn't open an empty view.
+  if ($("#dash").classList.contains("no-data")) {
+    document.querySelectorAll(".tab[data-v]").forEach(x => x.classList.remove("on"));
+    t.classList.add("on");
+    renderLocked(t.dataset.v);
+    return;
+  }
   document.querySelectorAll(".tab[data-v]").forEach(x => x.classList.remove("on"));
   document.querySelectorAll(".view").forEach(x => x.classList.remove("on"));
   t.classList.add("on"); $("#v-" + t.dataset.v).classList.add("on");
@@ -831,7 +892,7 @@ $("#ideas-gen")?.addEventListener("click", async function () {
 });
 
 // ── Upload: choose/drop → stage → explicit Run → process ────────────────────
-const empty = $("#empty"), input = $("#file-input"), errBox = $("#upload-error");
+const empty = $("#v-locked"), input = $("#file-input"), errBox = $("#upload-error");
 const chooseBox = $("#choose"), stagedBox = $("#staged"), processingBox = $("#processing");
 const stagedNameEl = $("#staged-name"), runBtn = $("#run-btn");
 let stagedFile = null;

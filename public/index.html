@@ -36,24 +36,20 @@ button.up{margin-left:8px}
 .sub b{color:var(--paper);font-weight:600}
 
 /* empty state */
-.empty{margin:32px 0;text-align:center;transition:.2s}
-.empty h2{font-size:26px;font-weight:600;margin-bottom:8px}
-.empty p{color:var(--paper-dim);max-width:640px;margin:0 auto 18px}
-.empty label{display:inline-block;font-family:var(--mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;background:var(--signal);color:#fff;padding:12px 26px;cursor:pointer;font-weight:600;border-radius:6px;transition:.15s}
-.empty label:hover{background:var(--signal-deep)}
-.empty .or{font-family:var(--mono);font-size:11px;color:var(--paper-dim);margin:14px 0 0;letter-spacing:.18em;text-transform:uppercase}
-/* The functions themselves, shown up front — the real tabs, grouped, before any upload. */
-.fn-lead{color:var(--paper-dim);max-width:680px;margin:0 auto 22px;font-size:15px}
-.fn-groups{display:flex;flex-direction:column;gap:16px;max-width:940px;margin:0 auto 30px;text-align:left}
-.fn-group{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
-.fn-h{font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--fc,var(--paper-dim));width:100%;font-weight:600;margin-bottom:1px}
-.fn-chip{font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--paper-dim);border:1px solid var(--line);border-radius:6px;padding:6px 11px;background:var(--panel)}
-.fn-chip.ai{border-color:#BBE7CE;color:var(--good)}
-/* The upload is a small strip now — the functions lead, this is one line beneath them. */
-.dropzone{border:1.5px dashed var(--line);border-radius:10px;padding:18px 20px;max-width:640px;margin:0 auto;transition:.2s}
-.empty.over .dropzone{border-color:var(--signal);background:var(--ink2)}
-.dropzone h3{font-size:16px;font-weight:600;margin-bottom:4px}
-.intro-sub{color:var(--paper-dim);max-width:680px;margin:0 auto 4px;font-size:15px}
+/* Locked view (before any data): a per-tab description + a compact upload. The tabs above
+   are the real, live tab bar. */
+.locked-head{margin-bottom:18px}
+.dropzone{border:2px dashed var(--line);border-radius:12px;padding:26px 24px;max-width:660px;margin:0;text-align:center;transition:.2s}
+#v-locked.over .dropzone{border-color:var(--signal);background:var(--ink2)}
+#v-locked.busy label{background:var(--line);color:var(--paper-dim);cursor:wait}
+.dropzone h3{font-size:18px;font-weight:600;margin-bottom:6px}
+.dropzone p{color:var(--paper-dim);max-width:560px;margin:0 auto 16px}
+.dropzone label{display:inline-block;font-family:var(--mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;background:var(--signal);color:#fff;padding:12px 26px;cursor:pointer;font-weight:600;border-radius:6px;transition:.15s}
+.dropzone label:hover{background:var(--signal-deep)}
+.dropzone input[type=file]{display:none}
+.dropzone .or{font-family:var(--mono);font-size:11px;color:var(--paper-dim);margin:14px 0 0;letter-spacing:.18em;text-transform:uppercase}
+#staged,#processing{text-align:center;padding:24px 0}
+#staged h3,#processing h3{font-size:20px;font-weight:600;margin-bottom:8px}
 .empty input[type=file]{display:none}
 .empty.busy label{background:var(--line);color:var(--paper-dim);cursor:wait}
 .staged-name{font-family:var(--mono);font-size:14px;color:var(--paper);margin:0 auto 22px;word-break:break-all;max-width:560px}
@@ -205,63 +201,8 @@ tr:hover td{background:var(--ink2)}
     </div>
   </div>
 
-  <div id="empty" class="empty" style="display:none">
-    <div id="choose">
-      <h2>Everything Audience Signal does</h2>
-      <p class="fn-lead">These are the tools you'll get once your data's in — reading what your audience rewards, and turning it into what to write next.</p>
-
-      <div class="fn-groups">
-        <div class="fn-group" style="--fc:var(--signal)">
-          <div class="fn-h">Understand your audience</div>
-          <span class="fn-chip">Beats</span><span class="fn-chip">Signal Leaders</span><span class="fn-chip">Rising / Fading</span>
-          <span class="fn-chip">Words that lift</span><span class="fn-chip">Sentiment</span><span class="fn-chip">Format</span>
-          <span class="fn-chip">Headline signal</span><span class="fn-chip">Hidden Gems</span><span class="fn-chip">Best Day</span>
-          <span class="fn-chip">Over / Under</span><span class="fn-chip">Readership</span><span class="fn-chip">Timeline</span>
-          <span class="fn-chip">Compare periods</span><span class="fn-chip">Score a headline</span>
-        </div>
-        <div class="fn-group" style="--fc:var(--good)">
-          <div class="fn-h">Decide what to write next · AI</div>
-          <span class="fn-chip ai">AI Brief</span><span class="fn-chip ai">Recommendations</span><span class="fn-chip ai">Story Ideas</span>
-        </div>
-        <div class="fn-group">
-          <div class="fn-h">Manage &amp; keep track</div>
-          <span class="fn-chip">Sources</span><span class="fn-chip">Stories</span><span class="fn-chip">Newsroom context</span>
-          <span class="fn-chip">Data Quality</span><span class="fn-chip">History</span><span class="fn-chip">Activity</span>
-        </div>
-      </div>
-
-      <div class="dropzone">
-        <h3>Add your data to unlock them</h3>
-        <p style="margin-bottom:14px;font-size:14px">Drop your <b>Social Media Matrix</b> — Word (.docx / .doc), PDF, or spreadsheet (.csv) — here, or:</p>
-        <label for="file-input">Choose file</label>
-        <input id="file-input" type="file" accept=".docx,.doc,.pdf,.csv,.tsv,.txt">
-        <div class="sheet-row" style="margin-top:14px">
-          <div class="or" style="margin-bottom:8px">or link a Google Sheet</div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
-            <input id="sheet-url" type="url" placeholder="https://docs.google.com/spreadsheets/d/…" style="flex:1;min-width:260px;font-family:var(--mono);font-size:13px;padding:9px 12px;background:var(--ink2);color:var(--paper);border:1px solid var(--line);border-radius:6px" />
-            <button id="sheet-btn" class="run-analyze" style="padding:9px 18px">Load sheet</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div id="staged" style="display:none">
-      <h2>Ready to analyse</h2>
-      <p class="staged-name" id="staged-name"></p>
-      <button id="run-btn" class="run-analyze">Run analysis</button>
-      <div class="or"><a href="#" id="choose-different">choose a different file</a></div>
-    </div>
-
-    <div id="processing" style="display:none">
-      <div class="spin-lg"></div>
-      <h2>Reading your file&hellip;</h2>
-      <p id="processing-note">Pulling the matrix out of your document. A Word
-        <code>.docx</code> is near-instant; a <code>.doc</code> or PDF is read by AI
-        and can take up to a minute &mdash; this is normal, please don&rsquo;t close the tab.</p>
-    </div>
-
-    <div id="upload-error" class="err" style="display:none"></div>
-  </div>
+  <!-- The upload + the "what this tab does" panel now live inside the dashboard as #v-locked,
+       so the real tab bar is visible and clickable before any data is uploaded. -->
 
   <div id="dash" style="display:none">
     <div id="context-banner" style="display:none;margin:18px 0;padding:14px 18px;border:1px solid var(--signal);background:var(--ink2);border-radius:6px;font-size:14.5px;color:var(--paper)">
@@ -293,6 +234,42 @@ tr:hover td{background:var(--ink2)}
       <button class="tab" data-v="history">History</button>
       <button class="tab" data-v="activity">Activity</button>
       <button class="tab" data-v="brief">AI Brief</button>
+    </div>
+
+    <!-- Shown before any data is loaded: the tabs above are live; clicking one explains that
+         tool here and offers the upload. Replaced by the real views once data is in. -->
+    <div id="v-locked" class="view">
+      <div class="locked-head">
+        <div class="sec-t" id="locked-title">Beats</div>
+        <div class="sec-d" id="locked-desc"></div>
+      </div>
+      <div id="choose" class="dropzone">
+        <h3 id="locked-cta">Upload your data to unlock this</h3>
+        <p style="margin-bottom:14px;font-size:14px">Drop your <b>Social Media Matrix</b> &mdash; Word (.docx / .doc), PDF, or spreadsheet (.csv) &mdash; here, or:</p>
+        <label for="file-input">Choose file</label>
+        <input id="file-input" type="file" accept=".docx,.doc,.pdf,.csv,.tsv,.txt">
+        <div class="sheet-row" style="margin-top:14px">
+          <div class="or" style="margin-bottom:8px">or link a Google Sheet</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
+            <input id="sheet-url" type="url" placeholder="https://docs.google.com/spreadsheets/d/…" style="flex:1;min-width:260px;font-family:var(--mono);font-size:13px;padding:9px 12px;background:var(--ink2);color:var(--paper);border:1px solid var(--line);border-radius:6px" />
+            <button id="sheet-btn" class="run-analyze" style="padding:9px 18px">Load sheet</button>
+          </div>
+        </div>
+      </div>
+      <div id="staged" style="display:none;text-align:center">
+        <h3>Ready to analyse</h3>
+        <p class="staged-name" id="staged-name"></p>
+        <button id="run-btn" class="run-analyze">Run analysis</button>
+        <div class="or"><a href="#" id="choose-different">choose a different file</a></div>
+      </div>
+      <div id="processing" style="display:none;text-align:center">
+        <div class="spin-lg"></div>
+        <h3>Reading your file&hellip;</h3>
+        <p id="processing-note">Pulling the matrix out of your document. A Word <code>.docx</code> is
+          near-instant; a <code>.doc</code> or PDF is read by AI and can take up to a minute &mdash;
+          this is normal, please don&rsquo;t close the tab.</p>
+      </div>
+      <div id="upload-error" class="err" style="display:none"></div>
     </div>
 
     <div id="v-sources" class="view">
