@@ -42,16 +42,17 @@ button.up{margin-left:8px}
 .empty label{display:inline-block;font-family:var(--mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;background:var(--signal);color:#fff;padding:12px 26px;cursor:pointer;font-weight:600;border-radius:6px;transition:.15s}
 .empty label:hover{background:var(--signal-deep)}
 .empty .or{font-family:var(--mono);font-size:11px;color:var(--paper-dim);margin:14px 0 0;letter-spacing:.18em;text-transform:uppercase}
-/* What the app does — the features grid a newcomer sees before uploading. */
-.feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:22px auto 30px;max-width:1000px;text-align:left}
-.feature-card{border:1px solid var(--line);border-radius:10px;padding:15px 16px;background:var(--panel)}
-.feature-card .fc-t{display:flex;align-items:center;gap:8px;font-weight:600;font-size:14.5px;margin-bottom:5px}
-.feature-card .fc-t::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--fc,var(--signal));flex:0 0 auto}
-.feature-card .fc-d{color:var(--paper-dim);font-size:12.75px;line-height:1.5}
-/* The upload is now a compact card, not the whole screen. Drag feedback lands on it. */
-.dropzone{border:2px dashed var(--line);border-radius:12px;padding:24px 22px;max-width:660px;margin:0 auto;transition:.2s}
+/* The functions themselves, shown up front — the real tabs, grouped, before any upload. */
+.fn-lead{color:var(--paper-dim);max-width:680px;margin:0 auto 22px;font-size:15px}
+.fn-groups{display:flex;flex-direction:column;gap:16px;max-width:940px;margin:0 auto 30px;text-align:left}
+.fn-group{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.fn-h{font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--fc,var(--paper-dim));width:100%;font-weight:600;margin-bottom:1px}
+.fn-chip{font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--paper-dim);border:1px solid var(--line);border-radius:6px;padding:6px 11px;background:var(--panel)}
+.fn-chip.ai{border-color:#BBE7CE;color:var(--good)}
+/* The upload is a small strip now — the functions lead, this is one line beneath them. */
+.dropzone{border:1.5px dashed var(--line);border-radius:10px;padding:18px 20px;max-width:640px;margin:0 auto;transition:.2s}
 .empty.over .dropzone{border-color:var(--signal);background:var(--ink2)}
-.dropzone h3{font-size:18px;font-weight:600;margin-bottom:6px}
+.dropzone h3{font-size:16px;font-weight:600;margin-bottom:4px}
 .intro-sub{color:var(--paper-dim);max-width:680px;margin:0 auto 4px;font-size:15px}
 .empty input[type=file]{display:none}
 .empty.busy label{background:var(--line);color:var(--paper-dim);cursor:wait}
@@ -206,51 +207,40 @@ tr:hover td{background:var(--ink2)}
 
   <div id="empty" class="empty" style="display:none">
     <div id="choose">
-      <h2>What Audience Signal does</h2>
-      <p class="intro-sub">Point it at your own published-story performance and it shows what your audience
-        actually rewards — then turns that into what to commission next. All grounded in your data, nothing from
-        outside conversation.</p>
+      <h2>Everything Audience Signal does</h2>
+      <p class="fn-lead">These are the tools you'll get once your data's in — reading what your audience rewards, and turning it into what to write next.</p>
 
-      <div class="feature-grid">
-        <div class="feature-card" style="--fc:var(--signal)">
-          <div class="fc-t">What actually resonates</div>
-          <div class="fc-d">Every story ranked by <b>engagement rate</b> — the share of people reached who acted — not raw reach, which boosting and the algorithm inflate.</div>
+      <div class="fn-groups">
+        <div class="fn-group" style="--fc:var(--signal)">
+          <div class="fn-h">Understand your audience</div>
+          <span class="fn-chip">Beats</span><span class="fn-chip">Signal Leaders</span><span class="fn-chip">Rising / Fading</span>
+          <span class="fn-chip">Words that lift</span><span class="fn-chip">Sentiment</span><span class="fn-chip">Format</span>
+          <span class="fn-chip">Headline signal</span><span class="fn-chip">Hidden Gems</span><span class="fn-chip">Best Day</span>
+          <span class="fn-chip">Over / Under</span><span class="fn-chip">Readership</span><span class="fn-chip">Timeline</span>
+          <span class="fn-chip">Compare periods</span><span class="fn-chip">Score a headline</span>
         </div>
-        <div class="feature-card" style="--fc:var(--signal)">
-          <div class="fc-t">Deep, offline analysis</div>
-          <div class="fc-d">Beats, rising &amp; fading topics, the words that lift or drag a headline, best publish day, hidden gems, and a headline scorer. Free, no AI key needed.</div>
+        <div class="fn-group" style="--fc:var(--good)">
+          <div class="fn-h">Decide what to write next · AI</div>
+          <span class="fn-chip ai">AI Brief</span><span class="fn-chip ai">Recommendations</span><span class="fn-chip ai">Story Ideas</span>
         </div>
-        <div class="feature-card" style="--fc:var(--good)">
-          <div class="fc-t">AI editorial brief</div>
-          <div class="fc-d">A decisive read-out from Claude: the signal, what to commission more of, what's loud but hollow, what to test next.</div>
-        </div>
-        <div class="feature-card" style="--fc:var(--good)">
-          <div class="fc-t">Strategy recommendations</div>
-          <div class="fc-d">Where to put reporters — which beats and formats to grow, which to drop or rethink — each tied to the evidence in your own numbers.</div>
-        </div>
-        <div class="feature-card" style="--fc:var(--good)">
-          <div class="fc-t">Story ideas to commission</div>
-          <div class="fc-d">New, reportable pitches, each traceable to a proven past winner, a rising beat, or a word that lifts — never an appetite the data doesn't show.</div>
-        </div>
-        <div class="feature-card" style="--fc:var(--paper-dim)">
-          <div class="fc-t">A kept decision history</div>
-          <div class="fc-d">Every brief, recommendation and idea saved with the audience picture behind it, plus dated snapshots — so decisions build on the last ones.</div>
+        <div class="fn-group">
+          <div class="fn-h">Manage &amp; keep track</div>
+          <span class="fn-chip">Sources</span><span class="fn-chip">Stories</span><span class="fn-chip">Newsroom context</span>
+          <span class="fn-chip">Data Quality</span><span class="fn-chip">History</span><span class="fn-chip">Activity</span>
         </div>
       </div>
 
       <div class="dropzone">
-        <h3>Add your data to begin</h3>
-        <p style="margin-bottom:16px">Drop your <b>Social Media Matrix</b> — a Word (.docx / .doc), PDF, or spreadsheet (.csv) — here, or:</p>
+        <h3>Add your data to unlock them</h3>
+        <p style="margin-bottom:14px;font-size:14px">Drop your <b>Social Media Matrix</b> — Word (.docx / .doc), PDF, or spreadsheet (.csv) — here, or:</p>
         <label for="file-input">Choose file</label>
         <input id="file-input" type="file" accept=".docx,.doc,.pdf,.csv,.tsv,.txt">
-        <div class="or">or drop the file anywhere in this box</div>
-        <div class="sheet-row" style="margin-top:18px">
+        <div class="sheet-row" style="margin-top:14px">
           <div class="or" style="margin-bottom:8px">or link a Google Sheet</div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
-            <input id="sheet-url" type="url" placeholder="https://docs.google.com/spreadsheets/d/…" style="flex:1;min-width:260px;font-family:var(--mono);font-size:13px;padding:10px 12px;background:var(--ink2);color:var(--paper);border:1px solid var(--line);border-radius:6px" />
-            <button id="sheet-btn" class="run-analyze" style="padding:10px 20px">Load sheet</button>
+            <input id="sheet-url" type="url" placeholder="https://docs.google.com/spreadsheets/d/…" style="flex:1;min-width:260px;font-family:var(--mono);font-size:13px;padding:9px 12px;background:var(--ink2);color:var(--paper);border:1px solid var(--line);border-radius:6px" />
+            <button id="sheet-btn" class="run-analyze" style="padding:9px 18px">Load sheet</button>
           </div>
-          <div class="or" style="margin-top:8px;font-size:11px">In Google Sheets: <b>File → Share → Publish to web → CSV</b>, then paste that link.</div>
         </div>
       </div>
     </div>
