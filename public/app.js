@@ -481,6 +481,87 @@ async function renderActivity() {
   }).join("");
 }
 
+// ── Decision history: past briefs, recommendations, ideas + dated snapshots ──────────
+let HISTORY_KIND = "";
+const HKIND = {
+  brief:     { label: "Brief",          color: "#3B82F6" },
+  recommend: { label: "Recommendations", color: "#8B5CF6" },
+  ideas:     { label: "Story ideas",    color: "#10B981" },
+  snapshot:  { label: "Data snapshot",  color: "#64748B" },
+};
+
+async function renderHistory() {
+  const list = $("#history-list");
+  if (!list) return;
+  const qs = HISTORY_KIND ? `?kind=${encodeURIComponent(HISTORY_KIND)}` : "";
+  const data = await fetch("api/history" + qs).then(r => r.json()).catch(() => ({ history: [] }));
+  const rows = data.history || [];
+  if (!rows.length) {
+    list.innerHTML = `<div class="dim">Nothing here yet. Generate a brief, recommendations or story ideas, or add data — each is kept here so you can look back on it.</div>`;
+    return;
+  }
+  list.innerHTML = rows.map(h => {
+    const k = HKIND[h.kind] || { label: h.kind, color: "#64748B" };
+    const when = (h.ts || "").replace("T", " ").slice(0, 16);
+    const topline = h.metrics
+      ? `${h.metrics.stories ?? "?"} stories · median rate ${h.metrics.medianRate ?? "?"}%`
+      : "";
+    return `<div class="hist-card" data-id="${h.id}" style="border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <span class="pill" style="background:${k.color}22;color:${k.color};border:1px solid ${k.color}">${k.label}</span>
+        <b style="font-size:14px">${escapeHtml(h.title || k.label)}</b>
+        <span class="mono dim" style="font-size:12px">${when}</span>
+        <span class="mono dim" style="font-size:12px">· ${escapeHtml(h.source || "all")}</span>
+        <span style="flex:1"></span>
+        ${h.hasBody ? `<button class="btn hist-open" data-id="${h.id}" style="padding:4px 10px;font-size:12px">Open</button>` : ""}
+        <button class="btn hist-del" data-id="${h.id}" style="padding:4px 10px;font-size:12px;background:transparent;color:var(--alert);border:1px solid var(--alert)">Delete</button>
+      </div>
+      ${topline ? `<div class="mono dim" style="font-size:12px;margin-top:6px">${topline}</div>` : ""}
+      <div class="hist-body" style="display:none;margin-top:10px"></div>
+    </div>`;
+  }).join("");
+}
+
+// Open one entry: fetch its full body + the snapshot it was based on, render inline.
+async function openHistory(id, card) {
+  const body = card.querySelector(".hist-body");
+  if (body.dataset.loaded) { body.style.display = body.style.display === "none" ? "block" : "none"; return; }
+  body.style.display = "block";
+  body.innerHTML = `<div class="dim">Loading…</div>`;
+  const data = await fetch("api/history/" + encodeURIComponent(id)).then(r => r.json()).catch(() => null);
+  const e = data && data.entry;
+  if (!e) { body.innerHTML = `<div class="dim">Couldn't load this entry.</div>`; return; }
+  const m = e.metrics;
+  const snap = m ? `
+    <div style="border-top:1px solid var(--line);margin-top:12px;padding-top:10px">
+      <div class="mono dim" style="font-size:11px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">The audience picture at the time</div>
+      <div class="mono" style="font-size:12px">${m.stories ?? "?"} stories · median rate ${m.medianRate ?? "?"}%${m.reachFloor ? ` · reach floor ${m.reachFloor}` : ""}</div>
+      ${(m.topBeats || []).length ? `<div class="mono dim" style="font-size:12px;margin-top:4px">Top beats: ${m.topBeats.map(b => `${escapeHtml(b.beat)} ${b.medianRate}%`).join(" · ")}</div>` : ""}
+      ${(m.rising || []).length ? `<div class="mono" style="font-size:12px;margin-top:4px;color:#10B981">Rising: ${m.rising.map(escapeHtml).join(", ")}</div>` : ""}
+      ${(m.fading || []).length ? `<div class="mono" style="font-size:12px;margin-top:2px;color:var(--alert)">Fading: ${m.fading.map(escapeHtml).join(", ")}</div>` : ""}
+    </div>` : "";
+  body.innerHTML = `<div class="ai-body" style="font-size:14px">${e.body ? mdToHtml(e.body) : `<div class="dim">No text — this is a data snapshot.</div>`}</div>${snap}`;
+  body.dataset.loaded = "1";
+}
+
+$("#history-filter")?.addEventListener("click", e => {
+  const t = e.target.closest("[data-hk]"); if (!t) return;
+  document.querySelectorAll("#history-filter [data-hk]").forEach(x => x.classList.remove("on"));
+  t.classList.add("on");
+  HISTORY_KIND = t.dataset.hk || "";
+  renderHistory();
+});
+$("#history-list")?.addEventListener("click", async e => {
+  const open = e.target.closest(".hist-open");
+  if (open) return openHistory(open.dataset.id, open.closest(".hist-card"));
+  const del = e.target.closest(".hist-del");
+  if (del) {
+    if (!confirm("Delete this from your history? This can't be undone.")) return;
+    await fetch("api/history/" + encodeURIComponent(del.dataset.id), { method: "DELETE" }).catch(() => {});
+    renderHistory();
+  }
+});
+
 // ── Sources management (#1, #3) ──────────────────────────────────────────────
 async function renderSources() {
   const list = $("#sources-list");
@@ -662,6 +743,7 @@ document.querySelector(".tabs")?.addEventListener("click", e => {
   if (t.dataset.v === "sources") renderSources();
   if (t.dataset.v === "newsroom") loadContext();
   if (t.dataset.v === "stories") renderStories();
+  if (t.dataset.v === "history") renderHistory();
 });
 
 $("#gen").addEventListener("click", async function () {

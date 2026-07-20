@@ -257,6 +257,7 @@ tr:hover td{background:var(--ink2)}
       <button class="tab" data-v="timeline">Timeline</button>
       <button class="tab" data-v="compare">Compare</button>
       <button class="tab" data-v="quality">Data Quality</button>
+      <button class="tab" data-v="history">History</button>
       <button class="tab" data-v="activity">Activity</button>
       <button class="tab" data-v="brief">AI Brief</button>
     </div>
@@ -451,6 +452,23 @@ tr:hover td{background:var(--ink2)}
       <div class="sec-t">What the source matrix got wrong</div>
       <div class="q-grid" id="q-grid"></div>
       <table><thead><tr><th>Row</th><th>Level</th><th>Field</th><th>Issue</th></tr></thead><tbody id="q-tb"></tbody></table>
+    </div>
+    <div id="v-history" class="view">
+      <div class="sec-h">Your decision history · every brief, recommendation, idea and data snapshot, kept</div>
+      <div class="sec-t">History</div>
+      <div class="sec-d">Everything the Node has produced, newest first — each editorial brief,
+        set of recommendations and batch of story ideas, plus a dated snapshot of how your
+        audience looked each time you added data. Reopen any of them to see the full text and
+        the numbers it was based on, so decisions build on the last ones. Stored with your
+        newsroom and kept across sign-ins.</div>
+      <div id="history-filter" style="display:flex;gap:6px;flex-wrap:wrap;margin:0 0 12px">
+        <button class="tab on" data-hk="">All</button>
+        <button class="tab" data-hk="recommend">Recommendations</button>
+        <button class="tab" data-hk="ideas">Story ideas</button>
+        <button class="tab" data-hk="brief">Briefs</button>
+        <button class="tab" data-hk="snapshot">Data snapshots</button>
+      </div>
+      <div id="history-list"></div>
     </div>
     <div id="v-activity" class="view">
       <div class="sec-h">Everything this Node has done · stays on this computer</div>
