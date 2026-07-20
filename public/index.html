@@ -97,9 +97,9 @@ button.up{margin-left:8px}
 .stat .v{font-size:34px;font-weight:600;margin-top:6px;font-variant-numeric:tabular-nums}
 .stat .v small{font-size:14px;color:var(--paper-dim);font-weight:400}
 .tabs{display:flex;margin:34px 0 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
-.tab{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;background:none;border:none;color:var(--paper-dim);padding:13px 18px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:.15s}
-.tab:hover{color:var(--paper)}
-.tab.on{color:var(--signal);border-bottom-color:var(--signal)}
+.tab{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;background:var(--ink);border:1px solid var(--line);border-bottom:2px solid transparent;color:var(--paper-dim);padding:10px 15px;cursor:pointer;margin:0 4px -1px 0;border-radius:7px 7px 0 0;transition:.12s}
+.tab:hover{color:var(--paper);background:var(--panel);border-color:#CBD5E1}
+.tab.on{color:var(--signal);background:var(--panel);border-color:var(--line);border-bottom-color:var(--signal);font-weight:600}
 .view{display:none;padding-top:30px;animation:fade .35s ease}
 .view.on{display:block}
 @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
@@ -217,7 +217,7 @@ tr:hover td{background:var(--ink2)}
       <button class="tab" data-v="readership">Readership</button>
       <button class="tab" data-v="recommend">Recommendations</button>
       <button class="tab" data-v="ideas">Story Ideas</button>
-      <button class="tab on" data-v="beats">Beats</button>
+      <button class="tab on" data-v="beats">Topics</button>
       <button class="tab" data-v="signal">Signal Leaders</button>
       <button class="tab" data-v="trend">Rising / Fading</button>
       <button class="tab" data-v="format">Format</button>
@@ -240,7 +240,7 @@ tr:hover td{background:var(--ink2)}
          tool here and offers the upload. Replaced by the real views once data is in. -->
     <div id="v-locked" class="view">
       <div class="locked-head">
-        <div class="sec-t" id="locked-title">Beats</div>
+        <div class="sec-t" id="locked-title">Topics</div>
         <div class="sec-d" id="locked-desc"></div>
       </div>
       <div id="choose" class="dropzone">
@@ -302,7 +302,7 @@ tr:hover td{background:var(--ink2)}
     <div id="v-newsroom" class="view">
       <div class="sec-h">Who you are · where you publish · who you serve</div>
       <div class="sec-t">Newsroom context</div>
-      <div class="sec-d">The Node uses this to interpret your data and ground its recommendations. The shared fields (about / audience / beats) also sync to your <b>Grounded Newsroom Profile</b>, so other tools and Nodes benefit too. Stored with your newsroom.</div>
+      <div class="sec-d">The Node uses this to interpret your data and ground its recommendations. The shared fields (about / audience / topics) also sync to your <b>Grounded Newsroom Profile</b>, so other tools and Nodes benefit too. Stored with your newsroom.</div>
       <div style="max-width:760px;display:grid;gap:14px">
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
           <div><label class="nl">Country</label><input id="ctx-country" type="text" class="ni" placeholder="e.g. Zambia"></div>
@@ -312,7 +312,7 @@ tr:hover td{background:var(--ink2)}
         <div><label class="nl">Languages</label><input id="ctx-languages" type="text" class="ni" placeholder="e.g. English, Bemba"></div>
         <div><label class="nl">Audience — who reads you</label><textarea id="ctx-audience" class="nt" placeholder="e.g. urban working-age readers, civil servants, the diaspora"></textarea></div>
         <div><label class="nl">About the newsroom</label><textarea id="ctx-about" class="nt" placeholder="A sentence or two on who you are and what you do."></textarea></div>
-        <div><label class="nl">Beats / focus</label><textarea id="ctx-beats_note" class="nt" placeholder="The topics you cover or want to be known for."></textarea></div>
+        <div><label class="nl">Topics / focus</label><textarea id="ctx-beats_note" class="nt" placeholder="The topics you cover or want to be known for."></textarea></div>
         <div style="display:flex;gap:12px;align-items:center">
           <button class="btn" id="ctx-save">Save context</button>
           <span id="ctx-status" class="dim mono" style="font-size:12px"></span>
@@ -332,7 +332,7 @@ tr:hover td{background:var(--ink2)}
     <div id="v-ideas" class="view">
       <div class="sec-h">What to write next · pitched from your audience's proven appetite</div>
       <div class="sec-t">Story ideas</div>
-      <div class="sec-d">Claude reads what your audience has already rewarded — the top performers, hidden gems, rising beats, and lifting words — and pitches new, commissionable story ideas, each tied to the evidence that justifies it. Add your <b>newsroom context</b> to make the pitches fit your patch.</div>
+      <div class="sec-d">Claude reads what your audience has already rewarded — the top performers, hidden gems, rising topics, and lifting words — and pitches new, commissionable story ideas, each tied to the evidence that justifies it. Add your <b>newsroom context</b> to make the pitches fit your patch.</div>
       <div class="ai-box">
         <div class="ai-bar"><div class="t">⌁ Claude · commissioning ideas</div>
           <button class="btn" id="ideas-gen">Generate story ideas</button></div>
@@ -341,11 +341,11 @@ tr:hover td{background:var(--ink2)}
     </div>
     <div id="v-beats" class="view on">
       <div class="sec-h">Topic clustering · keyword-tagged, editable in <code>lib/beats.js</code></div>
-      <div class="sec-t">Which beats actually move the audience</div>
+      <div class="sec-t">Which topics actually move the audience</div>
       <div class="sec-d">Ranked by <b>median engagement rate</b>, not volume.</div>
       <div class="ai-bar" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:6px 0 14px">
         <span id="beats-status" class="t"></span>
-        <button class="btn" id="fit-beats">Fit beats to my coverage</button>
+        <button class="btn" id="fit-beats">Fit topics to my coverage</button>
         <a href="#" id="reset-beats" style="display:none;color:var(--signal);font-family:var(--mono);font-size:12px">reset to default</a>
       </div>
       <div id="beats-err" class="err" style="display:none;margin:0 0 12px"></div>
@@ -356,13 +356,13 @@ tr:hover td{background:var(--ink2)}
       <div class="sec-t">What truly resonated &mdash; vs what just got boosted</div>
       <button class="toggle on" id="sg-rate">By engagement rate</button>
       <button class="toggle" id="sg-reach">Reach giants that under-converted</button>
-      <table><thead><tr><th>Story</th><th>Beat</th><th>Band</th><th class="r">Reach</th><th class="r">Eng.</th><th class="r">Rate</th></tr></thead><tbody id="signal-tb"></tbody></table>
+      <table><thead><tr><th>Story</th><th>Topic</th><th>Band</th><th class="r">Reach</th><th class="r">Eng.</th><th class="r">Rate</th></tr></thead><tbody id="signal-tb"></tbody></table>
       <div id="signal-note" class="sec-t" style="margin-top:10px;font-size:12.5px;color:var(--paper-dim)"></div>
     </div>
     <div id="v-trend" class="view">
       <div class="sec-h">First half vs second half of the year</div>
-      <div class="sec-t">Beats heating up &mdash; or cooling off</div>
-      <table><thead><tr><th>Beat</th><th class="r">Early rate</th><th class="r">Late rate</th><th class="r">Δ</th><th>Direction</th></tr></thead><tbody id="trend-tb"></tbody></table>
+      <div class="sec-t">Topics heating up &mdash; or cooling off</div>
+      <table><thead><tr><th>Topic</th><th class="r">Early rate</th><th class="r">Late rate</th><th class="r">Δ</th><th>Direction</th></tr></thead><tbody id="trend-tb"></tbody></table>
     </div>
     <div id="v-format" class="view">
       <div class="sec-h">Investigation · Opinion · News · Editorial</div>
@@ -400,7 +400,7 @@ tr:hover td{background:var(--ink2)}
     <div id="v-score" class="view">
       <div class="sec-h">Predict before you publish</div>
       <div class="sec-t">Type a draft headline &mdash; get its likely engagement rate, from your own history</div>
-      <div class="sec-d">Built only from <b>your</b> stories: beats, headline shape, high/low-converting words, and framing. Transparent &mdash; every adjustment is shown. Not a guarantee, a prior.</div>
+      <div class="sec-d">Built only from <b>your</b> stories: topics, headline shape, high/low-converting words, and framing. Transparent &mdash; every adjustment is shown. Not a guarantee, a prior.</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 6px">
         <input id="score-input" type="text" placeholder="e.g. Mining boom: inside the deal that left residents with nothing" style="flex:1;min-width:300px;font-size:14px;padding:11px 13px;background:var(--ink2);color:var(--paper);border:1px solid var(--line);border-radius:6px" />
         <button id="score-btn" class="btn">Score it</button>
@@ -412,9 +412,9 @@ tr:hover td{background:var(--ink2)}
       <div class="sec-t">Stories that resonated but barely reached anyone are your best boost candidates</div>
       <div id="gem-grid" class="topline" style="margin-bottom:16px"></div>
       <div class="sec-t" style="color:var(--good)">Hidden gems &mdash; low reach, high rate (boost these)</div>
-      <table><thead><tr><th>Story</th><th>Beat</th><th class="r">Reach</th><th class="r">Eng.</th><th class="r">Rate</th></tr></thead><tbody id="gems-tb"></tbody></table>
+      <table><thead><tr><th>Story</th><th>Topic</th><th class="r">Reach</th><th class="r">Eng.</th><th class="r">Rate</th></tr></thead><tbody id="gems-tb"></tbody></table>
       <div class="sec-t" style="color:var(--alert);margin-top:18px">Loud but hollow &mdash; high reach, low rate</div>
-      <table><thead><tr><th>Story</th><th>Beat</th><th class="r">Reach</th><th class="r">Eng.</th><th class="r">Rate</th></tr></thead><tbody id="duds-tb"></tbody></table>
+      <table><thead><tr><th>Story</th><th>Topic</th><th class="r">Reach</th><th class="r">Eng.</th><th class="r">Rate</th></tr></thead><tbody id="duds-tb"></tbody></table>
     </div>
     <div id="v-timing" class="view">
       <div class="sec-h">Day-of-week resonance</div>
@@ -423,16 +423,16 @@ tr:hover td{background:var(--ink2)}
       <div id="timing-note" class="sec-d" style="margin-top:10px"></div>
     </div>
     <div id="v-outliers" class="view">
-      <div class="sec-h">Beat their own beat</div>
-      <div class="sec-t">Stories that punched above &mdash; or below &mdash; what their beat normally does</div>
+      <div class="sec-h">Against their own topic&rsquo;s norm</div>
+      <div class="sec-t">Stories that punched above &mdash; or below &mdash; what their topic normally does</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:6px">
         <div>
           <div class="sec-t" style="color:var(--good)">Over-performers &uarr;</div>
-          <table><thead><tr><th>Story</th><th class="r">Rate</th><th class="r">Beat norm</th><th class="r">&Delta;</th></tr></thead><tbody id="over-tb"></tbody></table>
+          <table><thead><tr><th>Story</th><th class="r">Rate</th><th class="r">Topic norm</th><th class="r">&Delta;</th></tr></thead><tbody id="over-tb"></tbody></table>
         </div>
         <div>
           <div class="sec-t" style="color:var(--alert)">Under-performers &darr;</div>
-          <table><thead><tr><th>Story</th><th class="r">Rate</th><th class="r">Beat norm</th><th class="r">&Delta;</th></tr></thead><tbody id="under-tb"></tbody></table>
+          <table><thead><tr><th>Story</th><th class="r">Rate</th><th class="r">Topic norm</th><th class="r">&Delta;</th></tr></thead><tbody id="under-tb"></tbody></table>
         </div>
       </div>
     </div>
@@ -451,8 +451,8 @@ tr:hover td{background:var(--ink2)}
       <div id="cmp-empty" class="sec-d">Pick another upload above to see the difference. (You need at least two uploads.)</div>
       <div id="cmp-out" style="display:none">
         <div class="topline" id="cmp-topline" style="margin-bottom:18px"></div>
-        <div class="sec-t">Beats — biggest movers</div>
-        <table><thead><tr><th>Beat</th><th class="r">Now</th><th class="r">Was</th><th class="r">Δ</th><th>Change</th></tr></thead><tbody id="cmp-beats"></tbody></table>
+        <div class="sec-t">Topics — biggest movers</div>
+        <table><thead><tr><th>Topic</th><th class="r">Now</th><th class="r">Was</th><th class="r">Δ</th><th>Change</th></tr></thead><tbody id="cmp-beats"></tbody></table>
         <div class="sec-t" style="margin-top:18px">Format — biggest movers</div>
         <table><thead><tr><th>Format</th><th class="r">Now</th><th class="r">Was</th><th class="r">Δ</th><th>Change</th></tr></thead><tbody id="cmp-formats"></tbody></table>
       </div>

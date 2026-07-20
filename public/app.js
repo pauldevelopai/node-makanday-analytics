@@ -84,11 +84,11 @@ const LOCKED_DESC = {
   newsroom:  { t: "Newsroom context", d: "Tell the Node where you publish and who your audience is, so it reads your numbers in context and its advice fits your patch." },
   stories:   { t: "Stories", d: "The full list of your stories and their engagement rates. Add article links so the Node can read your coverage and sharpen its topic detection." },
   readership:{ t: "Readership", d: "Unique readers and pageviews rolled up — a truer measure of who you reached than boosted reach." },
-  recommend: { t: "Recommendations", d: "AI strategy: which beats and formats to grow, which to drop or rethink, and where to put your reporters — each tied to your own evidence." },
-  ideas:     { t: "Story Ideas", d: "AI pitches new, commissionable stories, each traceable to a proven past winner, a rising beat, or a word that lifts engagement." },
-  beats:     { t: "Beats", d: "What topics your audience rewards most, ranked by engagement rate — with a flag for which differences are statistically real." },
+  recommend: { t: "Recommendations", d: "AI strategy: which topics and formats to grow, which to drop or rethink, and where to put your reporters — each tied to your own evidence." },
+  ideas:     { t: "Story Ideas", d: "AI pitches new, commissionable stories, each traceable to a proven past winner, a rising topic, or a word that lifts engagement." },
+  beats:     { t: "Topics", d: "What topics your audience rewards most, ranked by engagement rate — with a flag for which differences are statistically real." },
   signal:    { t: "Signal Leaders", d: "Your genuine winners: the top stories by engagement rate, above a reach floor so they aren't tiny-sample flukes." },
-  trend:     { t: "Rising / Fading", d: "Which beats are gaining resonance with your audience and which are cooling, period over period." },
+  trend:     { t: "Rising / Fading", d: "Which topics are gaining resonance with your audience and which are cooling, period over period." },
   format:    { t: "Format", d: "Which formats — article, video, gallery — earn the most engagement per person reached." },
   headline:  { t: "Headline Signal", d: "Which headline features (questions, numbers, length) lift or drag your engagement rate." },
   words:     { t: "Words", d: "The specific words and phrases that lift or drag a headline's rate in your own history." },
@@ -96,7 +96,7 @@ const LOCKED_DESC = {
   score:     { t: "Score a headline", d: "Paste a draft headline and get a predicted engagement rate, built from what your audience has already rewarded." },
   gems:      { t: "Hidden Gems", d: "Stories that resonated hard but were barely promoted — undervalued audience appetite worth revisiting." },
   timing:    { t: "Best Day", d: "The day of the week your stories tend to land best." },
-  outliers:  { t: "Over / Under", d: "Stories that over- or under-performed the median for their beat." },
+  outliers:  { t: "Over / Under", d: "Stories that over- or under-performed the median for their topic." },
   timeline:  { t: "Timeline", d: "Your engagement rate over time." },
   compare:   { t: "Compare", d: "Put two periods side by side to see exactly what changed in what your audience rewards." },
   quality:   { t: "Data Quality", d: "Any errors or warnings from reading your matrix, row by row, so you can fix the source data." },
@@ -198,8 +198,8 @@ function renderBeatsControls() {
   const ai = REPORT.beatsSource === "ai";
   if (status) {
     status.textContent = ai
-      ? `Beats fitted to your coverage (${(REPORT.beatNames || []).length})`
-      : "Using the generic default beats";
+      ? `Topics fitted to your coverage (${(REPORT.beatNames || []).length})`
+      : "Using the generic default topics";
   }
   if (reset) reset.style.display = ai ? "inline" : "none";
   if (REPORT.beatsError && err) { err.textContent = REPORT.beatsError; err.style.display = "block"; }
@@ -208,7 +208,7 @@ function renderBeatsControls() {
 $("#fit-beats")?.addEventListener("click", async function () {
   if (!CURRENT) return;
   const btn = this; btn.disabled = true; btn.textContent = "Reading your coverage…";
-  try { await load(CURRENT, 1); } finally { btn.disabled = false; btn.textContent = "Fit beats to my coverage"; }
+  try { await load(CURRENT, 1); } finally { btn.disabled = false; btn.textContent = "Fit topics to my coverage"; }
 });
 
 $("#reset-beats")?.addEventListener("click", async function (e) {
@@ -589,7 +589,7 @@ async function openHistory(id, card) {
     <div style="border-top:1px solid var(--line);margin-top:12px;padding-top:10px">
       <div class="mono dim" style="font-size:11px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">The audience picture at the time</div>
       <div class="mono" style="font-size:12px">${m.stories ?? "?"} stories · median rate ${m.medianRate ?? "?"}%${m.reachFloor ? ` · reach floor ${m.reachFloor}` : ""}</div>
-      ${(m.topBeats || []).length ? `<div class="mono dim" style="font-size:12px;margin-top:4px">Top beats: ${m.topBeats.map(b => `${escapeHtml(b.beat)} ${b.medianRate}%`).join(" · ")}</div>` : ""}
+      ${(m.topBeats || []).length ? `<div class="mono dim" style="font-size:12px;margin-top:4px">Top topics: ${m.topBeats.map(b => `${escapeHtml(b.beat)} ${b.medianRate}%`).join(" · ")}</div>` : ""}
       ${(m.rising || []).length ? `<div class="mono" style="font-size:12px;margin-top:4px;color:#10B981">Rising: ${m.rising.map(escapeHtml).join(", ")}</div>` : ""}
       ${(m.fading || []).length ? `<div class="mono" style="font-size:12px;margin-top:2px;color:var(--alert)">Fading: ${m.fading.map(escapeHtml).join(", ")}</div>` : ""}
     </div>` : "";
