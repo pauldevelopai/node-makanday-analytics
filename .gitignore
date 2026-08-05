@@ -21,4 +21,5 @@ data/processed/*
 !data/processed/.gitkeep
 
 # Claude Code local workspace
-.claude/
+.claude/*
+!.claude/commands/
